@@ -5,12 +5,9 @@ import android.content.Context
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.AttributeSet
-import android.view.KeyEvent
-import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
-import android.widget.TextView.OnEditorActionListener
 import ar.edu.itba.pam.nearchatter.R
 import ar.edu.itba.pam.nearchatter.login.OnUsernameConfirmListener
 
