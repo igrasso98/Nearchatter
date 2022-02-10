@@ -10,5 +10,4 @@ class LoginPresenter(view: LoginView, private val userRepository: UserRepository
     fun onUsernameConfirm(username: String){
         userRepository.addUser(User(username))
     }
-
 }
