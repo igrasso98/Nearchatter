@@ -5,6 +5,7 @@ import android.provider.Settings
 import ar.edu.itba.pam.nearchatter.models.Device
 import com.google.android.gms.nearby.Nearby
 import com.google.android.gms.nearby.connection.*
+import com.google.android.gms.nearby.connection.ConnectionsClient
 
 import com.google.android.gms.nearby.connection.DiscoveryOptions
 import java.lang.IllegalStateException
@@ -144,7 +145,7 @@ class NearbyService(val context: Context) : INearbyService {
 
                     connectionsClient.sendPayload(
                         endpointId,
-                        Payload.fromBytes("$INITIALIZATION_PREFIX${hwId.toByteArray(Charsets.UTF_8)}")
+                        Payload.fromBytes("$INITIALIZATION_PREFIX${hwId.toByteArray(Charsets.UTF_8)}".toByteArray())
                     )
                 }
             }
@@ -164,7 +165,7 @@ class NearbyService(val context: Context) : INearbyService {
                 if (decoded.startsWith(INITIALIZATION_PREFIX)) {
                     val data = decoded.substringAfter(INITIALIZATION_PREFIX)
 
-                    val usernameLength = decoded.substringBefore().toInt()
+                    val usernameLength = decoded.substringBefore(USERNAME_PREFIX).toInt()
                     val username = decoded.substring(usernameLength)
                     val hwid = decoded.substringAfter(INITIALIZATION_PREFIX)
                     onConnected.accept(endpointId, hwid, username)
