@@ -13,7 +13,6 @@ class NearchatterContainerLocator {
         if (container == null) {
             setComponent(ProductionNearchatterContainer(context));
         }
-
         return container!!
     }
 

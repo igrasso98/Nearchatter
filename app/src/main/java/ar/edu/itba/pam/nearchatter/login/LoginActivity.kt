@@ -3,6 +3,9 @@ package ar.edu.itba.pam.nearchatter.login
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import ar.edu.itba.pam.nearchatter.R
+import ar.edu.itba.pam.nearchatter.di.NearchatterContainer
+import ar.edu.itba.pam.nearchatter.di.NearchatterContainerLocator
+import ar.edu.itba.pam.nearchatter.login.repository.IUserRepository
 import ar.edu.itba.pam.nearchatter.login.repository.UserRepository
 import ar.edu.itba.pam.nearchatter.login.ui.LoginFormView
 
@@ -23,9 +26,9 @@ class LoginActivity : AppCompatActivity(), LoginView, OnUsernameConfirmListener 
         presenter = lastNonConfigurationInstance as LoginPresenter?
 
         if (presenter == null) {
-            //Init mappers and repositories
-            val userRepository = UserRepository()
-            presenter = LoginPresenter(this, userRepository)
+            val container: NearchatterContainer =
+                NearchatterContainerLocator().locateComponent(this)
+            presenter = container.getLoginPresenter(this)
         }
     }
 
