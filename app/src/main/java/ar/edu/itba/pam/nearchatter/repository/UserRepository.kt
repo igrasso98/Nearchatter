@@ -1,6 +1,6 @@
-package ar.edu.itba.pam.nearchatter.login.repository
+package ar.edu.itba.pam.nearchatter.repository
 
-import ar.edu.itba.pam.nearchatter.login.domain.User
+import ar.edu.itba.pam.nearchatter.domain.User
 
 class UserRepository : IUserRepository {
     override fun addUser(user: User) {

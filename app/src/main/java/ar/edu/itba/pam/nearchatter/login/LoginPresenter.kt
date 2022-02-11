@@ -1,7 +1,7 @@
 package ar.edu.itba.pam.nearchatter.login
 
-import ar.edu.itba.pam.nearchatter.login.domain.User
-import ar.edu.itba.pam.nearchatter.login.repository.UserRepository
+import ar.edu.itba.pam.nearchatter.domain.User
+import ar.edu.itba.pam.nearchatter.repository.UserRepository
 import java.lang.ref.WeakReference
 
 class LoginPresenter(view: LoginView, private val userRepository: UserRepository) {
