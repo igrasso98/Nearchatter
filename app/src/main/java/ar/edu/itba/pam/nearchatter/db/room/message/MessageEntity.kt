@@ -29,8 +29,8 @@ import ar.edu.itba.pam.nearchatter.db.room.user.UserEntity
 class MessageEntity(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "message_id") val messageId: Long,
-    @ColumnInfo(name = "sender_id") val senderId: Long,
-    @ColumnInfo(name = "receiver_id") val receiverId: Long,
+    @ColumnInfo(name = "sender_id") val senderId: String,
+    @ColumnInfo(name = "receiver_id") val receiverId: String,
     @ColumnInfo(name = "payload") val payload: String,
     @ColumnInfo(name = "send_at") val sendAt: String,
     @ColumnInfo(name = "read") val read: Boolean,

@@ -1,17 +1,25 @@
 package ar.edu.itba.pam.nearchatter.domain
 
 class Message(
-    senderId: Long,
-    receiverId: Long,
+    senderId: String,
+    receiverId: String,
     payload: String,
     sendAt: String,
     read: Boolean
 ) {
-    private var senderId: Long = senderId
-    private var receiverId: Long = receiverId
+    private var senderId: String = senderId
+    private var receiverId: String = receiverId
     private var payload: String = payload
     private var sendAt: String = sendAt
     private var read: Boolean = read
+
+    fun getReceiverId(): String {
+        return this.receiverId
+    }
+
+    fun getSenderId(): String {
+        return this.senderId
+    }
 
     fun getPayload(): String {
         return this.payload
@@ -21,7 +29,7 @@ class Message(
         return this.sendAt
     }
 
-    fun getisRead(): Boolean {
+    fun getIsRead(): Boolean {
         return read
     }
 

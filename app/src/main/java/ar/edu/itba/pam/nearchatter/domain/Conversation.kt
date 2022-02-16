@@ -24,7 +24,7 @@ class Conversation(user: User, lastMessage: Message?) {
 
     fun getLastMessageIsRead(): Boolean? {
         if (lastMessage != null) {
-            return this.lastMessage?.getisRead()
+            return this.lastMessage?.getIsRead()
         }
         return null
     }

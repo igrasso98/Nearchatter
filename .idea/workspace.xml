@@ -15,10 +15,17 @@
     <list default="true" id="6d87eb41-54bf-40da-a718-00a2b4f550a1" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.gradle/7.0.2/dependencies-accessors/dependencies-accessors.lock" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/7.0.2/dependencies-accessors/gc.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/7.0.2/executionHistory/executionHistory.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/7.0.2/executionHistory/executionHistory.lock" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/7.0.2/fileChanges/last-build.bin" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/7.0.2/fileHashes/fileHashes.bin" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/7.0.2/fileHashes/fileHashes.lock" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/7.0.2/fileHashes/resourceHashesCache.bin" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/7.0.2/gc.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/7.0.2/javaCompile/classAnalysis.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/7.0.2/javaCompile/jarAnalysis.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/7.0.2/javaCompile/javaCompile.lock" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/7.0.2/javaCompile/taskHistory.bin" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/cache.properties" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" />
@@ -26,16 +33,17 @@
       <change beforePath="$PROJECT_DIR$/.gradle/checksums/md5-checksums.bin" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/checksums/sha1-checksums.bin" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/vcs-1/gc.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__io_reactivex_rxjava2_rxandroid_2_0_0_aar.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__io_reactivex_rxjava2_rxjava_2_0_0.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/.Gradle__io_reactivex_rxjava2_rxandroid_2_0_0_aar.xml.icloud" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/.Gradle__io_reactivex_rxjava2_rxjava_2_0_0.xml.icloud" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/chats/ChatsActivity.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/chats/ChatsView.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/chats/OnChatSelectedListener.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/di/NearchatterContainer.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/di/NearchatterContainer.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/db/room/NearchatterDb.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/db/room/NearchatterDb.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/db/room/conversation/ConversationDao.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/db/room/conversation/ConversationDao.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/db/room/conversation/ConversationEntity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/db/room/conversation/ConversationEntity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/db/room/message/MessageEntity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/db/room/message/MessageEntity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/db/room/user/UserDao.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/db/room/user/UserDao.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/db/room/user/UserEntity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/db/room/user/UserEntity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/db/sharedPreferences/ISharedPreferencesStorage.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/db/sharedPreferences/ISharedPreferencesStorage.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/db/sharedPreferences/SharedPreferencesStorage.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/db/sharedPreferences/SharedPreferencesStorage.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/di/NearchatterModule.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/di/NearchatterModule.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/di/ProductionNearchatterContainer.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/di/ProductionNearchatterContainer.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/domain/Conversation.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/domain/Conversation.kt" afterDir="false" />
@@ -43,16 +51,13 @@
       <change beforePath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/domain/User.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/domain/User.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/login/LoginActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/login/LoginActivity.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/login/LoginPresenter.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/login/LoginPresenter.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/peers/PeerViewHolder.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/peers/PeerViewHolder.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/peers/PeersActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/peers/PeersActivity.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/peers/PeersAdapter.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/peers/PeersAdapter.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/peers/PeersPresenter.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/peers/PeersPresenter.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/peers/ui/PeersListView.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/peers/ui/PeersListView.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/peers/ui/PeersListViewImpl.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/peers/ui/PeersListViewImpl.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/peers/PeersView.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/peers/PeersView.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/repository/ConversationMapper.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/repository/ConversationMapper.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/repository/IUserRepository.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/repository/IUserRepository.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/repository/UserMapper.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/repository/UserMapper.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/repository/UserRepository.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/repository/UserRepository.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_peers_list.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_peers_list.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -296,5 +301,36 @@
       </map>
     </option>
     <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/login/LoginPresenter.kt</url>
+          <line>32</line>
+          <option name="timeStamp" value="4" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/login/LoginPresenter.kt</url>
+          <line>36</line>
+          <option name="timeStamp" value="5" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/login/LoginPresenter.kt</url>
+          <line>21</line>
+          <option name="timeStamp" value="6" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/login/LoginPresenter.kt</url>
+          <line>25</line>
+          <option name="timeStamp" value="7" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/login/LoginPresenter.kt</url>
+          <line>40</line>
+          <option name="timeStamp" value="8" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

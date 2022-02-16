@@ -5,9 +5,7 @@ import ar.edu.itba.pam.nearchatter.domain.User
 
 class UserMapper {
     fun toEntity(user: User): UserEntity {
-        var userEntity = UserEntity()
-        userEntity.username = user.getUsername()
-        return userEntity
+        return UserEntity(user.getUserId(), user.getUsername())
     }
 
     fun fromEntity(userEntity: UserEntity): User {

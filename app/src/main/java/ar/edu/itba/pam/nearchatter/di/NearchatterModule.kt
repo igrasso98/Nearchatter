@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import ar.edu.itba.pam.nearchatter.db.room.NearchatterDb
+import ar.edu.itba.pam.nearchatter.db.room.conversation.ConversationDao
 import ar.edu.itba.pam.nearchatter.db.room.user.UserDao
 import ar.edu.itba.pam.nearchatter.db.sharedPreferences.ISharedPreferencesStorage
 import ar.edu.itba.pam.nearchatter.db.sharedPreferences.SharedPreferencesStorage
@@ -11,6 +12,7 @@ import ar.edu.itba.pam.nearchatter.login.LoginPresenter
 import ar.edu.itba.pam.nearchatter.login.LoginView
 import ar.edu.itba.pam.nearchatter.peers.PeersPresenter
 import ar.edu.itba.pam.nearchatter.peers.PeersView
+import ar.edu.itba.pam.nearchatter.repository.ConversationMapper
 import ar.edu.itba.pam.nearchatter.repository.IUserRepository
 import ar.edu.itba.pam.nearchatter.repository.UserMapper
 import ar.edu.itba.pam.nearchatter.repository.UserRepository
@@ -28,22 +30,45 @@ class NearchatterModule(context: Context) {
 
     fun provideUserRepository(
         userDao: UserDao,
-        mapper: UserMapper
+        conversationDao: ConversationDao,
+        userMapper: UserMapper,
+        conversationMapper: ConversationMapper
     ): IUserRepository {
-        return UserRepository(userDao, mapper)
+        return UserRepository(userDao, conversationDao, userMapper, conversationMapper)
     }
 
     fun provideLoginPresenter(
         view: LoginView,
         userRepository: IUserRepository,
         sharedPreferencesStorage: ISharedPreferencesStorage,
-        schedulerProvider: SchedulerProvider
+        schedulerProvider: SchedulerProvider,
+        hwid: String
     ): LoginPresenter {
-        return LoginPresenter(view, userRepository, sharedPreferencesStorage, schedulerProvider)
+        return LoginPresenter(
+            view,
+            userRepository,
+            sharedPreferencesStorage,
+            schedulerProvider,
+            hwid
+        )
     }
 
-    fun providePeersPresenter(view: PeersView, userRepository: IUserRepository): PeersPresenter {
-        return PeersPresenter(view, userRepository)
+    fun providePeersPresenter(
+        view: PeersView,
+        userRepository: IUserRepository,
+        sharedPreferencesStorage: ISharedPreferencesStorage,
+        schedulerProvider: SchedulerProvider,
+        nearbyService: INearbyService,
+        hwid: String
+    ): PeersPresenter {
+        return PeersPresenter(
+            view,
+            userRepository,
+            sharedPreferencesStorage,
+            schedulerProvider,
+            nearbyService,
+            hwid
+        )
     }
 
     fun provideNearbyService(): INearbyService {
@@ -70,4 +95,13 @@ class NearchatterModule(context: Context) {
     fun provideSchedulerProvider(): SchedulerProvider {
         return AndroidSchedulerProvider()
     }
+
+    fun provideConversationMapper(): ConversationMapper {
+        return ConversationMapper()
+    }
+
+    fun provideConversationDao(): ConversationDao {
+        return NearchatterDb.getInstance(getApplicationContext())?.conversationDao()!!
+    }
+
 }

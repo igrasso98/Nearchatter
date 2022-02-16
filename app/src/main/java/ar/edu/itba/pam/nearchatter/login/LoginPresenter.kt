@@ -1,6 +1,7 @@
 package ar.edu.itba.pam.nearchatter.login
 
 import android.annotation.SuppressLint
+import android.provider.Settings
 import ar.edu.itba.pam.nearchatter.db.sharedPreferences.ISharedPreferencesStorage
 import ar.edu.itba.pam.nearchatter.domain.User
 import ar.edu.itba.pam.nearchatter.repository.IUserRepository
@@ -11,25 +12,26 @@ class LoginPresenter(
     view: LoginView,
     private val userRepository: IUserRepository,
     private val sharedPreferencesStorage: ISharedPreferencesStorage,
-    private val schedulerProvider: SchedulerProvider
+    private val schedulerProvider: SchedulerProvider,
+    private val hwid: String,
 ) {
 
     @SuppressLint("CheckResult")
     fun onUsernameConfirm(username: String) {
-        var userId: Long = sharedPreferencesStorage.getUserId()
-        if (userId == -1L) {
-            userRepository.addUser(User(userId, username))
+        if (sharedPreferencesStorage.isActive()) {
+            userRepository.addUser(User(hwid, username))
                 .subscribeOn(schedulerProvider.io()).observeOn(schedulerProvider.ui())
                 .subscribe(this::onUserAdded, this::onUserAddedFailed)
         } else {
-            userRepository.updateUsername(userId, username)
+            userRepository.updateUsername(hwid, username)
                 .subscribeOn(schedulerProvider.io()).observeOn(schedulerProvider.ui())
                 .subscribe(this::onSuccess, this::onUserAddedFailed)
         }
     }
 
-    private fun onUserAdded(userId: Long) {
-        sharedPreferencesStorage.setUserId(userId)
+    private fun onUserAdded(unit: Unit) {
+        sharedPreferencesStorage.deactivate()
+        println(unit)
     }
 
     private fun onSuccess(unit: Unit) {
@@ -37,5 +39,6 @@ class LoginPresenter(
     }
 
     private fun onUserAddedFailed(t: Throwable) {
+        println(t.toString())
     }
 }

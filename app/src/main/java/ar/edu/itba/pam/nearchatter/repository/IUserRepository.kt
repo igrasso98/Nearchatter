@@ -6,9 +6,11 @@ import io.reactivex.Flowable
 import io.reactivex.Single
 
 interface IUserRepository {
-    fun addUser(user: User): Single<Long>
+    fun addUser(user: User): Single<Unit>
 
-    fun updateUsername(userId: Long, username: String): Single<Unit>
+    fun getUsernameById(id: String): Single<String>
+
+    fun updateUsername(userId: String, username: String): Single<Unit>
 
     fun getUserConversations(): Flowable<List<Conversation>>
 }

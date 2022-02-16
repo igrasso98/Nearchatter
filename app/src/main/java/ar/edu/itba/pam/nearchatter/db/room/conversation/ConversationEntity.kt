@@ -12,7 +12,7 @@ import ar.edu.itba.pam.nearchatter.db.room.user.UserEntity
         ForeignKey(
             entity = UserEntity::class,
             parentColumns = ["user_id"],
-            childColumns = ["sender_id"],
+            childColumns = ["other_id"],
             onDelete = ForeignKey.RESTRICT,
             onUpdate = ForeignKey.CASCADE
         ),
@@ -28,6 +28,6 @@ import ar.edu.itba.pam.nearchatter.db.room.user.UserEntity
 class ConversationEntity(
     @PrimaryKey
     @ColumnInfo(name = "conversation_id") val conversationId: Long,
-    @ColumnInfo(name = "sender_id") val senderId: Long,
+    @ColumnInfo(name = "other_id") val otherId: String,
     @ColumnInfo(name = "last_message_id") val lastMessageId: Long?
 )

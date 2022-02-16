@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import ar.edu.itba.pam.nearchatter.R
 import ar.edu.itba.pam.nearchatter.di.NearchatterContainer
 import ar.edu.itba.pam.nearchatter.di.NearchatterContainerLocator
+import ar.edu.itba.pam.nearchatter.domain.Conversation
 import ar.edu.itba.pam.nearchatter.login.LoginView
 import ar.edu.itba.pam.nearchatter.login.OnUsernameConfirmListener
 import ar.edu.itba.pam.nearchatter.peers.ui.PeersListView
@@ -40,10 +41,6 @@ class PeersActivity : AppCompatActivity(), PeersView, OnPeerSelectedListener {
         peersListView.bind(adapter)
     }
 
-    override fun bind() {
-        peersListView.bind(adapter)
-    }
-
     override fun onStop() {
         super.onStop()
         presenter?.onViewDetached()
@@ -51,11 +48,16 @@ class PeersActivity : AppCompatActivity(), PeersView, OnPeerSelectedListener {
 
     override fun onStart() {
         super.onStart()
-        presenter?.ovViewAttached()
+        presenter?.onViewAttached()
     }
 
     override fun onSelected(deviceId: String) {
         TODO("Not yet implemented")
         println(deviceId)
     }
+
+    override fun bind(conversations: List<Conversation>) {
+        peersListView.bind(adapter)
+    }
+
 }

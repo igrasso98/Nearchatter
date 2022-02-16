@@ -2,6 +2,7 @@ package ar.edu.itba.pam.nearchatter.login
 
 import android.content.Intent
 import android.os.Bundle
+import android.provider.Settings
 import androidx.appcompat.app.AppCompatActivity
 import ar.edu.itba.pam.nearchatter.R
 import ar.edu.itba.pam.nearchatter.di.NearchatterContainer
