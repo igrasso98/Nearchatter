@@ -5,18 +5,15 @@ import android.provider.Settings
 import ar.edu.itba.pam.nearchatter.models.Device
 import com.google.android.gms.nearby.Nearby
 import com.google.android.gms.nearby.connection.*
-import com.google.android.gms.nearby.connection.ConnectionsClient
-
-import com.google.android.gms.nearby.connection.DiscoveryOptions
-import java.lang.IllegalStateException
 
 
 class NearbyService(val context: Context) : INearbyService {
     companion object {
         const val SERVICE_ID = "ar.edu.itba.pam.nearchatter"
         const val INITIALIZATION_PREFIX = "id"
-        const val USERNAME_PREFIX = "id"
         const val MESSAGE_PREFIX = "ms"
+        const val MAGIC_PREFIX = "nc"
+        val CHAR_REGEX = "[^0-9]".toRegex()
     }
 
     private val connectionsClient: ConnectionsClient = Nearby.getConnectionsClient(context)
@@ -63,7 +60,7 @@ class NearbyService(val context: Context) : INearbyService {
         val device = hwIdDevices[id] ?: return
         connectionsClient.sendPayload(
             device.getEndpointId(),
-            Payload.fromBytes("$MESSAGE_PREFIX$message".toByteArray(Charsets.UTF_8))
+            Payload.fromBytes((MAGIC_PREFIX + MESSAGE_PREFIX + message).toByteArray(Charsets.UTF_8))
         )
     }
 
@@ -116,6 +113,9 @@ class NearbyService(val context: Context) : INearbyService {
         private val onMessage: OnMessageCallback,
         private val onDisconnected: OnDisconnectCallback,
     ) {
+        // TODO: CHange to SHA256
+        private val hwId = Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
+
         inner class EndpointDiscovery : EndpointDiscoveryCallback()
         {
             override fun onEndpointFound(endpointId: String, info: DiscoveredEndpointInfo) {
@@ -128,6 +128,7 @@ class NearbyService(val context: Context) : INearbyService {
 
             override fun onEndpointLost(endpointId: String) {
                 println("On endpoint lost: $endpointId")
+                onDisconnected.accept(endpointId)
             }
         }
 
@@ -141,11 +142,15 @@ class NearbyService(val context: Context) : INearbyService {
                 println("On connection result: $endpointId, $resolution (${resolution.status})")
                 if (resolution.status.isSuccess) {
                     println("sending hwid to $endpointId")
-                    val hwId = Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
-
                     connectionsClient.sendPayload(
                         endpointId,
-                        Payload.fromBytes("$INITIALIZATION_PREFIX${hwId.toByteArray(Charsets.UTF_8)}".toByteArray())
+                        Payload.fromBytes((
+                             MAGIC_PREFIX +
+                             INITIALIZATION_PREFIX +
+                             username.length +
+                             username +
+                             hwId
+                        ).toByteArray(Charsets.UTF_8))
                     )
                 }
             }
@@ -159,18 +164,34 @@ class NearbyService(val context: Context) : INearbyService {
         inner class CustomPayloadCallback : PayloadCallback()
         {
             override fun onPayloadReceived(endpointId: String, payload: Payload) {
-                val decoded = String(payload.asBytes()!!, Charsets.UTF_8)
+                var decoded = String(payload.asBytes()!!, Charsets.UTF_8)
+
+                // Prevent unknown connections
+                if (!decoded.startsWith(MAGIC_PREFIX)) {
+                    println("invalid message from $endpointId: $decoded")
+                    return
+                }
+
+                decoded = decoded.substringAfter(MAGIC_PREFIX)
+
                 println("received from $endpointId: $decoded")
-
                 if (decoded.startsWith(INITIALIZATION_PREFIX)) {
-                    val data = decoded.substringAfter(INITIALIZATION_PREFIX)
+                    decoded = decoded.substringAfter(INITIALIZATION_PREFIX)
 
-                    val usernameLength = decoded.substringBefore(USERNAME_PREFIX).toInt()
-                    val username = decoded.substring(usernameLength)
-                    val hwid = decoded.substringAfter(INITIALIZATION_PREFIX)
-                    onConnected.accept(endpointId, hwid, username)
-                } else {
+                    val usernameIndex = CHAR_REGEX.find(decoded)!!.range.first
+                    val usernameLength = decoded.substring(0, usernameIndex).toInt()
+                    val username = decoded.substring(usernameIndex, usernameLength)
+
+                    decoded = decoded.substringAfter(username)
+
+                    val otherHwId = decoded
+
+                    println("received from $endpointId: username = $username, hwid = $otherHwId")
+                    onConnected.accept(endpointId, otherHwId, username)
+                } else if (decoded.startsWith(MESSAGE_PREFIX)) {
                     val message = decoded.substringAfter(MESSAGE_PREFIX)
+
+                    println("received from $endpointId: message = $message")
                     onMessage.accept(endpointId, message)
                 }
             }
@@ -192,3 +213,5 @@ fun interface OnMessageCallback {
 fun interface OnDisconnectCallback {
     fun accept(endpointId: String)
 }
+
+fun ByteArray.toHex(): String = joinToString(separator = "") { eachByte -> "%02x".format(eachByte) }
