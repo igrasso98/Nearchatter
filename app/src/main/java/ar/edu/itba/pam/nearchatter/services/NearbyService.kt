@@ -2,6 +2,7 @@ package ar.edu.itba.pam.nearchatter.services
 
 import android.content.Context
 import android.provider.Settings
+import ar.edu.itba.pam.nearchatter.domain.Message
 import ar.edu.itba.pam.nearchatter.models.Device
 import com.google.android.gms.nearby.Nearby
 import com.google.android.gms.nearby.connection.*
@@ -23,8 +24,10 @@ class NearbyService(val context: Context) : INearbyService {
     private val hwIdDevices: MutableMap<String, Device> = HashMap()
     private var acceptsConnections = false
     private var stopping = false
+    private var newDeviceCallback: NewDeviceCallback? = null
+    private var messageCallback: MessageCallback? = null
 
-    override fun openConnections(username: String, onNewDevice: NewDeviceCallback) {
+    override fun openConnections(username: String) {
         if (stopping) {
             throw ConcurrentModificationException()
         }
@@ -52,12 +55,12 @@ class NearbyService(val context: Context) : INearbyService {
         startDiscovery(helper.EndpointDiscovery())
     }
 
-    override fun sendMessage(id: String, message: String) {
+    override fun sendMessage(message: Message) {
         if (!acceptsConnections) {
             throw IllegalStateException()
         }
 
-        val device = hwIdDevices[id] ?: return
+        val device = hwIdDevices[message.getPayload()] ?: return
         connectionsClient.sendPayload(
             device.getEndpointId(),
             Payload.fromBytes((MAGIC_PREFIX + MESSAGE_PREFIX + message).toByteArray(Charsets.UTF_8))
