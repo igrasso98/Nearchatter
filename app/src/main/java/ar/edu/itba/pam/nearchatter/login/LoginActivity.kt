@@ -1,10 +1,14 @@
 package ar.edu.itba.pam.nearchatter.login
 
+import android.content.Intent
 import android.os.Bundle
+import android.provider.Settings
 import androidx.appcompat.app.AppCompatActivity
 import ar.edu.itba.pam.nearchatter.R
-import ar.edu.itba.pam.nearchatter.login.repository.UserRepository
+import ar.edu.itba.pam.nearchatter.di.NearchatterContainer
+import ar.edu.itba.pam.nearchatter.di.NearchatterContainerLocator
 import ar.edu.itba.pam.nearchatter.login.ui.LoginFormView
+import ar.edu.itba.pam.nearchatter.peers.PeersActivity
 
 
 class LoginActivity : AppCompatActivity(), LoginView, OnUsernameConfirmListener {
@@ -16,20 +20,20 @@ class LoginActivity : AppCompatActivity(), LoginView, OnUsernameConfirmListener 
         setContentView(R.layout.activity_login)
         createPresenter()
 
-        setUpView()
+        setupView()
     }
 
     private fun createPresenter() {
         presenter = lastNonConfigurationInstance as LoginPresenter?
 
         if (presenter == null) {
-            //Init mappers and repositories
-            val userRepository = UserRepository()
-            presenter = LoginPresenter(this, userRepository)
+            val container: NearchatterContainer =
+                NearchatterContainerLocator().locateComponent(this)
+            presenter = container.getLoginPresenter(this)
         }
     }
 
-    private fun setUpView() {
+    private fun setupView() {
         loginFormView = findViewById(R.id.login_form)
         loginFormView.setOnUsernameConfirmListener(this)
         loginFormView.bind()
@@ -40,9 +44,9 @@ class LoginActivity : AppCompatActivity(), LoginView, OnUsernameConfirmListener 
     }
 
     override fun onConfirm(username: String) {
-//        val intent = Intent(this, LoginActivity::class.java)
-//        intent.putExtra("username", username)
-//        startActivity(intent)
-        println(username)
+        presenter?.onUsernameConfirm(username)
+        val intent = Intent(this, PeersActivity::class.java)
+        intent.putExtra("username", username)
+        startActivity(intent)
     }
 }

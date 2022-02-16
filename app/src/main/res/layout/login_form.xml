@@ -34,10 +34,11 @@
         android:id="@+id/login_form_username_input"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="16dp"
         android:background="@drawable/rounded_border_edittext"
+        android:inputType="text"
+        android:maxLines="1"
         android:hint="Username"
         android:padding="10dp"
         android:textColor="@color/blue"
