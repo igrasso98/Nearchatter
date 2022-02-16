@@ -3,6 +3,8 @@ package ar.edu.itba.pam.nearchatter.peers
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import ar.edu.itba.pam.nearchatter.R
+import ar.edu.itba.pam.nearchatter.di.NearchatterContainer
+import ar.edu.itba.pam.nearchatter.di.NearchatterContainerLocator
 import ar.edu.itba.pam.nearchatter.login.LoginView
 import ar.edu.itba.pam.nearchatter.login.OnUsernameConfirmListener
 import ar.edu.itba.pam.nearchatter.peers.ui.PeersListView
@@ -25,9 +27,9 @@ class PeersActivity : AppCompatActivity(), PeersView, OnPeerSelectedListener {
         presenter = lastNonConfigurationInstance as PeersPresenter?
 
         if (presenter == null) {
-            //Init mappers and repositories
-            val userRepository = UserRepository()
-            presenter = PeersPresenter(this, userRepository)
+            val container: NearchatterContainer =
+                NearchatterContainerLocator().locateComponent(this)
+            presenter = container.getPeersPresenter(this)
         }
     }
 

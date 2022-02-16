@@ -7,8 +7,8 @@
     android:background="@color/lemon_green"
     android:padding="16dp">
 
-    <ar.edu.itba.pam.nearchatter.login.ui.LoginFormViewImpl
-        android:id="@+id/login_form"
+    <ar.edu.itba.pam.nearchatter.peers.ui.PeersListViewImpl
+        android:id="@+id/peers_list_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical" />

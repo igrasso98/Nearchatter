@@ -5,44 +5,61 @@
       <config />
     </shared>
   </component>
+  <component name="AndroidLogFilters">
+    <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="Show only selected application" />
+  </component>
   <component name="AutoImportSettings">
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6d87eb41-54bf-40da-a718-00a2b4f550a1" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__io_reactivex_rxjava2_rxandroid_2_0_0_aar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__io_reactivex_rxjava2_rxjava_2_0_0.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/domain/Conversation.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/domain/Message.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/domain/User.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/peers/OnPeerSelectedListener.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/peers/PeerViewHolder.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/peers/PeersActivity.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/peers/PeersAdapter.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/peers/PeersPresenter.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/peers/PeersView.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/peers/ui/PeersListView.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/peers/ui/PeersListViewImpl.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/repository/IUserRepository.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_peers_list.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/7.0.2/dependencies-accessors/dependencies-accessors.lock" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/7.0.2/dependencies-accessors/gc.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/7.0.2/fileChanges/last-build.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/7.0.2/fileHashes/fileHashes.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/7.0.2/fileHashes/fileHashes.lock" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/7.0.2/gc.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/cache.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/checksums/checksums.lock" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/checksums/md5-checksums.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/checksums/sha1-checksums.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/vcs-1/gc.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__io_reactivex_rxjava2_rxandroid_2_0_0_aar.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__io_reactivex_rxjava2_rxjava_2_0_0.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules/app/Nearchatter.app.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules/app/Nearchatter.app.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/FirstFragment.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/MainActivity.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/SecondFragment.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/chats/ChatsActivity.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/chats/ChatsView.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/chats/OnChatSelectedListener.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/di/NearchatterContainer.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/di/NearchatterContainer.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/di/NearchatterModule.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/di/NearchatterModule.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/di/ProductionNearchatterContainer.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/di/ProductionNearchatterContainer.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/domain/Conversation.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/domain/Conversation.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/domain/Message.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/domain/Message.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/domain/User.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/domain/User.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/login/LoginActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/login/LoginActivity.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/login/LoginPresenter.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/login/LoginPresenter.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/login/domain/User.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/login/repository/IUserRepository.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/login/repository/UserRepository.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/repository/UserRepository.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/peers/PeerViewHolder.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/peers/PeerViewHolder.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/peers/PeersActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/peers/PeersActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/peers/PeersAdapter.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/peers/PeersAdapter.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/peers/PeersPresenter.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/peers/PeersPresenter.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/peers/ui/PeersListView.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/peers/ui/PeersListView.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/peers/ui/PeersListViewImpl.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/peers/ui/PeersListViewImpl.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/repository/IUserRepository.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/repository/IUserRepository.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/repository/UserRepository.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/repository/UserRepository.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_peers_list.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_peers_list.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[/Users/igrasso/.android/avd/Pixel_3a_API_32_arm64-v8a.avd]" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[9B081FFAZ00DRF]" />
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
@@ -71,6 +88,7 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
+        <option value="layoutResourceFile" />
         <option value="Kotlin Interface" />
         <option value="Kotlin Class" />
       </list>
@@ -97,15 +115,22 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="RunOnceActivity.cidr.known.project.marker" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="android-custom-view/Users/igrasso/.gradle/caches/modules-2/files-2.1/androidx.recyclerview/recyclerview/1.1.0/f2bdf79e1977939817f54a9d3e2f6bc52b63bdd0/recyclerview-1.1.0-sources.jar!/androidx/recyclerview/widget/RecyclerView.java_SELECTED" value="RecyclerView" />
     <property name="android-custom-view/Users/igrasso/Desktop/ITBA/PAM/Nearchatter/app/src/main/java/ar/edu/itba/pam/nearchatter/login/ui/LoginFormViewImpl.kt_LoginFormViewImpl_DIMENSIONS" value="1080&#10;1920" />
     <property name="android-custom-view/Users/igrasso/Desktop/ITBA/PAM/Nearchatter/app/src/main/java/ar/edu/itba/pam/nearchatter/login/ui/LoginFormViewImpl.kt_SELECTED" value="LoginFormViewImpl" />
+    <property name="android-custom-view/Users/igrasso/Desktop/ITBA/PAM/Nearchatter/app/src/main/java/ar/edu/itba/pam/nearchatter/peers/ui/PeersListViewImpl.kt_SELECTED" value="PeersListViewImpl" />
     <property name="cidr.known.project.marker" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="memory.settings.postsync.last.time.stamp" value="1644938739688" />
   </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/app/src/main/java/ar/edu/itba/pam/nearchatter/db/room" />
+    </key>
+  </component>
   <component name="RunManager" selected="Android App.PAM.Nearchatter.app">
     <configuration name="PAM.Nearchatter.app" type="AndroidRunConfigurationType" factoryName="Android App" activateToolWindowBeforeRun="false">
-      <module name="PAM.Nearchatter.app" />
+      <module name="Nearchatter.app" />
       <option name="DEPLOY" value="true" />
       <option name="DEPLOY_APK_FROM_BUNDLE" value="false" />
       <option name="DEPLOY_AS_INSTANT" value="false" />

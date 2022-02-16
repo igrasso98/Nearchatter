@@ -6,8 +6,6 @@ import androidx.appcompat.app.AppCompatActivity
 import ar.edu.itba.pam.nearchatter.R
 import ar.edu.itba.pam.nearchatter.di.NearchatterContainer
 import ar.edu.itba.pam.nearchatter.di.NearchatterContainerLocator
-import ar.edu.itba.pam.nearchatter.repository.IUserRepository
-import ar.edu.itba.pam.nearchatter.repository.UserRepository
 import ar.edu.itba.pam.nearchatter.login.ui.LoginFormView
 import ar.edu.itba.pam.nearchatter.peers.PeersActivity
 
@@ -45,9 +43,9 @@ class LoginActivity : AppCompatActivity(), LoginView, OnUsernameConfirmListener 
     }
 
     override fun onConfirm(username: String) {
+        presenter?.onUsernameConfirm(username)
         val intent = Intent(this, PeersActivity::class.java)
         intent.putExtra("username", username)
         startActivity(intent)
-        println(username)
     }
 }

@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import ar.edu.itba.pam.nearchatter.R
 import ar.edu.itba.pam.nearchatter.login.OnUsernameConfirmListener
 import ar.edu.itba.pam.nearchatter.peers.OnPeerSelectedListener
+import ar.edu.itba.pam.nearchatter.peers.PeerViewHolder
 import ar.edu.itba.pam.nearchatter.peers.PeersAdapter
 
 class PeersListViewImpl @JvmOverloads constructor(

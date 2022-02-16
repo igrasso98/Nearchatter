@@ -5,18 +5,19 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import ar.edu.itba.pam.nearchatter.R
+import ar.edu.itba.pam.nearchatter.domain.Conversation
 import ar.edu.itba.pam.nearchatter.domain.User
 import ar.edu.itba.pam.nearchatter.login.OnUsernameConfirmListener
 
 class PeersAdapter : RecyclerView.Adapter<PeerViewHolder>() {
     private var onPeerSelectedListener: OnPeerSelectedListener? = null
-    private var dataset: MutableList<User> = ArrayList()
+    private var peersList: MutableList<Conversation> = ArrayList()
 
 
-    fun setDataset(newDataset: List<User>?) {
-        dataset.clear()
+    fun setDataset(newDataset: List<Conversation>?) {
+        peersList.clear()
         if (newDataset != null) {
-            dataset.addAll(newDataset)
+            peersList.addAll(newDataset)
         }
         notifyDataSetChanged()
     }
@@ -33,12 +34,12 @@ class PeersAdapter : RecyclerView.Adapter<PeerViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: PeerViewHolder, position: Int) {
-        holder.bind(dataset[position])
+        holder.bind(peersList[position])
         holder.setOnPeerSelectedListener(onPeerSelectedListener)
     }
 
     override fun getItemCount(): Int {
-        return dataset.size
+        return peersList.size
     }
 
 }
