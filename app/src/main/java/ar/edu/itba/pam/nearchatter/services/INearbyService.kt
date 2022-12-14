@@ -15,9 +15,9 @@ interface INearbyService {
 
     fun closeConnections()
 
-    fun setOnConnectCallback(callback: NewDeviceCallback)
-
-    fun setOnMessageCallback(callback: MessageCallback)
+//    fun setOnConnectCallback(callback: NewDeviceCallback)
+//
+//    fun setOnMessageCallback(callback: MessageCallback)
 }
 
 fun interface NewDeviceCallback {

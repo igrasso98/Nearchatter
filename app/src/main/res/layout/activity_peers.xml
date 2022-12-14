@@ -3,14 +3,21 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/lemon_green"
-    android:padding="16dp">
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/visible_username"
+        style="@style/TextAppearance.AppCompat.Title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/light_grey"
+        android:gravity="center"
+        android:paddingVertical="8dp"
+        android:textColor="@color/light_green" />
 
     <ar.edu.itba.pam.nearchatter.peers.ui.PeersListViewImpl
-        android:id="@+id/peers_list_view"
+        android:id="@+id/peers_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical" />
-
 </LinearLayout>
