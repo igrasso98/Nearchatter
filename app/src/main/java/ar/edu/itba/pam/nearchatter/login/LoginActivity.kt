@@ -13,6 +13,7 @@ import ar.edu.itba.pam.nearchatter.di.NearchatterContainer
 import ar.edu.itba.pam.nearchatter.di.NearchatterContainerLocator
 import ar.edu.itba.pam.nearchatter.login.ui.LoginFormView
 import ar.edu.itba.pam.nearchatter.peers.PeersActivity
+import ar.edu.itba.pam.nearchatter.peers.PeersActivityV2
 
 
 class LoginActivity : AppCompatActivity(), LoginView, OnUsernameConfirmListener {
@@ -63,7 +64,7 @@ class LoginActivity : AppCompatActivity(), LoginView, OnUsernameConfirmListener 
 
     override fun onConfirm(username: String) {
         presenter?.onUsernameConfirm(username)
-        val intent = Intent(this, PeersActivity::class.java)
+        val intent = Intent(this, PeersActivityV2::class.java)
         intent.putExtra("username", username)
         startActivity(intent)
     }
