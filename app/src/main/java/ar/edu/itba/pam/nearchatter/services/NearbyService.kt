@@ -2,6 +2,7 @@ package ar.edu.itba.pam.nearchatter.services
 
 import android.content.Context
 import android.provider.Settings
+import android.widget.Toast
 import ar.edu.itba.pam.nearchatter.domain.Message
 import ar.edu.itba.pam.nearchatter.models.Device
 import com.google.android.gms.nearby.Nearby
@@ -18,8 +19,10 @@ class NearbyService(val context: Context) : INearbyService {
     }
 
     private val connectionsClient: ConnectionsClient = Nearby.getConnectionsClient(context)
+
     // TODO: Move to repo
     private val endpointIdDevices: MutableMap<String, Device> = HashMap()
+
     // TODO: Move to repo
     private val hwIdDevices: MutableMap<String, Device> = HashMap()
     private var acceptsConnections = false
@@ -83,31 +86,30 @@ class NearbyService(val context: Context) : INearbyService {
         username: String,
         lifecycle: ConnectionLifecycleCallback
     ) {
-        val advertisingOptions: AdvertisingOptions = AdvertisingOptions.Builder().setStrategy(Strategy.P2P_CLUSTER).build()
+        val advertisingOptions: AdvertisingOptions =
+            AdvertisingOptions.Builder().setStrategy(Strategy.P2P_STAR).build()
         connectionsClient
             .startAdvertising(username, SERVICE_ID, lifecycle, advertisingOptions)
-            .addOnSuccessListener { }
-            .addOnFailureListener { }
+            .addOnSuccessListener { println("Accepting User") }
+            .addOnFailureListener { throw it }
     }
 
     private fun startDiscovery(
         discovery: EndpointDiscoveryCallback
     ) {
-        val discoveryOptions = DiscoveryOptions.Builder().setStrategy(Strategy.P2P_CLUSTER).build()
+        val discoveryOptions = DiscoveryOptions.Builder().setStrategy(Strategy.P2P_STAR).build()
         connectionsClient
             .startDiscovery(SERVICE_ID, discovery, discoveryOptions)
-            .addOnSuccessListener { }
-            .addOnFailureListener { }
+            .addOnSuccessListener { println("Accepting User") }
+            .addOnFailureListener { throw it }
     }
 
     private fun stopAdvertising() {
-        connectionsClient
-            .stopAdvertising()
+        connectionsClient.stopAdvertising()
     }
 
     private fun stopDiscovery() {
-        connectionsClient
-            .stopDiscovery()
+        connectionsClient.stopDiscovery()
     }
 
     inner class ConnectionHelper(
@@ -117,10 +119,11 @@ class NearbyService(val context: Context) : INearbyService {
         private val onDisconnected: OnDisconnectCallback,
     ) {
         // TODO: CHange to SHA256
-        private val hwId = Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
+        private val hwId =
+            Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
 
-        inner class EndpointDiscovery : EndpointDiscoveryCallback()
-        {
+        // Callbacks for finding other devices
+        inner class EndpointDiscovery : EndpointDiscoveryCallback() {
             override fun onEndpointFound(endpointId: String, info: DiscoveredEndpointInfo) {
                 println("On endpoint Found: $endpointId")
                 connectionsClient
@@ -135,10 +138,10 @@ class NearbyService(val context: Context) : INearbyService {
             }
         }
 
+        // Callbacks for connections to other devices
         inner class ConnectionLifecycle : ConnectionLifecycleCallback() {
             override fun onConnectionInitiated(endpointId: String, info: ConnectionInfo) {
-                connectionsClient
-                    .acceptConnection(endpointId, CustomPayloadCallback())
+                connectionsClient.acceptConnection(endpointId, CustomPayloadCallback())
             }
 
             override fun onConnectionResult(endpointId: String, resolution: ConnectionResolution) {
@@ -147,13 +150,15 @@ class NearbyService(val context: Context) : INearbyService {
                     println("sending hwid to $endpointId")
                     connectionsClient.sendPayload(
                         endpointId,
-                        Payload.fromBytes((
-                             MAGIC_PREFIX +
-                             INITIALIZATION_PREFIX +
-                             username.length +
-                             username +
-                             hwId
-                        ).toByteArray(Charsets.UTF_8))
+                        Payload.fromBytes(
+                            (
+                                    MAGIC_PREFIX +
+                                            INITIALIZATION_PREFIX +
+                                            username.length +
+                                            username +
+                                            hwId
+                                    ).toByteArray(Charsets.UTF_8)
+                        )
                     )
                 }
             }
@@ -164,8 +169,8 @@ class NearbyService(val context: Context) : INearbyService {
             }
         }
 
-        inner class CustomPayloadCallback : PayloadCallback()
-        {
+        // Callbacks for receiving payloads
+        inner class CustomPayloadCallback : PayloadCallback() {
             override fun onPayloadReceived(endpointId: String, payload: Payload) {
                 var decoded = String(payload.asBytes()!!, Charsets.UTF_8)
 
@@ -177,7 +182,7 @@ class NearbyService(val context: Context) : INearbyService {
 
                 decoded = decoded.substringAfter(MAGIC_PREFIX)
 
-                println("received from $endpointId: $decoded")
+                println("received fr om $endpointId: $decoded")
                 if (decoded.startsWith(INITIALIZATION_PREFIX)) {
                     decoded = decoded.substringAfter(INITIALIZATION_PREFIX)
 

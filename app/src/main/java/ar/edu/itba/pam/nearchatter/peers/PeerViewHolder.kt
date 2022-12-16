@@ -11,10 +11,12 @@ class PeerViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private var onPeerSelectedListener: OnPeerSelectedListener? = null
 
     fun bind(model: Conversation) {
-        val productName = itemView.findViewById<TextView>(R.id.conversation_username)
-        productName.text = model.getUsername()
-        val productDescription = itemView.findViewById<TextView>(R.id.conversation_payload)
-        productDescription.text = model.getLastMessagePayload()
+        val username = itemView.findViewById<TextView>(R.id.conversation_username)
+        username.text = model.getUsername()
+        val lastMessage = itemView.findViewById<TextView>(R.id.conversation_last_message)
+        lastMessage.text = model.getLastMessagePayload()
+        val sendAt = itemView.findViewById<TextView>(R.id.conversation_send_at)
+        sendAt.text = model.getLastMessageSendAt()
 //        val addProductButton = itemView.findViewById<ImageView>(R.id.shop_product)
 //        addProductButton.setOnClickListener { v: View? ->
 //            if (listener != null) {

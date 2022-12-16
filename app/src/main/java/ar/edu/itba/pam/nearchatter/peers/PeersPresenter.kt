@@ -4,12 +4,9 @@ import android.annotation.SuppressLint
 import ar.edu.itba.pam.nearchatter.db.sharedPreferences.ISharedPreferencesStorage
 import ar.edu.itba.pam.nearchatter.domain.Conversation
 import ar.edu.itba.pam.nearchatter.domain.User
-import ar.edu.itba.pam.nearchatter.login.LoginView
 import ar.edu.itba.pam.nearchatter.repository.IUserRepository
 import ar.edu.itba.pam.nearchatter.services.INearbyService
-import ar.edu.itba.pam.nearchatter.services.NearbyService
 import ar.edu.itba.pam.nearchatter.utils.schedulers.SchedulerProvider
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import java.lang.ref.WeakReference
@@ -42,7 +39,7 @@ class PeersPresenter(
     }
 
     fun onUsernameLoaded(username: String) {
-        nearbyService.openConnections(username, {})
+        nearbyService.openConnections(username)
         conversationsDisposable =
             userRepository.getUserConversations().subscribeOn(Schedulers.computation())
                 .subscribeOn(schedulerProvider.io()).observeOn(schedulerProvider.ui())
@@ -50,7 +47,7 @@ class PeersPresenter(
     }
 
     fun onConversationsLoaded(conversations: List<Conversation>) {
-        if(view.get() != null) {
+        if (view.get() != null) {
             view.get()!!.bind(conversations)
         }
     }
