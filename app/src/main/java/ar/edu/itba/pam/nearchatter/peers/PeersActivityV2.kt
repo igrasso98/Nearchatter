@@ -10,6 +10,7 @@ import ar.edu.itba.pam.nearchatter.databinding.ActivityPeersV2Binding
 import ar.edu.itba.pam.nearchatter.domain.Conversation
 import ar.edu.itba.pam.nearchatter.domain.Message
 import ar.edu.itba.pam.nearchatter.domain.User
+import java.time.LocalDate
 
 class PeersActivityV2 : AppCompatActivity(), OnPeerSelectedListener {
     private lateinit var binding: ActivityPeersV2Binding
@@ -57,11 +58,11 @@ class PeersActivityV2 : AppCompatActivity(), OnPeerSelectedListener {
     val mockedConversations = listOf<Conversation>(
         Conversation(
             User("ksjdfnksjdnf", "Delfi Varas"),
-            Message("skjdfnksjdfn", "kdjsfnskdjfn", "Hola, como andas?", "Now", true)
+            Message("skjdfnksjdfn", "kdjsfnskdjfn", "Hola, como andas?", LocalDate.now())
         ),
         Conversation(
             User("ksjdfnksjdnf", "Nico Britos"),
-            Message("skjdfnksjdfn", "kdjsfnskdjfn", "llegamos con PAM?", "Yesterday", true)
+            Message("skjdfnksjdfn", "kdjsfnskdjfn", "llegamos con PAM?", LocalDate.now().minusDays(1))
         ),
         Conversation(
             User("ksjdfnksjdnf", "Santi Grasso"),
@@ -69,8 +70,7 @@ class PeersActivityV2 : AppCompatActivity(), OnPeerSelectedListener {
                 "skjdfnksjdfn",
                 "kdjsfnskdjfn",
                 "Esto es una descripcion un poco mas larga para ver que pasa",
-                "10/04/2020",
-                true
+                LocalDate.now().minusMonths(1),
             )
         ),
     )

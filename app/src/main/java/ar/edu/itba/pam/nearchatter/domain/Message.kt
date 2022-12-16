@@ -1,18 +1,13 @@
 package ar.edu.itba.pam.nearchatter.domain
 
-class Message(
-    senderId: String,
-    receiverId: String,
-    payload: String,
-    sendAt: String,
-    read: Boolean
-) {
-    private var senderId: String = senderId
-    private var receiverId: String = receiverId
-    private var payload: String = payload
-    private var sendAt: String = sendAt
-    private var read: Boolean = read
+import java.time.LocalDate
 
+class Message(
+    private var senderId: String,
+    private var receiverId: String,
+    private var payload: String,
+    private var sendAt: LocalDate
+) {
     fun getReceiverId(): String {
         return this.receiverId
     }
@@ -25,12 +20,7 @@ class Message(
         return this.payload
     }
 
-    fun getSendAt(): String {
+    fun getSendAt(): LocalDate {
         return this.sendAt
     }
-
-    fun getIsRead(): Boolean {
-        return read
-    }
-
 }

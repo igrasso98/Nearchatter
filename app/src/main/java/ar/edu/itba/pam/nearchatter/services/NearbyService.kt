@@ -2,11 +2,12 @@ package ar.edu.itba.pam.nearchatter.services
 
 import android.content.Context
 import android.provider.Settings
-import android.widget.Toast
 import ar.edu.itba.pam.nearchatter.domain.Message
 import ar.edu.itba.pam.nearchatter.models.Device
 import com.google.android.gms.nearby.Nearby
 import com.google.android.gms.nearby.connection.*
+import java.time.LocalDate
+import java.util.function.Consumer
 
 
 class NearbyService(val context: Context) : INearbyService {
@@ -18,17 +19,32 @@ class NearbyService(val context: Context) : INearbyService {
         val CHAR_REGEX = "[^0-9]".toRegex()
     }
 
+    private val hwId = Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
+
     private val connectionsClient: ConnectionsClient = Nearby.getConnectionsClient(context)
 
     // TODO: Move to repo
+    private val endpointIdDevicesConnecting: MutableSet<String> = HashSet()
     private val endpointIdDevices: MutableMap<String, Device> = HashMap()
-
-    // TODO: Move to repo
     private val hwIdDevices: MutableMap<String, Device> = HashMap()
+
     private var acceptsConnections = false
     private var stopping = false
-    private var newDeviceCallback: NewDeviceCallback? = null
-    private var messageCallback: MessageCallback? = null
+    private var disconnectedDeviceCallback: Consumer<Device>? = null
+    private var connectedDeviceCallback: Consumer<Device>? = null
+    private var messageCallback: Consumer<Message>? = null
+
+    override fun setOnConnectCallback(callback: Consumer<Device>) {
+        this.disconnectedDeviceCallback = callback
+    }
+
+    override fun setOnDisconnectCallback(callback: Consumer<Device>) {
+        this.connectedDeviceCallback = callback
+    }
+
+    override fun setOnMessageCallback(callback: Consumer<Message>) {
+        this.messageCallback = callback
+    }
 
     override fun openConnections(username: String) {
         if (stopping) {
@@ -43,17 +59,37 @@ class NearbyService(val context: Context) : INearbyService {
                 val device = Device(id, endpointId, username)
                 hwIdDevices[id] = device
                 endpointIdDevices[endpointId] = device
+                endpointIdDevicesConnecting.remove(endpointId)
+                connectedDeviceCallback?.accept(Device(id, endpointId, username))
             },
-            { endpointId, message -> println("Message: $message from $endpointId") },
+            { endpointId, message ->
+                println("Message: $message from $endpointId")
+
+                val device = endpointIdDevices[endpointId]
+                if (device == null) {
+                    println("Device with endpoint $endpointId is not found on local map")
+                    return@ConnectionHelper
+                }
+
+                messageCallback?.accept(Message(
+                    device.getId(),
+                    hwId,
+                    message,
+                    LocalDate.now()
+                ))
+            },
             { endpointId ->
                 println("Disconnected: $endpointId")
+                endpointIdDevicesConnecting.remove(endpointId)
                 val device = endpointIdDevices[endpointId]
                 if (device != null) {
                     hwIdDevices.remove(device.getId())
                     endpointIdDevices.remove(endpointId)
+                    disconnectedDeviceCallback?.accept(device)
                 }
             }
         )
+
         startAdvertising(username, helper.ConnectionLifecycle())
         startDiscovery(helper.EndpointDiscovery())
     }
@@ -63,7 +99,7 @@ class NearbyService(val context: Context) : INearbyService {
             throw IllegalStateException()
         }
 
-        val device = hwIdDevices[message.getPayload()] ?: return
+        val device = hwIdDevices[message.getReceiverId()] ?: return
         connectionsClient.sendPayload(
             device.getEndpointId(),
             Payload.fromBytes((MAGIC_PREFIX + MESSAGE_PREFIX + message).toByteArray(Charsets.UTF_8))
@@ -76,6 +112,8 @@ class NearbyService(val context: Context) : INearbyService {
 
         stopDiscovery()
         stopAdvertising()
+
+        endpointIdDevicesConnecting.clear()
         endpointIdDevices.clear()
         hwIdDevices.clear()
 
@@ -86,8 +124,11 @@ class NearbyService(val context: Context) : INearbyService {
         username: String,
         lifecycle: ConnectionLifecycleCallback
     ) {
-        val advertisingOptions: AdvertisingOptions =
-            AdvertisingOptions.Builder().setStrategy(Strategy.P2P_STAR).build()
+        val advertisingOptions: AdvertisingOptions = AdvertisingOptions.Builder()
+                .setStrategy(Strategy.P2P_STAR)
+                .setDisruptiveUpgrade(false)
+                .build()
+
         connectionsClient
             .startAdvertising(username, SERVICE_ID, lifecycle, advertisingOptions)
             .addOnSuccessListener { println("Accepting User") }
@@ -118,14 +159,17 @@ class NearbyService(val context: Context) : INearbyService {
         private val onMessage: OnMessageCallback,
         private val onDisconnected: OnDisconnectCallback,
     ) {
-        // TODO: CHange to SHA256
-        private val hwId =
-            Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
-
         // Callbacks for finding other devices
         inner class EndpointDiscovery : EndpointDiscoveryCallback() {
             override fun onEndpointFound(endpointId: String, info: DiscoveredEndpointInfo) {
+                if (endpointIdDevices.contains(endpointId) || endpointIdDevicesConnecting.contains(endpointId)) {
+                    println("On endpoint Found existing device: $endpointId")
+                    return
+                }
+
                 println("On endpoint Found: $endpointId")
+                endpointIdDevicesConnecting.plus(endpointId)
+
                 connectionsClient
                     .requestConnection(username, endpointId, ConnectionLifecycle())
                     .addOnSuccessListener { println("connected") }
@@ -170,7 +214,7 @@ class NearbyService(val context: Context) : INearbyService {
         }
 
         // Callbacks for receiving payloads
-        inner class CustomPayloadCallback : PayloadCallback() {
+        private inner class CustomPayloadCallback : PayloadCallback() {
             override fun onPayloadReceived(endpointId: String, payload: Payload) {
                 var decoded = String(payload.asBytes()!!, Charsets.UTF_8)
 
@@ -182,7 +226,7 @@ class NearbyService(val context: Context) : INearbyService {
 
                 decoded = decoded.substringAfter(MAGIC_PREFIX)
 
-                println("received fr om $endpointId: $decoded")
+                println("received from $endpointId: $decoded")
                 if (decoded.startsWith(INITIALIZATION_PREFIX)) {
                     decoded = decoded.substringAfter(INITIALIZATION_PREFIX)
 
@@ -204,7 +248,9 @@ class NearbyService(val context: Context) : INearbyService {
                 }
             }
 
-            override fun onPayloadTransferUpdate(p0: String, p1: PayloadTransferUpdate) {}
+            override fun onPayloadTransferUpdate(p0: String, p1: PayloadTransferUpdate) {
+                println("received custom payload but this is not supported")
+            }
         }
     }
 }
@@ -212,7 +258,6 @@ class NearbyService(val context: Context) : INearbyService {
 fun interface OnConnectCallback {
     fun accept(endpointId: String, id: String, username: String)
 }
-
 
 fun interface OnMessageCallback {
     fun accept(endpointId: String, message: String)
