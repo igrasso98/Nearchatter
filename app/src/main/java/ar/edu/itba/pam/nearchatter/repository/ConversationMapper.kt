@@ -1,6 +1,5 @@
 package ar.edu.itba.pam.nearchatter.repository
 
-import ar.edu.itba.pam.nearchatter.db.room.conversation.ConversationEntity
 import ar.edu.itba.pam.nearchatter.db.room.conversation.UserConversation
 import ar.edu.itba.pam.nearchatter.db.room.user.UserEntity
 import ar.edu.itba.pam.nearchatter.domain.Conversation
@@ -21,7 +20,6 @@ class ConversationMapper {
             lastMessEnt?.receiverId!!,
             lastMessEnt?.payload!!,
             lastMessEnt?.sendAt!!,
-            lastMessEnt?.read!!
         )
         return Conversation(user, lastMessage)
     }

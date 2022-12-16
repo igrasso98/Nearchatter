@@ -1,48 +1,27 @@
 package ar.edu.itba.pam.nearchatter.services
 
 import android.content.Context
-import android.provider.Settings
 import ar.edu.itba.pam.nearchatter.domain.Message
 import ar.edu.itba.pam.nearchatter.models.Device
-import com.google.android.gms.nearby.Nearby
 import com.google.android.gms.nearby.connection.*
 import java.time.LocalDate
 import java.util.function.Consumer
 
 
 class NearbyService(val context: Context) : INearbyService {
-    companion object {
-        const val SERVICE_ID = "ar.edu.itba.pam.nearchatter"
-        const val INITIALIZATION_PREFIX = "id"
-        const val MESSAGE_PREFIX = "ms"
-        const val MAGIC_PREFIX = "nc"
-        val CHAR_REGEX = "[^0-9]".toRegex()
-    }
-
-    private val hwId = Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
-
-    private val connectionsClient: ConnectionsClient = Nearby.getConnectionsClient(context)
-
-    // TODO: Move to repo
-    private val endpointIdDevicesConnecting: MutableSet<String> = HashSet()
-    private val endpointIdDevices: MutableMap<String, Device> = HashMap()
-    private val hwIdDevices: MutableMap<String, Device> = HashMap()
-
-    private var acceptsConnections = false
-    private var stopping = false
     private var disconnectedDeviceCallback: Consumer<Device>? = null
     private var connectedDeviceCallback: Consumer<Device>? = null
     private var messageCallback: Consumer<Message>? = null
 
-    override fun setOnConnectCallback(callback: Consumer<Device>) {
+    override fun setOnConnectCallback(callback: Consumer<Device>?) {
         this.disconnectedDeviceCallback = callback
     }
 
-    override fun setOnDisconnectCallback(callback: Consumer<Device>) {
+    override fun setOnDisconnectCallback(callback: Consumer<Device>?) {
         this.connectedDeviceCallback = callback
     }
 
-    override fun setOnMessageCallback(callback: Consumer<Message>) {
+    override fun setOnMessageCallback(callback: Consumer<Message>?) {
         this.messageCallback = callback
     }
 
@@ -255,16 +234,3 @@ class NearbyService(val context: Context) : INearbyService {
     }
 }
 
-fun interface OnConnectCallback {
-    fun accept(endpointId: String, id: String, username: String)
-}
-
-fun interface OnMessageCallback {
-    fun accept(endpointId: String, message: String)
-}
-
-fun interface OnDisconnectCallback {
-    fun accept(endpointId: String)
-}
-
-fun ByteArray.toHex(): String = joinToString(separator = "") { eachByte -> "%02x".format(eachByte) }
