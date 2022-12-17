@@ -37,7 +37,7 @@ class NearchatterModule(context: Context) {
     }
 
     fun provideNearbyRepository(
-        userRepository: UserRepository
+        userRepository: UserRepository,
         disconnectedDeviceCallback: Consumer<Device>,
         connectedDeviceCallback: Consumer<Device>,
         messageCallback: Consumer<Message>,

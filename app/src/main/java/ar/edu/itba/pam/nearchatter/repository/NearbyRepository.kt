@@ -1,9 +1,13 @@
 package ar.edu.itba.pam.nearchatter.repository
 
 import android.content.Context
+import android.os.Build
 import android.provider.Settings
+import androidx.annotation.RequiresApi
 import ar.edu.itba.pam.nearchatter.domain.Message
 import ar.edu.itba.pam.nearchatter.models.Device
+import ar.edu.itba.pam.nearchatter.repository.NearbyConnectionHandler.Companion.MAGIC_PREFIX
+import ar.edu.itba.pam.nearchatter.repository.NearbyConnectionHandler.Companion.MESSAGE_PREFIX
 import com.google.android.gms.nearby.Nearby
 import com.google.android.gms.nearby.connection.*
 import java.time.LocalDate
@@ -29,6 +33,7 @@ class NearbyRepository(
     private var stopping = false
     private var acceptsConnections = false
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun openConnections(username: String) {
         if (stopping) {
             throw ConcurrentModificationException()
@@ -52,6 +57,7 @@ class NearbyRepository(
             { otherHwId, message ->
                 println("Message: $message - $otherHwId")
                 messageCallback.accept(Message(
+                    null,
                     otherHwId,
                     hwId,
                     message,

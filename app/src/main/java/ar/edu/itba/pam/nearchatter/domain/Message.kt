@@ -3,11 +3,14 @@ package ar.edu.itba.pam.nearchatter.domain
 import java.time.LocalDate
 
 class Message(
+    private var id: Long?,
     private var senderId: String,
     private var receiverId: String,
     private var payload: String,
     private var sendAt: LocalDate
 ) {
+
+
     fun getReceiverId(): String {
         return this.receiverId
     }

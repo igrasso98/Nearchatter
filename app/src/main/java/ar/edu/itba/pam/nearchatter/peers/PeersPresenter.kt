@@ -23,10 +23,6 @@ class PeersPresenter(
     private var view: WeakReference<PeersView> = WeakReference<PeersView>(view)
     private var conversationsDisposable: Disposable? = null
 
-    fun onPeerSelected(peer: User) {
-
-    }
-
     @SuppressLint("CheckResult")
     fun onViewAttached() {
         userRepository.getUsernameById(hwid).subscribeOn(Schedulers.computation())
@@ -38,7 +34,8 @@ class PeersPresenter(
         conversationsDisposable?.dispose()
     }
 
-    fun onUsernameLoaded(username: String) {
+    private fun onUsernameLoaded(username: String) {
+        setNearbyServiceCallbacks()
         nearbyService.openConnections(username)
         conversationsDisposable =
             userRepository.getUserConversations().subscribeOn(Schedulers.computation())
@@ -46,17 +43,31 @@ class PeersPresenter(
                 .subscribe(this::onConversationsLoaded, this::onFailure)
     }
 
-    fun onConversationsLoaded(conversations: List<Conversation>) {
+    private fun onConversationsLoaded(conversations: List<Conversation>) {
         if (view.get() != null) {
             view.get()!!.bind(conversations)
         }
     }
 
-    fun onFailure(throwable: Throwable) {
+    private fun onFailure(throwable: Throwable) {
 
     }
 
-    fun connectToPeer(deviceId: String) {}
-
-    fun discoverPeers() {}
+    private fun setNearbyServiceCallbacks() {
+        nearbyService.setOnConnectCallback { d ->
+            run {
+                println(d.getId())
+            }
+        }
+        nearbyService.setOnDisconnectCallback { d ->
+            run {
+                println(d.getUsername())
+            }
+        }
+        nearbyService.setOnMessageCallback { m ->
+            run {
+                println(m.getPayload())
+            }
+        }
+    }
 }

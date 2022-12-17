@@ -13,9 +13,10 @@ class ConversationMapper {
         val lastMessEnt = userConversation.lastMessage
         val user = User(
             userEnt?.userId!!,
-            userEnt?.username!!
+            userEnt.username!!
         )
         val lastMessage = Message(
+            lastMessEnt?.id!!,
             lastMessEnt?.senderId!!,
             lastMessEnt?.receiverId!!,
             lastMessEnt?.payload!!,
