@@ -1,6 +1,7 @@
 package ar.edu.itba.pam.nearchatter.repository
 
 import com.google.android.gms.nearby.connection.ConnectionLifecycleCallback
+import com.google.android.gms.nearby.connection.ConnectionsClient
 import com.google.android.gms.nearby.connection.EndpointDiscoveryCallback
 
 fun interface OnConnectCallback {
@@ -16,6 +17,16 @@ fun interface OnDisconnectCallback {
 }
 
 interface INearbyConnectionHandler {
+    fun init(
+        connectionsClient: ConnectionsClient,
+        username: String,
+        onConnected: OnConnectCallback,
+        onMessage: OnMessageCallback,
+        onDisconnected: OnDisconnectCallback
+    )
+
+    fun sendMessage(endpointId: String, message: String)
+
     fun createEndpointDiscoveryCallback() : EndpointDiscoveryCallback
 
     fun createConnectionLifecycleCallback(): ConnectionLifecycleCallback

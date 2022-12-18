@@ -11,6 +11,7 @@ import ar.edu.itba.pam.nearchatter.peers.PeersView
 import ar.edu.itba.pam.nearchatter.repository.*
 import ar.edu.itba.pam.nearchatter.services.INearbyService
 import ar.edu.itba.pam.nearchatter.utils.schedulers.SchedulerProvider
+import com.google.android.gms.nearby.connection.ConnectionsClient
 
 class ProductionNearchatterContainer(context: Context) : NearchatterContainer {
     private val nearchatterModule: NearchatterModule = NearchatterModule(context)
@@ -24,7 +25,9 @@ class ProductionNearchatterContainer(context: Context) : NearchatterContainer {
     private var messageRepository: IMessageRepository? = null
     private var messageDao: MessageDao? = null
     private var messageMapper: MessageMapper? = null
+    private var connectionsClient: ConnectionsClient? = null
     private var nearbyRepository: INearbyRepository? = null
+    private var nearbyConnectionHandler: INearbyConnectionHandler? = null
     private var sharedPreferencesStorage: ISharedPreferencesStorage? = null
     private var schedulerProvider: SchedulerProvider? = null
 
@@ -57,14 +60,33 @@ class ProductionNearchatterContainer(context: Context) : NearchatterContainer {
         return this.messageRepository!!;
     }
 
+    override fun getConnectionsClient(): ConnectionsClient {
+        if (this.connectionsClient == null) {
+            this.connectionsClient = this.nearchatterModule.provideConnectionsClient(
+                getApplicationContext()
+            )
+        }
+        return this.connectionsClient!!;
+    }
+
     override fun getNearbyRepository(): INearbyRepository {
         if (this.nearbyRepository == null) {
             this.nearbyRepository = this.nearchatterModule.provideNearbyRepository(
-                getApplicationContext(),
                 getHwId(),
+                getNearbyConnectionHandler(),
+                getConnectionsClient(),
             )
         }
         return this.nearbyRepository!!;
+    }
+
+    override fun getNearbyConnectionHandler(): INearbyConnectionHandler {
+        if (this.nearbyConnectionHandler == null) {
+            this.nearbyConnectionHandler = this.nearchatterModule.provideNearbyConnectionHandler(
+                getHwId(),
+            )
+        }
+        return this.nearbyConnectionHandler!!;
     }
 
     override fun getLoginPresenter(view: LoginView): LoginPresenter {
