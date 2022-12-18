@@ -1,21 +1,23 @@
 package ar.edu.itba.pam.nearchatter.db.room.user
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import io.reactivex.Flowable
 import io.reactivex.Single
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface UserDao {
     @Query(
         "SELECT * \n" +
-            "FROM users \n" +
-            "LEFT OUTER JOIN messages\n" +
-            "      ON messages.message_id=last_message_id"
+                "FROM users \n" +
+                "LEFT OUTER JOIN messages\n" +
+                "      ON messages.message_id=last_message_id"
     )
-    fun getAllConversations(): Flowable<List<UserConversation>>
+    fun getAllConversations(): LiveData<List<UserConversation>>
 
     @Query("SELECT username FROM users WHERE user_id = :id")
     fun getUsernameById(id: String): String

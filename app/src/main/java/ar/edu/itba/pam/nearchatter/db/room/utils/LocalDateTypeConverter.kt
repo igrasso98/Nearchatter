@@ -17,5 +17,7 @@ class LocalDateTypeConverter {
     @TypeConverter
     fun toLocalDate(timestamp: Long): LocalDate {
         return LocalDate.ofEpochDay(timestamp)
+//         Use this to test
+//        return LocalDate.now()
     }
 }

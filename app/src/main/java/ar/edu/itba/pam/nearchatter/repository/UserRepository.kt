@@ -1,11 +1,14 @@
 package ar.edu.itba.pam.nearchatter.repository
 
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.asFlow
 import ar.edu.itba.pam.nearchatter.db.room.user.UserDao
 import ar.edu.itba.pam.nearchatter.domain.Conversation
 import ar.edu.itba.pam.nearchatter.domain.Message
 import ar.edu.itba.pam.nearchatter.domain.User
-import io.reactivex.Flowable
 import io.reactivex.Single
+import kotlinx.coroutines.flow.Flow
+
 
 class UserRepository(
     private val userDao: UserDao,
@@ -14,7 +17,6 @@ class UserRepository(
 ) :
     IUserRepository {
 
-    private var conversations: Flowable<List<Conversation>>? = null
 
     override fun addUser(user: User): Single<Unit> {
         return Single.fromCallable { userDao.insert(userMapper.toEntity(user)) }
@@ -28,15 +30,22 @@ class UserRepository(
         return Single.fromCallable { userDao.updateUser(userId, username) }
     }
 
-    override fun getUserConversations(): Flowable<List<Conversation>> {
-        if (this.conversations == null) {
-            val myConversations = userDao.getAllConversations()
-            conversations = myConversations.map(conversationMapper::fromUserConversations)
+    override fun getUserConversations(): Flow<List<Conversation>> {
+        val conversations = MutableLiveData<List<Conversation>>()
+        userDao.getAllConversations().observeForever {
+            conversations.postValue(it.map(conversationMapper::fromUserConversation))
         }
-        return this.conversations!!
+        return conversations.asFlow()
     }
 
+
     override fun setLastMessage(message: Message): Single<Unit> {
-        return Single.fromCallable { userDao.setLastMessage(message.getSenderId(), message.getReceiverId(), message.getId()!!) }
+        return Single.fromCallable {
+            userDao.setLastMessage(
+                message.getSenderId(),
+                message.getReceiverId(),
+                message.getId()!!
+            )
+        }
     }
 }

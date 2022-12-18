@@ -10,6 +10,9 @@ interface MessageDao {
     @Query("SELECT * FROM messages")
     fun getAll(): List<MessageEntity>
 
+    @Query("SELECT * FROM messages WHERE sender_id == :id OR receiver_id == :id")
+    fun getById(id: String): List<MessageEntity>
+
     @Insert
     fun insert(message: MessageEntity): Long
 
