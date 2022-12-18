@@ -18,6 +18,8 @@ import ar.edu.itba.pam.nearchatter.services.INearbyService
 import ar.edu.itba.pam.nearchatter.services.NearbyService
 import ar.edu.itba.pam.nearchatter.utils.schedulers.AndroidSchedulerProvider
 import ar.edu.itba.pam.nearchatter.utils.schedulers.SchedulerProvider
+import com.google.android.gms.nearby.Nearby
+import com.google.android.gms.nearby.connection.ConnectionsClient
 
 class NearchatterModule(context: Context) {
     private val applicationContext: Context = context.applicationContext;
@@ -42,8 +44,20 @@ class NearchatterModule(context: Context) {
         return UserRepository(userDao, userMapper, conversationMapper)
     }
 
-    fun provideNearbyRepository(context: Context, hwId: String): INearbyRepository {
-        return NearbyRepository(context, hwId)
+    fun provideNearbyRepository(
+        hwId: String,
+        nearbyConnectionHandler: INearbyConnectionHandler,
+        connectionsClient: ConnectionsClient,
+    ): INearbyRepository {
+        return NearbyRepository(hwId, nearbyConnectionHandler, connectionsClient)
+    }
+
+    fun provideConnectionsClient(context: Context): ConnectionsClient {
+        return Nearby.getConnectionsClient(context)
+    }
+
+    fun provideNearbyConnectionHandler(hwId: String): INearbyConnectionHandler {
+        return NearbyConnectionHandler(hwId)
     }
 
     fun provideMessageRepository(messageDao: MessageDao, messageMapper: MessageMapper): IMessageRepository {

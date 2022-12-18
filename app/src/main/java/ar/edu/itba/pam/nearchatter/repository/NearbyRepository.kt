@@ -1,27 +1,24 @@
 package ar.edu.itba.pam.nearchatter.repository
 
-import android.content.Context
+import androidx.annotation.VisibleForTesting
 import ar.edu.itba.pam.nearchatter.domain.Message
 import ar.edu.itba.pam.nearchatter.models.Device
-import ar.edu.itba.pam.nearchatter.repository.NearbyConnectionHandler.Companion.MAGIC_PREFIX
-import ar.edu.itba.pam.nearchatter.repository.NearbyConnectionHandler.Companion.MESSAGE_PREFIX
-import com.google.android.gms.nearby.Nearby
 import com.google.android.gms.nearby.connection.*
 import java.time.LocalDate
 import java.util.function.Consumer
 
 class NearbyRepository(
-    context: Context,
     private val hwId: String,
+    private val nearbyConnectionHandler: INearbyConnectionHandler,
+    private val connectionsClient: ConnectionsClient,
 ) :
     INearbyRepository {
     companion object {
         const val SERVICE_ID = "ar.edu.itba.pam.nearchatter"
     }
 
-    private val connectionsClient = Nearby.getConnectionsClient(context)
-    private var nearbyConnectionHandler: NearbyConnectionHandler? = null
-    private val hwIdDevices: MutableMap<String, Device> = HashMap()
+    @VisibleForTesting
+    val hwIdDevices: MutableMap<String, Device> = HashMap()
     private var disconnectedDeviceCallback: Consumer<Device>? = null
     private var connectedDeviceCallback: Consumer<Device>? = null
     private var messageCallback: Consumer<Message>? = null
@@ -33,15 +30,14 @@ class NearbyRepository(
         if (stopping) {
             throw ConcurrentModificationException()
         }
-        if (nearbyConnectionHandler != null) {
+        if (acceptsConnections) {
             return
         }
 
         acceptsConnections = true
 
-        nearbyConnectionHandler = NearbyConnectionHandler(
+        nearbyConnectionHandler.init(
             connectionsClient,
-            hwId,
             username,
             { endpointId, otherHwId, username ->
                 println("Connected with: $endpointId -> $otherHwId (username: $username)")
@@ -65,8 +61,8 @@ class NearbyRepository(
             }
         )
 
-        startAdvertising(username, nearbyConnectionHandler!!.createConnectionLifecycleCallback())
-        startDiscovery(nearbyConnectionHandler!!.createEndpointDiscoveryCallback())
+        startAdvertising(username, nearbyConnectionHandler.createConnectionLifecycleCallback())
+        startDiscovery(nearbyConnectionHandler.createEndpointDiscoveryCallback())
     }
 
     override fun sendMessage(message: Message) {
@@ -75,10 +71,7 @@ class NearbyRepository(
         }
 
         val device = hwIdDevices[message.getReceiverId()] ?: return
-        connectionsClient.sendPayload(
-            device.getEndpointId(),
-            Payload.fromBytes((MAGIC_PREFIX + MESSAGE_PREFIX + message).toByteArray(Charsets.UTF_8))
-        )
+        nearbyConnectionHandler.sendMessage(device.getEndpointId(), message.getPayload())
     }
 
     override fun closeConnections() {
@@ -114,20 +107,14 @@ class NearbyRepository(
             .setDisruptiveUpgrade(false)
             .build()
 
-        connectionsClient
-            .startAdvertising(username, SERVICE_ID, lifecycle, advertisingOptions)
-            .addOnSuccessListener { println("Accepting User") }
-            .addOnFailureListener { throw it }
+        connectionsClient.startAdvertising(username, SERVICE_ID, lifecycle, advertisingOptions)
     }
 
     private fun startDiscovery(
         discovery: EndpointDiscoveryCallback
     ) {
         val discoveryOptions = DiscoveryOptions.Builder().setStrategy(Strategy.P2P_STAR).build()
-        connectionsClient
-            .startDiscovery(SERVICE_ID, discovery, discoveryOptions)
-            .addOnSuccessListener { println("Accepting User") }
-            .addOnFailureListener { throw it }
+        connectionsClient.startDiscovery(SERVICE_ID, discovery, discoveryOptions)
     }
 
     private fun stopAdvertising() {

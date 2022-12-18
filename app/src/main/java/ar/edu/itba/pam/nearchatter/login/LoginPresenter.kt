@@ -1,12 +1,10 @@
 package ar.edu.itba.pam.nearchatter.login
 
 import android.annotation.SuppressLint
-import android.provider.Settings
 import ar.edu.itba.pam.nearchatter.db.sharedPreferences.ISharedPreferencesStorage
 import ar.edu.itba.pam.nearchatter.domain.User
 import ar.edu.itba.pam.nearchatter.repository.IUserRepository
 import ar.edu.itba.pam.nearchatter.utils.schedulers.SchedulerProvider
-import java.lang.Exception
 
 class LoginPresenter(
     view: LoginView,
