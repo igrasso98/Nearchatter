@@ -8,21 +8,24 @@ import ar.edu.itba.pam.nearchatter.domain.User
 
 
 class ConversationMapper {
-    private fun fromUserConversation(userConversation: UserConversation): Conversation {
-        val userEnt: UserEntity? = userConversation.user
+    fun fromUserConversation(userConversation: UserConversation): Conversation {
+        val userEnt: UserEntity = userConversation.user!!
         val lastMessEnt = userConversation.lastMessage
         val user = User(
-            userEnt?.userId!!,
-            userEnt.username!!,
+            userEnt.userId,
+            userEnt.username,
             false,
         )
-        val lastMessage = Message(
-            lastMessEnt?.id!!,
-            lastMessEnt?.senderId!!,
-            lastMessEnt?.receiverId!!,
-            lastMessEnt?.payload!!,
-            lastMessEnt?.sendAt!!,
-        )
+        var lastMessage: Message? = null
+        if (lastMessEnt != null) {
+            lastMessage = Message(
+                lastMessEnt.id,
+                lastMessEnt.senderId,
+                lastMessEnt.receiverId,
+                lastMessEnt.payload,
+                lastMessEnt.sendAt,
+            )
+        }
         return Conversation(user, lastMessage)
     }
 

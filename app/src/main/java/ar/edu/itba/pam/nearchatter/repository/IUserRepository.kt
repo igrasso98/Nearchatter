@@ -1,9 +1,10 @@
 package ar.edu.itba.pam.nearchatter.repository
 
+import androidx.lifecycle.MutableLiveData
 import ar.edu.itba.pam.nearchatter.domain.Conversation
 import ar.edu.itba.pam.nearchatter.domain.Message
 import ar.edu.itba.pam.nearchatter.domain.User
-import io.reactivex.Flowable
+import kotlinx.coroutines.flow.Flow
 import io.reactivex.Single
 
 interface IUserRepository {
@@ -13,7 +14,7 @@ interface IUserRepository {
 
     fun updateUsername(userId: String, username: String): Single<Unit>
 
-    fun getUserConversations(): Flowable<List<Conversation>>
+    fun getUserConversations(): Flow<List<Conversation>>
 
     fun setLastMessage(message: Message): Single<Unit>
 }

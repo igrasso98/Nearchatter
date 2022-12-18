@@ -2,12 +2,9 @@ package ar.edu.itba.pam.nearchatter.chat
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.preference.PreferenceManager
-import ar.edu.itba.pam.nearchatter.R
 import ar.edu.itba.pam.nearchatter.databinding.ActivityChatBinding
 import ar.edu.itba.pam.nearchatter.domain.Message
 import ar.edu.itba.pam.nearchatter.domain.User
-import ar.edu.itba.pam.nearchatter.peers.PeersAdapter
 
 class ChatActivity : AppCompatActivity(), ChatView {
     private lateinit var binding: ActivityChatBinding
