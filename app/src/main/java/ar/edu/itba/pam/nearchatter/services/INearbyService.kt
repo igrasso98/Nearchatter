@@ -1,7 +1,7 @@
 package ar.edu.itba.pam.nearchatter.services
 
 import ar.edu.itba.pam.nearchatter.domain.Message
-import ar.edu.itba.pam.nearchatter.models.Device
+import ar.edu.itba.pam.nearchatter.domain.User
 import java.util.function.Consumer
 
 interface INearbyService {
@@ -16,9 +16,9 @@ interface INearbyService {
 
     fun closeConnections()
 
-    fun setOnConnectCallback(callback: Consumer<Device>?)
+    fun setOnConnectCallback(callback: Consumer<User>?)
 
-    fun setOnDisconnectCallback(callback: Consumer<Device>?)
+    fun setOnDisconnectCallback(callback: Consumer<User>?)
 
     fun setOnMessageCallback(callback: Consumer<Message>?)
 }

@@ -3,19 +3,7 @@ package ar.edu.itba.pam.nearchatter.repository
 import ar.edu.itba.pam.nearchatter.models.Device
 import com.google.android.gms.nearby.connection.*
 
-fun interface OnConnectCallback {
-    fun accept(endpointId: String, hwId: String, username: String)
-}
 
-fun interface OnMessageCallback {
-    fun accept(hwId: String, message: String)
-}
-
-fun interface OnDisconnectCallback {
-    fun accept(hwId: String)
-}
-
-// TODO: Como mover esto al NearchatterModule???
 class NearbyConnectionHandler(
     private val connectionsClient: ConnectionsClient,
     private val hwId: String,
@@ -23,7 +11,7 @@ class NearbyConnectionHandler(
     private val onConnected: OnConnectCallback,
     private val onMessage: OnMessageCallback,
     private val onDisconnected: OnDisconnectCallback,
-) {
+) : INearbyConnectionHandler {
     companion object {
         const val INITIALIZATION_PREFIX = "id"
         const val MESSAGE_PREFIX = "ms"
@@ -34,8 +22,16 @@ class NearbyConnectionHandler(
     private val endpointIdDevicesConnecting: MutableSet<String> = HashSet()
     private val endpointIdDevices: MutableMap<String, Device> = HashMap()
 
+    override fun createEndpointDiscoveryCallback(): EndpointDiscoveryCallback {
+        return EndpointDiscovery()
+    }
+
+    override fun createConnectionLifecycleCallback(): ConnectionLifecycleCallback {
+        return ConnectionLifecycle()
+    }
+
     // Callbacks for finding other devices
-    inner class EndpointDiscovery : EndpointDiscoveryCallback() {
+    private inner class EndpointDiscovery : EndpointDiscoveryCallback() {
         override fun onEndpointFound(endpointId: String, info: DiscoveredEndpointInfo) {
             if (endpointIdDevices.contains(endpointId) || endpointIdDevicesConnecting.contains(endpointId)) {
                 println("On endpoint Found existing device: $endpointId")
@@ -58,7 +54,7 @@ class NearbyConnectionHandler(
     }
 
     // Callbacks for connections to other devices
-    inner class ConnectionLifecycle : ConnectionLifecycleCallback() {
+    private inner class ConnectionLifecycle : ConnectionLifecycleCallback() {
         override fun onConnectionInitiated(endpointId: String, info: ConnectionInfo) {
             connectionsClient.acceptConnection(endpointId, CustomPayloadCallback())
         }

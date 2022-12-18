@@ -23,12 +23,16 @@ import java.time.LocalDate
             onDelete = RESTRICT,
             onUpdate = CASCADE
         )
+    ],
+    indices = [
+        Index("sender_id"),
+        Index("receiver_id"),
     ]
 )
 @TypeConverters(LocalDateTypeConverter::class)
 class MessageEntity(
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "message_id") val id: Long,
+    @ColumnInfo(name = "message_id") val id: Long?,
     @ColumnInfo(name = "sender_id") val senderId: String,
     @ColumnInfo(name = "receiver_id") val receiverId: String,
     @ColumnInfo(name = "payload") val payload: String,

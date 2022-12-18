@@ -1,9 +1,6 @@
 package ar.edu.itba.pam.nearchatter.repository
 
 import android.content.Context
-import android.os.Build
-import android.provider.Settings
-import androidx.annotation.RequiresApi
 import ar.edu.itba.pam.nearchatter.domain.Message
 import ar.edu.itba.pam.nearchatter.models.Device
 import ar.edu.itba.pam.nearchatter.repository.NearbyConnectionHandler.Companion.MAGIC_PREFIX
@@ -15,25 +12,23 @@ import java.util.function.Consumer
 
 class NearbyRepository(
     context: Context,
-    private val userRepository: UserRepository,
-    private val disconnectedDeviceCallback: Consumer<Device>,
-    private val connectedDeviceCallback: Consumer<Device>,
-    private val messageCallback: Consumer<Message>,
+    private val hwId: String,
 ) :
     INearbyRepository {
     companion object {
         const val SERVICE_ID = "ar.edu.itba.pam.nearchatter"
     }
 
-    private val hwId = Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
     private val connectionsClient = Nearby.getConnectionsClient(context)
     private var nearbyConnectionHandler: NearbyConnectionHandler? = null
     private val hwIdDevices: MutableMap<String, Device> = HashMap()
+    private var disconnectedDeviceCallback: Consumer<Device>? = null
+    private var connectedDeviceCallback: Consumer<Device>? = null
+    private var messageCallback: Consumer<Message>? = null
 
     private var stopping = false
     private var acceptsConnections = false
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun openConnections(username: String) {
         if (stopping) {
             throw ConcurrentModificationException()
@@ -52,11 +47,11 @@ class NearbyRepository(
                 println("Connected with: $endpointId -> $otherHwId (username: $username)")
                 val device = Device(otherHwId, endpointId, username)
                 hwIdDevices[otherHwId] = device
-                connectedDeviceCallback.accept(device)
+                connectedDeviceCallback?.accept(device)
             },
             { otherHwId, message ->
                 println("Message: $message - $otherHwId")
-                messageCallback.accept(Message(
+                messageCallback?.accept(Message(
                     null,
                     otherHwId,
                     hwId,
@@ -66,12 +61,12 @@ class NearbyRepository(
             },
             { otherHwId ->
                 println("Disconnected: $otherHwId")
-                disconnectedDeviceCallback.accept(hwIdDevices.remove(otherHwId)!!)
+                disconnectedDeviceCallback?.accept(hwIdDevices.remove(otherHwId)!!)
             }
         )
 
-        startAdvertising(username, nearbyConnectionHandler!!.ConnectionLifecycle())
-        startDiscovery(nearbyConnectionHandler!!.EndpointDiscovery())
+        startAdvertising(username, nearbyConnectionHandler!!.createConnectionLifecycleCallback())
+        startDiscovery(nearbyConnectionHandler!!.createEndpointDiscoveryCallback())
     }
 
     override fun sendMessage(message: Message) {
@@ -96,6 +91,18 @@ class NearbyRepository(
         hwIdDevices.clear()
 
         stopping = false
+    }
+
+    override fun setOnConnectCallback(callback: Consumer<Device>?) {
+        this.disconnectedDeviceCallback = callback
+    }
+
+    override fun setOnDisconnectCallback(callback: Consumer<Device>?) {
+        this.connectedDeviceCallback = callback
+    }
+
+    override fun setOnMessageCallback(callback: Consumer<Message>?) {
+        this.messageCallback = callback
     }
 
     private fun startAdvertising(

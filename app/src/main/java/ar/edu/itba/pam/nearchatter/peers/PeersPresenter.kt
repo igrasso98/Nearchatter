@@ -3,7 +3,6 @@ package ar.edu.itba.pam.nearchatter.peers
 import android.annotation.SuppressLint
 import ar.edu.itba.pam.nearchatter.db.sharedPreferences.ISharedPreferencesStorage
 import ar.edu.itba.pam.nearchatter.domain.Conversation
-import ar.edu.itba.pam.nearchatter.domain.User
 import ar.edu.itba.pam.nearchatter.repository.IUserRepository
 import ar.edu.itba.pam.nearchatter.services.INearbyService
 import ar.edu.itba.pam.nearchatter.utils.schedulers.SchedulerProvider
@@ -56,7 +55,7 @@ class PeersPresenter(
     private fun setNearbyServiceCallbacks() {
         nearbyService.setOnConnectCallback { d ->
             run {
-                println(d.getId())
+                println(d.getUserId())
             }
         }
         nearbyService.setOnDisconnectCallback { d ->

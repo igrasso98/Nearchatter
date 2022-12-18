@@ -1,23 +1,32 @@
 package ar.edu.itba.pam.nearchatter.services
 
-import android.content.Context
+import android.annotation.SuppressLint
 import ar.edu.itba.pam.nearchatter.domain.Message
-import ar.edu.itba.pam.nearchatter.models.Device
-import com.google.android.gms.nearby.connection.*
-import java.time.LocalDate
+import ar.edu.itba.pam.nearchatter.domain.User
+import ar.edu.itba.pam.nearchatter.repository.IMessageRepository
+import ar.edu.itba.pam.nearchatter.repository.INearbyRepository
+import ar.edu.itba.pam.nearchatter.repository.IUserRepository
 import java.util.function.Consumer
 
 
-class NearbyService(val context: Context) : INearbyService {
-    private var disconnectedDeviceCallback: Consumer<Device>? = null
-    private var connectedDeviceCallback: Consumer<Device>? = null
+class NearbyService(
+    private val nearbyRepository: INearbyRepository,
+    private val userRepository: IUserRepository,
+    private val messageRepository: IMessageRepository,
+) : INearbyService {
+    private var disconnectedDeviceCallback: Consumer<User>? = null
+    private var connectedDeviceCallback: Consumer<User>? = null
     private var messageCallback: Consumer<Message>? = null
 
-    override fun setOnConnectCallback(callback: Consumer<Device>?) {
+    init {
+        setUpNearbyRepository()
+    }
+
+    override fun setOnConnectCallback(callback: Consumer<User>?) {
         this.disconnectedDeviceCallback = callback
     }
 
-    override fun setOnDisconnectCallback(callback: Consumer<Device>?) {
+    override fun setOnDisconnectCallback(callback: Consumer<User>?) {
         this.connectedDeviceCallback = callback
     }
 
@@ -26,210 +35,37 @@ class NearbyService(val context: Context) : INearbyService {
     }
 
     override fun openConnections(username: String) {
-        if (stopping) {
-            throw ConcurrentModificationException()
-        }
-        acceptsConnections = true
-
-        val helper = ConnectionHelper(
-            username,
-            { endpointId, id, username ->
-                println("Connected with: $endpointId -> $id (username: $username)")
-                val device = Device(id, endpointId, username)
-                hwIdDevices[id] = device
-                endpointIdDevices[endpointId] = device
-                endpointIdDevicesConnecting.remove(endpointId)
-                connectedDeviceCallback?.accept(Device(id, endpointId, username))
-            },
-            { endpointId, message ->
-                println("Message: $message from $endpointId")
-
-                val device = endpointIdDevices[endpointId]
-                if (device == null) {
-                    println("Device with endpoint $endpointId is not found on local map")
-                    return@ConnectionHelper
-                }
-
-                messageCallback?.accept(Message(
-                    device.getId(),
-                    hwId,
-                    message,
-                    LocalDate.now()
-                ))
-            },
-            { endpointId ->
-                println("Disconnected: $endpointId")
-                endpointIdDevicesConnecting.remove(endpointId)
-                val device = endpointIdDevices[endpointId]
-                if (device != null) {
-                    hwIdDevices.remove(device.getId())
-                    endpointIdDevices.remove(endpointId)
-                    disconnectedDeviceCallback?.accept(device)
-                }
-            }
-        )
-
-        startAdvertising(username, helper.ConnectionLifecycle())
-        startDiscovery(helper.EndpointDiscovery())
+        nearbyRepository.openConnections(username)
     }
 
     override fun sendMessage(message: Message) {
-        if (!acceptsConnections) {
-            throw IllegalStateException()
-        }
-
-        val device = hwIdDevices[message.getReceiverId()] ?: return
-        connectionsClient.sendPayload(
-            device.getEndpointId(),
-            Payload.fromBytes((MAGIC_PREFIX + MESSAGE_PREFIX + message).toByteArray(Charsets.UTF_8))
-        )
+        nearbyRepository.sendMessage(message)
+        messageRepository.addMessage(message)
     }
 
     override fun closeConnections() {
-        acceptsConnections = false
-        stopping = true
-
-        stopDiscovery()
-        stopAdvertising()
-
-        endpointIdDevicesConnecting.clear()
-        endpointIdDevices.clear()
-        hwIdDevices.clear()
-
-        stopping = false
+        nearbyRepository.closeConnections()
     }
 
-    private fun startAdvertising(
-        username: String,
-        lifecycle: ConnectionLifecycleCallback
-    ) {
-        val advertisingOptions: AdvertisingOptions = AdvertisingOptions.Builder()
-                .setStrategy(Strategy.P2P_STAR)
-                .setDisruptiveUpgrade(false)
-                .build()
-
-        connectionsClient
-            .startAdvertising(username, SERVICE_ID, lifecycle, advertisingOptions)
-            .addOnSuccessListener { println("Accepting User") }
-            .addOnFailureListener { throw it }
-    }
-
-    private fun startDiscovery(
-        discovery: EndpointDiscoveryCallback
-    ) {
-        val discoveryOptions = DiscoveryOptions.Builder().setStrategy(Strategy.P2P_STAR).build()
-        connectionsClient
-            .startDiscovery(SERVICE_ID, discovery, discoveryOptions)
-            .addOnSuccessListener { println("Accepting User") }
-            .addOnFailureListener { throw it }
-    }
-
-    private fun stopAdvertising() {
-        connectionsClient.stopAdvertising()
-    }
-
-    private fun stopDiscovery() {
-        connectionsClient.stopDiscovery()
-    }
-
-    inner class ConnectionHelper(
-        private val username: String,
-        private val onConnected: OnConnectCallback,
-        private val onMessage: OnMessageCallback,
-        private val onDisconnected: OnDisconnectCallback,
-    ) {
-        // Callbacks for finding other devices
-        inner class EndpointDiscovery : EndpointDiscoveryCallback() {
-            override fun onEndpointFound(endpointId: String, info: DiscoveredEndpointInfo) {
-                if (endpointIdDevices.contains(endpointId) || endpointIdDevicesConnecting.contains(endpointId)) {
-                    println("On endpoint Found existing device: $endpointId")
-                    return
-                }
-
-                println("On endpoint Found: $endpointId")
-                endpointIdDevicesConnecting.plus(endpointId)
-
-                connectionsClient
-                    .requestConnection(username, endpointId, ConnectionLifecycle())
-                    .addOnSuccessListener { println("connected") }
-                    .addOnFailureListener { e -> println(e) }
-            }
-
-            override fun onEndpointLost(endpointId: String) {
-                println("On endpoint lost: $endpointId")
-                onDisconnected.accept(endpointId)
+    @SuppressLint("CheckResult")
+    private fun setUpNearbyRepository() {
+        nearbyRepository.setOnConnectCallback { device ->
+            val user = User(device.getId(), device.getUsername(), true)
+            userRepository.addUser(user).subscribe { _ ->
+                connectedDeviceCallback?.accept(user)
             }
         }
 
-        // Callbacks for connections to other devices
-        inner class ConnectionLifecycle : ConnectionLifecycleCallback() {
-            override fun onConnectionInitiated(endpointId: String, info: ConnectionInfo) {
-                connectionsClient.acceptConnection(endpointId, CustomPayloadCallback())
-            }
-
-            override fun onConnectionResult(endpointId: String, resolution: ConnectionResolution) {
-                println("On connection result: $endpointId, $resolution (${resolution.status})")
-                if (resolution.status.isSuccess) {
-                    println("sending hwid to $endpointId")
-                    connectionsClient.sendPayload(
-                        endpointId,
-                        Payload.fromBytes(
-                            (
-                                    MAGIC_PREFIX +
-                                            INITIALIZATION_PREFIX +
-                                            username.length +
-                                            username +
-                                            hwId
-                                    ).toByteArray(Charsets.UTF_8)
-                        )
-                    )
+        nearbyRepository.setOnMessageCallback { message ->
+            messageRepository.addMessage(message).subscribe { dbMessage ->
+                userRepository.setLastMessage(dbMessage).subscribe { _ ->
+                    messageCallback?.accept(dbMessage)
                 }
-            }
-
-            override fun onDisconnected(endpointId: String) {
-                println("On connection disconnected: $endpointId")
-                onDisconnected.accept(endpointId)
             }
         }
 
-        // Callbacks for receiving payloads
-        private inner class CustomPayloadCallback : PayloadCallback() {
-            override fun onPayloadReceived(endpointId: String, payload: Payload) {
-                var decoded = String(payload.asBytes()!!, Charsets.UTF_8)
-
-                // Prevent unknown connections
-                if (!decoded.startsWith(MAGIC_PREFIX)) {
-                    println("invalid message from $endpointId: $decoded")
-                    return
-                }
-
-                decoded = decoded.substringAfter(MAGIC_PREFIX)
-
-                println("received from $endpointId: $decoded")
-                if (decoded.startsWith(INITIALIZATION_PREFIX)) {
-                    decoded = decoded.substringAfter(INITIALIZATION_PREFIX)
-
-                    val usernameIndex = CHAR_REGEX.find(decoded)!!.range.first
-                    val usernameLength = decoded.substring(0, usernameIndex).toInt()
-                    val username = decoded.substring(usernameIndex, usernameLength)
-
-                    decoded = decoded.substringAfter(username)
-
-                    val otherHwId = decoded
-
-                    println("received from $endpointId: username = $username, hwid = $otherHwId")
-                    onConnected.accept(endpointId, otherHwId, username)
-                } else if (decoded.startsWith(MESSAGE_PREFIX)) {
-                    val message = decoded.substringAfter(MESSAGE_PREFIX)
-
-                    println("received from $endpointId: message = $message")
-                    onMessage.accept(endpointId, message)
-                }
-            }
-
-            override fun onPayloadTransferUpdate(p0: String, p1: PayloadTransferUpdate) {
-                println("received custom payload but this is not supported")
-            }
+        nearbyRepository.setOnDisconnectCallback { device ->
+            disconnectedDeviceCallback?.accept(User(device.getId(), device.getUsername(), false))
         }
     }
 }

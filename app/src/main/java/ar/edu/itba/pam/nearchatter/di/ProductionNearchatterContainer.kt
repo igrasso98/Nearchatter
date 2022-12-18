@@ -1,20 +1,14 @@
 package ar.edu.itba.pam.nearchatter.di
 
-import android.annotation.SuppressLint
 import android.content.Context
-import android.provider.Settings
-import ar.edu.itba.pam.nearchatter.db.room.NearchatterDb
-import ar.edu.itba.pam.nearchatter.db.room.conversation.ConversationDao
+import ar.edu.itba.pam.nearchatter.db.room.message.MessageDao
 import ar.edu.itba.pam.nearchatter.db.room.user.UserDao
 import ar.edu.itba.pam.nearchatter.db.sharedPreferences.ISharedPreferencesStorage
 import ar.edu.itba.pam.nearchatter.login.LoginPresenter
 import ar.edu.itba.pam.nearchatter.login.LoginView
 import ar.edu.itba.pam.nearchatter.peers.PeersPresenter
 import ar.edu.itba.pam.nearchatter.peers.PeersView
-import ar.edu.itba.pam.nearchatter.repository.ConversationMapper
-import ar.edu.itba.pam.nearchatter.repository.IUserRepository
-import ar.edu.itba.pam.nearchatter.repository.UserMapper
-import ar.edu.itba.pam.nearchatter.repository.UserRepository
+import ar.edu.itba.pam.nearchatter.repository.*
 import ar.edu.itba.pam.nearchatter.services.INearbyService
 import ar.edu.itba.pam.nearchatter.utils.schedulers.SchedulerProvider
 
@@ -24,10 +18,13 @@ class ProductionNearchatterContainer(context: Context) : NearchatterContainer {
     private var userMapper: UserMapper? = null
     private var conversationMapper: ConversationMapper? = null
     private var userDao: UserDao? = null
-    private var conversationDao: ConversationDao? = null
     private var loginPresenter: LoginPresenter? = null
     private var peersPresenter: PeersPresenter? = null
     private var nearbyService: INearbyService? = null
+    private var messageRepository: IMessageRepository? = null
+    private var messageDao: MessageDao? = null
+    private var messageMapper: MessageMapper? = null
+    private var nearbyRepository: INearbyRepository? = null
     private var sharedPreferencesStorage: ISharedPreferencesStorage? = null
     private var schedulerProvider: SchedulerProvider? = null
 
@@ -35,11 +32,14 @@ class ProductionNearchatterContainer(context: Context) : NearchatterContainer {
         return nearchatterModule.getApplicationContext()
     }
 
+    override fun getHwId(): String {
+        return nearchatterModule.getHwId()
+    }
+
     override fun getUserRepository(): IUserRepository {
         if (this.userRepository == null) {
             this.userRepository = this.nearchatterModule.provideUserRepository(
                 getUserDao(),
-                getConversationDao(),
                 getUserMapper(),
                 getConversationMapper(),
             )
@@ -47,7 +47,26 @@ class ProductionNearchatterContainer(context: Context) : NearchatterContainer {
         return this.userRepository!!
     }
 
-    @SuppressLint("HardwareIds")
+    override fun getMessageRepository(): IMessageRepository {
+        if (this.messageRepository == null) {
+            this.messageRepository = this.nearchatterModule.provideMessageRepository(
+                getMessageDao(),
+                getMessageMapper(),
+            )
+        }
+        return this.messageRepository!!;
+    }
+
+    override fun getNearbyRepository(): INearbyRepository {
+        if (this.nearbyRepository == null) {
+            this.nearbyRepository = this.nearchatterModule.provideNearbyRepository(
+                getApplicationContext(),
+                getHwId(),
+            )
+        }
+        return this.nearbyRepository!!;
+    }
+
     override fun getLoginPresenter(view: LoginView): LoginPresenter {
         if (this.loginPresenter == null) {
             this.loginPresenter = this.nearchatterModule.provideLoginPresenter(
@@ -55,10 +74,7 @@ class ProductionNearchatterContainer(context: Context) : NearchatterContainer {
                 getUserRepository(),
                 getSharedPreferencesStorage(),
                 getSchedulerProvider(),
-                Settings.Secure.getString(
-                    getApplicationContext().contentResolver,
-                    Settings.Secure.ANDROID_ID
-                )
+                getHwId(),
             )
         }
         return this.loginPresenter!!
@@ -71,7 +87,6 @@ class ProductionNearchatterContainer(context: Context) : NearchatterContainer {
         return schedulerProvider!!
     }
 
-    @SuppressLint("HardwareIds")
     override fun getPeersPresenter(view: PeersView): PeersPresenter {
         if (this.peersPresenter == null) {
             this.peersPresenter = this.nearchatterModule.providePeersPresenter(
@@ -80,10 +95,7 @@ class ProductionNearchatterContainer(context: Context) : NearchatterContainer {
                 getSharedPreferencesStorage(),
                 getSchedulerProvider(),
                 getNearbyService(),
-                Settings.Secure.getString(
-                    getApplicationContext().contentResolver,
-                    Settings.Secure.ANDROID_ID
-                )
+                getHwId(),
             )
         }
         return this.peersPresenter!!
@@ -91,7 +103,11 @@ class ProductionNearchatterContainer(context: Context) : NearchatterContainer {
 
     override fun getNearbyService(): INearbyService {
         if (this.nearbyService == null) {
-            this.nearbyService = this.nearchatterModule.provideNearbyService()
+            this.nearbyService = this.nearchatterModule.provideNearbyService(
+                getNearbyRepository(),
+                getUserRepository(),
+                getMessageRepository(),
+            )
         }
         return this.nearbyService!!
     }
@@ -117,19 +133,24 @@ class ProductionNearchatterContainer(context: Context) : NearchatterContainer {
         return userDao!!
     }
 
+    private fun getMessageDao(): MessageDao {
+        if (this.messageDao == null) {
+            messageDao = this.nearchatterModule.provideMessageDao()
+        }
+        return messageDao!!
+    }
+
+    private fun getMessageMapper(): MessageMapper {
+        if (this.messageMapper == null) {
+            this.messageMapper = this.nearchatterModule.provideMessageMapper()
+        }
+        return this.messageMapper!!;
+    }
+
     private fun getConversationMapper(): ConversationMapper {
         if (this.conversationMapper == null) {
             this.conversationMapper = this.nearchatterModule.provideConversationMapper()
         }
         return this.conversationMapper!!
     }
-
-    private fun getConversationDao(): ConversationDao {
-        if (this.conversationDao == null) {
-            conversationDao = this.nearchatterModule.provideConversationDao()
-        }
-        return conversationDao!!
-    }
-
-
 }

@@ -4,14 +4,13 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import ar.edu.itba.pam.nearchatter.db.room.conversation.ConversationDao
-import ar.edu.itba.pam.nearchatter.db.room.conversation.ConversationEntity
+import ar.edu.itba.pam.nearchatter.db.room.message.MessageDao
 import ar.edu.itba.pam.nearchatter.db.room.message.MessageEntity
 import ar.edu.itba.pam.nearchatter.db.room.user.UserDao
 import ar.edu.itba.pam.nearchatter.db.room.user.UserEntity
 
 @Database(
-    entities = [UserEntity::class, MessageEntity::class, ConversationEntity::class],
+    entities = [UserEntity::class, MessageEntity::class],
     version = 5
 )
 abstract class NearchatterDb : RoomDatabase() {
@@ -37,6 +36,6 @@ abstract class NearchatterDb : RoomDatabase() {
     }
 
     abstract fun userDao(): UserDao
-    abstract fun conversationDao(): ConversationDao
+    abstract fun messageDao(): MessageDao
 
 }

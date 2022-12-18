@@ -1,9 +1,7 @@
-package ar.edu.itba.pam.nearchatter.db.room.conversation
+package ar.edu.itba.pam.nearchatter.db.room.user
 
-import android.os.Message
 import androidx.room.Embedded
 import ar.edu.itba.pam.nearchatter.db.room.message.MessageEntity
-import ar.edu.itba.pam.nearchatter.db.room.user.UserEntity
 
 class UserConversation {
     @Embedded

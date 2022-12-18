@@ -1,14 +1,19 @@
 package ar.edu.itba.pam.nearchatter.domain
 
-class User(id: String, username: String) {
-    private var user_id: String = id
-    private var user_username: String = username
-
+class User(
+    private val id: String,
+    private val username: String,
+    private val isConnected: Boolean
+) {
     fun getUserId(): String {
-        return user_id
+        return id
     }
 
     fun getUsername(): String {
-        return user_username
+        return username
+    }
+
+    fun isConnected(): Boolean {
+        return isConnected
     }
 }

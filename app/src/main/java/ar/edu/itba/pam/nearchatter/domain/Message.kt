@@ -9,7 +9,9 @@ class Message(
     private var payload: String,
     private var sendAt: LocalDate
 ) {
-
+    fun getId(): Long? {
+        return this.id
+    }
 
     fun getReceiverId(): String {
         return this.receiverId
