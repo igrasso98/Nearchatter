@@ -1,6 +1,7 @@
 package ar.edu.itba.pam.nearchatter.repository
 
 import ar.edu.itba.pam.nearchatter.domain.Conversation
+import ar.edu.itba.pam.nearchatter.domain.Message
 import ar.edu.itba.pam.nearchatter.domain.User
 import io.reactivex.Flowable
 import io.reactivex.Single
@@ -13,4 +14,6 @@ interface IUserRepository {
     fun updateUsername(userId: String, username: String): Single<Unit>
 
     fun getUserConversations(): Flowable<List<Conversation>>
+
+    fun setLastMessage(message: Message): Single<Unit>
 }

@@ -5,10 +5,10 @@ import ar.edu.itba.pam.nearchatter.domain.User
 
 class UserMapper {
     fun toEntity(user: User): UserEntity {
-        return UserEntity(user.getUserId(), user.getUsername())
+        return UserEntity(user.getUserId(), user.getUsername(), null)
     }
 
     fun fromEntity(userEntity: UserEntity): User {
-        return User(userEntity.userId!!, userEntity.username!!)
+        return User(userEntity.userId!!, userEntity.username!!, false)
     }
 }

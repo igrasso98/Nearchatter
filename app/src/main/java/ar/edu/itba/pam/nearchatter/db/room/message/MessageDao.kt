@@ -11,7 +11,7 @@ interface MessageDao {
     fun getAll(): List<MessageEntity>
 
     @Insert
-    fun insert(vararg message: MessageEntity)
+    fun insert(message: MessageEntity): Long
 
     @Delete
     fun delete(message: MessageEntity)

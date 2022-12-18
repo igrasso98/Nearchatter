@@ -13,8 +13,6 @@ import ar.edu.itba.pam.nearchatter.R
 import ar.edu.itba.pam.nearchatter.di.NearchatterContainer
 import ar.edu.itba.pam.nearchatter.di.NearchatterContainerLocator
 import ar.edu.itba.pam.nearchatter.domain.Conversation
-import ar.edu.itba.pam.nearchatter.domain.Message
-import ar.edu.itba.pam.nearchatter.domain.User
 import ar.edu.itba.pam.nearchatter.peers.ui.PeersListView
 
 
@@ -93,18 +91,18 @@ class PeersActivity : AppCompatActivity(), PeersView, OnPeerSelectedListener {
         var visibleUsername = findViewById<TextView>(R.id.visible_username)
         visibleUsername.text = "Logged as: " + intent.getStringExtra("username")
         val mockedConversations = listOf<Conversation>(
-            Conversation(
-                User("ksjdfnksjdnf", "Delfi Varas"),
-                Message("skjdfnksjdfn", "kdjsfnskdjfn", "Hola, como andas?", "Now", true)
-            ),
-            Conversation(
-                User("ksjdfnksjdnf", "Nico Britos"),
-                Message("skjdfnksjdfn", "kdjsfnskdjfn", "llegamos con PAM?", "Yesterday", true)
-            ),
-            Conversation(
-                User("ksjdfnksjdnf", "Santi Grasso"),
-                Message("skjdfnksjdfn", "kdjsfnskdjfn", "chau", "10/04/2020", true)
-            ),
+//            Conversation(
+//                User("ksjdfnksjdnf", "Delfi Varas"),
+//                Message("skjdfnksjdfn", "kdjsfnskdjfn", "Hola, como andas?", "Now", true)
+//            ),
+//            Conversation(
+//                User("ksjdfnksjdnf", "Nico Britos"),
+//                Message("skjdfnksjdfn", "kdjsfnskdjfn", "llegamos con PAM?", "Yesterday", true)
+//            ),
+//            Conversation(
+//                User("ksjdfnksjdnf", "Santi Grasso"),
+//                Message("skjdfnksjdfn", "kdjsfnskdjfn", "chau", "10/04/2020", true)
+//            ),
         )
         adapter.setDataset(mockedConversations)
     }

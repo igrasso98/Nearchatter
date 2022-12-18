@@ -1,7 +1,6 @@
 package ar.edu.itba.pam.nearchatter.repository
 
-import ar.edu.itba.pam.nearchatter.db.room.conversation.ConversationEntity
-import ar.edu.itba.pam.nearchatter.db.room.conversation.UserConversation
+import ar.edu.itba.pam.nearchatter.db.room.user.UserConversation
 import ar.edu.itba.pam.nearchatter.db.room.user.UserEntity
 import ar.edu.itba.pam.nearchatter.domain.Conversation
 import ar.edu.itba.pam.nearchatter.domain.Message
@@ -14,14 +13,15 @@ class ConversationMapper {
         val lastMessEnt = userConversation.lastMessage
         val user = User(
             userEnt?.userId!!,
-            userEnt?.username!!
+            userEnt.username!!,
+            false,
         )
         val lastMessage = Message(
+            lastMessEnt?.id!!,
             lastMessEnt?.senderId!!,
             lastMessEnt?.receiverId!!,
             lastMessEnt?.payload!!,
             lastMessEnt?.sendAt!!,
-            lastMessEnt?.read!!
         )
         return Conversation(user, lastMessage)
     }

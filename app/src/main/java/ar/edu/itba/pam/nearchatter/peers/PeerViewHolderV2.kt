@@ -5,6 +5,7 @@ import ar.edu.itba.pam.nearchatter.databinding.ItemContainerReceivedMessageBindi
 import ar.edu.itba.pam.nearchatter.databinding.ItemContainerUserBinding
 import ar.edu.itba.pam.nearchatter.domain.Conversation
 import ar.edu.itba.pam.nearchatter.domain.User
+import java.time.format.DateTimeFormatter
 
 class PeerViewHolderV2(itemView: ItemContainerUserBinding) :
     RecyclerView.ViewHolder(itemView.root) {
@@ -15,7 +16,7 @@ class PeerViewHolderV2(itemView: ItemContainerUserBinding) :
     fun setPeerData(conversation: Conversation) {
         binding.textName.text = conversation.getUsername()
         binding.textRecentMessage.text = conversation.getLastMessagePayload()
-        binding.textSendAt.text = conversation.getLastMessageSendAt()
+        binding.textSendAt.text = conversation.getLastMessageSendAt()?.format(DateTimeFormatter.BASIC_ISO_DATE)
         binding.root.setOnClickListener { _ -> onPeerSelectedListener?.onSelected(conversation.getUsername()) }
     }
 

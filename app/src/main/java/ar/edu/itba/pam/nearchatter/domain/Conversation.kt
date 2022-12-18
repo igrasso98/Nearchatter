@@ -1,5 +1,7 @@
 package ar.edu.itba.pam.nearchatter.domain
 
+import java.time.LocalDate
+
 class Conversation(user: User, lastMessage: Message?) {
     private var user: User = user
     private var lastMessage: Message? = lastMessage
@@ -15,18 +17,10 @@ class Conversation(user: User, lastMessage: Message?) {
         return null
     }
 
-    fun getLastMessageSendAt(): String? {
+    fun getLastMessageSendAt(): LocalDate? {
         if (lastMessage != null) {
             return this.lastMessage?.getSendAt()
         }
         return null
     }
-
-    fun getLastMessageIsRead(): Boolean? {
-        if (lastMessage != null) {
-            return this.lastMessage?.getIsRead()
-        }
-        return null
-    }
-
 }

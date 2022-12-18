@@ -19,7 +19,7 @@ class LoginPresenter(
     @SuppressLint("CheckResult")
     fun onUsernameConfirm(username: String) {
         if (sharedPreferencesStorage.isActive()) {
-            userRepository.addUser(User(hwid, username))
+            userRepository.addUser(User(hwid, username, true))
                 .subscribeOn(schedulerProvider.io()).observeOn(schedulerProvider.ui())
                 .subscribe(this::onUserAdded, this::onUserAddedFailed)
         } else {

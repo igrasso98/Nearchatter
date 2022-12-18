@@ -1,10 +1,11 @@
 package ar.edu.itba.pam.nearchatter.di
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Context.MODE_PRIVATE
-import android.content.SharedPreferences
+import android.provider.Settings
 import ar.edu.itba.pam.nearchatter.db.room.NearchatterDb
-import ar.edu.itba.pam.nearchatter.db.room.conversation.ConversationDao
+import ar.edu.itba.pam.nearchatter.db.room.message.MessageDao
 import ar.edu.itba.pam.nearchatter.db.room.user.UserDao
 import ar.edu.itba.pam.nearchatter.db.sharedPreferences.ISharedPreferencesStorage
 import ar.edu.itba.pam.nearchatter.db.sharedPreferences.SharedPreferencesStorage
@@ -12,10 +13,7 @@ import ar.edu.itba.pam.nearchatter.login.LoginPresenter
 import ar.edu.itba.pam.nearchatter.login.LoginView
 import ar.edu.itba.pam.nearchatter.peers.PeersPresenter
 import ar.edu.itba.pam.nearchatter.peers.PeersView
-import ar.edu.itba.pam.nearchatter.repository.ConversationMapper
-import ar.edu.itba.pam.nearchatter.repository.IUserRepository
-import ar.edu.itba.pam.nearchatter.repository.UserMapper
-import ar.edu.itba.pam.nearchatter.repository.UserRepository
+import ar.edu.itba.pam.nearchatter.repository.*
 import ar.edu.itba.pam.nearchatter.services.INearbyService
 import ar.edu.itba.pam.nearchatter.services.NearbyService
 import ar.edu.itba.pam.nearchatter.utils.schedulers.AndroidSchedulerProvider
@@ -28,13 +26,36 @@ class NearchatterModule(context: Context) {
         return applicationContext;
     }
 
+    @SuppressLint("HardwareIds")
+    fun getHwId(): String {
+        return Settings.Secure.getString(
+            getApplicationContext().contentResolver,
+            Settings.Secure.ANDROID_ID
+        )
+    }
+
     fun provideUserRepository(
         userDao: UserDao,
-        conversationDao: ConversationDao,
         userMapper: UserMapper,
         conversationMapper: ConversationMapper
     ): IUserRepository {
-        return UserRepository(userDao, conversationDao, userMapper, conversationMapper)
+        return UserRepository(userDao, userMapper, conversationMapper)
+    }
+
+    fun provideNearbyRepository(context: Context, hwId: String): INearbyRepository {
+        return NearbyRepository(context, hwId)
+    }
+
+    fun provideMessageRepository(messageDao: MessageDao, messageMapper: MessageMapper): IMessageRepository {
+        return MessageRepository(messageDao, messageMapper)
+    }
+
+    fun provideMessageMapper(): MessageMapper {
+        return MessageMapper()
+    }
+
+    fun provideMessageDao(): MessageDao {
+        return NearchatterDb.getInstance(getApplicationContext())?.messageDao()!!
     }
 
     fun provideLoginPresenter(
@@ -71,8 +92,16 @@ class NearchatterModule(context: Context) {
         )
     }
 
-    fun provideNearbyService(): INearbyService {
-        return NearbyService(applicationContext)
+    fun provideNearbyService(
+        nearbyRepository: INearbyRepository,
+        userRepository: IUserRepository,
+        messageRepository: IMessageRepository,
+    ): INearbyService {
+        return NearbyService(
+            nearbyRepository,
+            userRepository,
+            messageRepository,
+        )
     }
 
     fun provideSharedPreferencesStorage(): ISharedPreferencesStorage {
@@ -99,9 +128,4 @@ class NearchatterModule(context: Context) {
     fun provideConversationMapper(): ConversationMapper {
         return ConversationMapper()
     }
-
-    fun provideConversationDao(): ConversationDao {
-        return NearchatterDb.getInstance(getApplicationContext())?.conversationDao()!!
-    }
-
 }
