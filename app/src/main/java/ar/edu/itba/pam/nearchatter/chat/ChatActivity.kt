@@ -9,13 +9,11 @@ import ar.edu.itba.pam.nearchatter.domain.Message
 import ar.edu.itba.pam.nearchatter.domain.User
 import ar.edu.itba.pam.nearchatter.peers.PeersAdapter
 
-class ChatActivity : AppCompatActivity() {
+class ChatActivity : AppCompatActivity(), ChatView {
     private lateinit var binding: ActivityChatBinding
     private lateinit var receiverUser: User
     private lateinit var chatMessages: List<Message>
     private lateinit var chatAdapter: ChatAdapter
-//    private lateinit var preferenceManager: PreferenceManager
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,6 +48,10 @@ class ChatActivity : AppCompatActivity() {
     private fun loadReceiverDetails() {
 //        receiverUser = intent.getSerializableExtra("KEY_USER") as User
         binding.textName.text = "Delfi Varas"
+    }
+
+    override fun bind(conversations: List<Message>) {
+        TODO("Not yet implemented")
     }
 
 

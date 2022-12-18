@@ -34,8 +34,6 @@ class PeersPresenter(
     }
 
     private fun onUsernameLoaded(username: String) {
-        setNearbyServiceCallbacks()
-        nearbyService.openConnections(username)
         conversationsDisposable =
             userRepository.getUserConversations().subscribeOn(Schedulers.computation())
                 .subscribeOn(schedulerProvider.io()).observeOn(schedulerProvider.ui())
@@ -45,6 +43,8 @@ class PeersPresenter(
     private fun onConversationsLoaded(conversations: List<Conversation>) {
         if (view.get() != null) {
             view.get()!!.bind(conversations)
+            setNearbyServiceCallbacks()
+            nearbyService.openConnections(username)
         }
     }
 
@@ -53,9 +53,9 @@ class PeersPresenter(
     }
 
     private fun setNearbyServiceCallbacks() {
-        nearbyService.setOnConnectCallback { d ->
+        nearbyService.setOnConnectCallback { user ->
             run {
-                println(d.getUserId())
+                println(user)
             }
         }
         nearbyService.setOnDisconnectCallback { d ->
