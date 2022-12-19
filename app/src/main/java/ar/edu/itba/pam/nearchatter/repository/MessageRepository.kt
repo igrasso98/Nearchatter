@@ -6,6 +6,7 @@ import ar.edu.itba.pam.nearchatter.db.room.message.MessageDao
 import ar.edu.itba.pam.nearchatter.domain.Message
 import io.reactivex.Single
 import kotlinx.coroutines.flow.Flow
+import java.time.LocalDate
 
 class MessageRepository(
     private val messageDao: MessageDao,

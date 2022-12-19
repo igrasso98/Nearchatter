@@ -24,7 +24,6 @@ import java.time.LocalDate
 class PeersActivityV2 : AppCompatActivity(), PeersView, OnPeerSelectedListener {
     private lateinit var binding: ActivityPeersV2Binding
 
-    //    private lateinit var peers: List<Conversation>
     private lateinit var peersAdapterV2: PeersAdapterV2
     private var presenter: PeersPresenter? = null
 
@@ -37,6 +36,7 @@ class PeersActivityV2 : AppCompatActivity(), PeersView, OnPeerSelectedListener {
         Manifest.permission.ACCESS_WIFI_STATE,
         Manifest.permission.CHANGE_WIFI_STATE,
         Manifest.permission.ACCESS_COARSE_LOCATION,
+        Manifest.permission.ACCESS_FINE_LOCATION,
     )
 
 
