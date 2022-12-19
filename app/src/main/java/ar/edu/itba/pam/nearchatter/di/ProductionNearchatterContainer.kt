@@ -144,6 +144,7 @@ class ProductionNearchatterContainer(context: Context) : NearchatterContainer {
     override fun getNearbyService(): INearbyService {
         if (this.nearbyService == null) {
             this.nearbyService = this.nearchatterModule.provideNearbyService(
+                getHwId(),
                 getNearbyRepository(),
                 getUserRepository(),
                 getMessageRepository(),

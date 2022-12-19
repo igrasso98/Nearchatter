@@ -132,11 +132,13 @@ class NearchatterModule(context: Context) {
     }
 
     fun provideNearbyService(
+        hwId: String,
         nearbyRepository: INearbyRepository,
         userRepository: IUserRepository,
         messageRepository: IMessageRepository,
     ): INearbyService {
         return NearbyService(
+            hwId,
             nearbyRepository,
             userRepository,
             messageRepository,
