@@ -45,6 +45,12 @@ class ChatActivity : AppCompatActivity(), ChatView, OnMessageSentListener {
 
     }
 
+    override fun onStop() {
+        super.onStop()
+        presenter?.onViewDetached()
+    }
+
+
     private fun init() {
         chatMessages = ArrayList()
         chatAdapter = ChatAdapter(otherUserId)

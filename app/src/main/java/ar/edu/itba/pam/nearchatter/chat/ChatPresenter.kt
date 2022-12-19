@@ -2,6 +2,7 @@ package ar.edu.itba.pam.nearchatter.chat
 
 import android.annotation.SuppressLint
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.asLiveData
 import ar.edu.itba.pam.nearchatter.db.sharedPreferences.ISharedPreferencesStorage
 import ar.edu.itba.pam.nearchatter.domain.Conversation
@@ -28,6 +29,9 @@ class ChatPresenter(
     ) {
     private var messages: LiveData<List<Message>>? = null
     private var view: WeakReference<ChatView> = WeakReference<ChatView>(view)
+    private var username: String? = null
+    private val observer: Observer<List<Message>> =
+        Observer<List<Message>> { data -> onMessagesLoaded(data) }
 
 
     @SuppressLint("CheckResult")
@@ -38,18 +42,22 @@ class ChatPresenter(
 
     }
 
+    fun onViewDetached() {
+        messages!!.removeObserver(observer)
+    }
+
     fun sendMessage(payload: String) {
         nearbyService.sendMessage(payload, userId)
     }
 
     private fun onOtherUserLoaded(username: String) {
         messages = messageRepository.getMessagesById(userId).asLiveData()
-        messages!!.observeForever { data -> (onMessagesLoaded(username, data)) }
+        messages!!.observeForever(observer)
     }
 
-    private fun onMessagesLoaded(username: String, messages: List<Message>) {
-        if (view.get() != null) {
-            view.get()!!.bind(username, messages)
+    private fun onMessagesLoaded(messages: List<Message>) {
+        if (view.get() != null && username != null) {
+            view.get()!!.bind(username!!, messages)
         }
     }
 
