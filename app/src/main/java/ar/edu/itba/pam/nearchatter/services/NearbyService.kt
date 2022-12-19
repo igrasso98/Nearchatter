@@ -37,14 +37,17 @@ class NearbyService(
         nearbyRepository.openConnections(username)
     }
 
+    @SuppressLint("CheckResult")
     override fun sendMessage(message: String, receiverId: String) {
         val messageObj = Message(null, hwId, receiverId, message, LocalDate.now())
         nearbyRepository.sendMessage(messageObj)
         schedulerProvider.io().scheduleDirect {
-            println("To save sent message: $messageObj")
-            messageRepository.addMessage(messageObj)
+            messageRepository.addMessage(messageObj).subscribe { dbMessage ->
+                schedulerProvider.io().scheduleDirect {
+                    userRepository.setLastMessage(dbMessage).subscribe()
+                }
+            }
         }
-            // TODO: SET LAST MESSAGE
     }
 
     override fun closeConnections() {
@@ -66,7 +69,7 @@ class NearbyService(
             schedulerProvider.io().scheduleDirect {
                 messageRepository.addMessage(message).subscribe { dbMessage ->
                     schedulerProvider.io().scheduleDirect {
-                        userRepository.setLastMessage(dbMessage)
+                        userRepository.setLastMessage(dbMessage).subscribe()
                     }
                 }
             }
