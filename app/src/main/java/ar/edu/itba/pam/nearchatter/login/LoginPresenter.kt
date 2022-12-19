@@ -18,7 +18,7 @@ class LoginPresenter(
 
     @SuppressLint("CheckResult")
     fun onUsernameConfirm(username: String) {
-        if (sharedPreferencesStorage.isActive()) {
+        if (!sharedPreferencesStorage.isActive()) {
             schedulerProvider.io().scheduleDirect {
                 userRepository.addUser(User(hwid, username, true))
                     .subscribeOn(schedulerProvider.io()).observeOn(schedulerProvider.ui())
@@ -34,7 +34,7 @@ class LoginPresenter(
     }
 
     private fun onUserAdded(unit: Unit) {
-        sharedPreferencesStorage.deactivate()
+        sharedPreferencesStorage.activate()
         Log.i(tag, unit.toString())
     }
 

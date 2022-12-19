@@ -4,4 +4,6 @@ interface ISharedPreferencesStorage {
     fun isActive(): Boolean
 
     fun deactivate()
+
+    fun activate()
 }
