@@ -1,6 +1,6 @@
 package ar.edu.itba.pam.nearchatter.domain
 
-import java.time.LocalDate
+import java.time.LocalDateTime
 
 class Conversation(user: User, lastMessage: Message?) {
     private var user: User = user
@@ -21,7 +21,7 @@ class Conversation(user: User, lastMessage: Message?) {
         return null
     }
 
-    fun getLastMessageSendAt(): LocalDate? {
+    fun getLastMessageSendAt(): LocalDateTime? {
         if (lastMessage != null) {
             return this.lastMessage?.getSendAt()
         }

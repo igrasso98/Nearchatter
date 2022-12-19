@@ -1,13 +1,13 @@
 package ar.edu.itba.pam.nearchatter.domain
 
-import java.time.LocalDate
+import java.time.LocalDateTime
 
 class Message(
     private var id: Long?,
     private var senderId: String,
     private var receiverId: String,
     private var payload: String,
-    private var sendAt: LocalDate
+    private var sendAt: LocalDateTime
 ) {
     fun getId(): Long? {
         return this.id
@@ -25,7 +25,7 @@ class Message(
         return this.payload
     }
 
-    fun getSendAt(): LocalDate {
+    fun getSendAt(): LocalDateTime {
         return this.sendAt
     }
 }

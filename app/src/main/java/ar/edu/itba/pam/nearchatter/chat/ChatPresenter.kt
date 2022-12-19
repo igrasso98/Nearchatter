@@ -4,18 +4,13 @@ import android.annotation.SuppressLint
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.asLiveData
-import ar.edu.itba.pam.nearchatter.db.sharedPreferences.ISharedPreferencesStorage
-import ar.edu.itba.pam.nearchatter.domain.Conversation
 import ar.edu.itba.pam.nearchatter.domain.Message
-import ar.edu.itba.pam.nearchatter.peers.PeersView
 import ar.edu.itba.pam.nearchatter.repository.IMessageRepository
 import ar.edu.itba.pam.nearchatter.repository.IUserRepository
-import ar.edu.itba.pam.nearchatter.repository.UserRepository
 import ar.edu.itba.pam.nearchatter.services.INearbyService
 import ar.edu.itba.pam.nearchatter.utils.schedulers.SchedulerProvider
 import io.reactivex.schedulers.Schedulers
 import java.lang.ref.WeakReference
-import java.time.LocalDate
 
 class ChatPresenter(
     view: ChatView,
@@ -57,9 +52,8 @@ class ChatPresenter(
     }
 
     private fun onMessagesLoaded(messages: List<Message>) {
-        messages.sortedBy { it.getSendAt() }
         if (view.get() != null && username != null) {
-            view.get()!!.bind(username!!, messages)
+            view.get()!!.bind(username!!, messages.sortedBy { it.getSendAt() })
         }
     }
 

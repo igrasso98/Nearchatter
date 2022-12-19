@@ -5,7 +5,7 @@ import androidx.annotation.VisibleForTesting
 import ar.edu.itba.pam.nearchatter.domain.Message
 import ar.edu.itba.pam.nearchatter.models.Device
 import com.google.android.gms.nearby.connection.*
-import java.time.LocalDate
+import java.time.LocalDateTime
 import java.util.function.Consumer
 
 class NearbyRepository(
@@ -55,7 +55,7 @@ class NearbyRepository(
                         otherHwId,
                         hwId,
                         message,
-                        LocalDate.now()
+                        LocalDateTime.now()
                     )
                 )
             },

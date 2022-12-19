@@ -1,17 +1,18 @@
 package ar.edu.itba.pam.nearchatter.db.room.utils
 
 import androidx.room.TypeConverter
-import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.ZoneOffset
 
-class LocalDateTypeConverter {
+class LocalDateTimeTypeConverter {
 
     @TypeConverter
-    fun toTimestamp(localDate: LocalDate): Long {
-        return localDate.toEpochDay()
+    fun toTimestamp(localDate: LocalDateTime): Long {
+        return localDate.toEpochSecond(ZoneOffset.UTC)
     }
 
     @TypeConverter
-    fun toLocalDate(timestamp: Long): LocalDate {
-        return LocalDate.ofEpochDay(timestamp)
+    fun toLocalDateTime(timestamp: Long): LocalDateTime {
+        return LocalDateTime.ofEpochSecond(timestamp, 0, ZoneOffset.UTC)
     }
 }

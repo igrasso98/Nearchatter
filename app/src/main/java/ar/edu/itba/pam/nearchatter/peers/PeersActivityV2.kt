@@ -19,7 +19,7 @@ import ar.edu.itba.pam.nearchatter.di.NearchatterContainerLocator
 import ar.edu.itba.pam.nearchatter.domain.Conversation
 import ar.edu.itba.pam.nearchatter.domain.Message
 import ar.edu.itba.pam.nearchatter.domain.User
-import java.time.LocalDate
+import java.time.LocalDateTime
 
 class PeersActivityV2 : AppCompatActivity(), PeersView, OnPeerSelectedListener {
     private lateinit var binding: ActivityPeersV2Binding

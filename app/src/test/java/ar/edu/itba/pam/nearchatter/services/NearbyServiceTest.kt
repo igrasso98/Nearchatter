@@ -43,7 +43,7 @@ class NearbyServiceTest {
 //
 //    nearbyService.sendMessage("content", "receiver")
 //
-//    val localDate = LocalDate.now()
+//    val localDate = LocalDateTime.now()
 //    verify(nearbyRepository).sendMessage(MockitoHelper.capture(messageCaptor))
 //    verify(messageRepository).addMessage(MockitoHelper.capture(messageCaptor))
 //

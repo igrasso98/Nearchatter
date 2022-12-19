@@ -4,8 +4,8 @@ import androidx.room.*
 import androidx.room.ForeignKey.CASCADE
 import androidx.room.ForeignKey.RESTRICT
 import ar.edu.itba.pam.nearchatter.db.room.user.UserEntity
-import ar.edu.itba.pam.nearchatter.db.room.utils.LocalDateTypeConverter
-import java.time.LocalDate
+import ar.edu.itba.pam.nearchatter.db.room.utils.LocalDateTimeTypeConverter
+import java.time.LocalDateTime
 
 @Entity(
     tableName = "messages", foreignKeys = [
@@ -29,12 +29,12 @@ import java.time.LocalDate
         Index("receiver_id"),
     ]
 )
-@TypeConverters(LocalDateTypeConverter::class)
+@TypeConverters(LocalDateTimeTypeConverter::class)
 class MessageEntity(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "message_id") val id: Long?,
     @ColumnInfo(name = "sender_id") val senderId: String,
     @ColumnInfo(name = "receiver_id") val receiverId: String,
     @ColumnInfo(name = "payload") val payload: String,
-    @ColumnInfo(name = "send_at") val sendAt: LocalDate,
+    @ColumnInfo(name = "send_at") val sendAt: LocalDateTime,
 )
