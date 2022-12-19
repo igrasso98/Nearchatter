@@ -2,6 +2,7 @@ package ar.edu.itba.pam.nearchatter.peers
 
 import android.annotation.SuppressLint
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.asLiveData
 import ar.edu.itba.pam.nearchatter.db.sharedPreferences.ISharedPreferencesStorage
 import ar.edu.itba.pam.nearchatter.domain.Conversation
@@ -22,6 +23,8 @@ class PeersPresenter(
 
     private var view: WeakReference<PeersView> = WeakReference<PeersView>(view)
     private var conversations: LiveData<List<Conversation>>? = null
+    private val observer: Observer<List<Conversation>> =
+        Observer<List<Conversation>> { data -> onConversationsLoaded(data) }
 
     @SuppressLint("CheckResult")
     fun onViewAttached() {
@@ -31,14 +34,14 @@ class PeersPresenter(
     }
 
     fun onViewDetached() {
-//        conversations!!.removeObserver()
+        conversations!!.removeObserver(observer)
     }
 
     private fun onUsernameLoaded(username: String) {
         setNearbyServiceCallbacks()
         nearbyService.openConnections(username)
         conversations = userRepository.getUserConversations().asLiveData()
-        conversations!!.observeForever { data -> onConversationsLoaded(data) }
+        conversations!!.observeForever(observer)
     }
 
     private fun onConversationsLoaded(conversations: List<Conversation>) {
