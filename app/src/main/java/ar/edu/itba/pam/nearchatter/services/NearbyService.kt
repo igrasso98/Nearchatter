@@ -6,8 +6,7 @@ import ar.edu.itba.pam.nearchatter.domain.User
 import ar.edu.itba.pam.nearchatter.repository.IMessageRepository
 import ar.edu.itba.pam.nearchatter.repository.INearbyRepository
 import ar.edu.itba.pam.nearchatter.repository.IUserRepository
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
+import ar.edu.itba.pam.nearchatter.utils.schedulers.SchedulerProvider
 import java.time.LocalDate
 import java.util.function.Consumer
 
@@ -17,6 +16,7 @@ class NearbyService(
     private val nearbyRepository: INearbyRepository,
     private val userRepository: IUserRepository,
     private val messageRepository: IMessageRepository,
+    private val schedulerProvider: SchedulerProvider,
 ) : INearbyService {
     private var disconnectedDeviceCallback: Consumer<User>? = null
     private var connectedDeviceCallback: Consumer<User>? = null
@@ -40,7 +40,8 @@ class NearbyService(
     override fun sendMessage(message: String, receiverId: String) {
         val messageObj = Message(null, hwId, receiverId, message, LocalDate.now())
         nearbyRepository.sendMessage(messageObj)
-        GlobalScope.async {
+        schedulerProvider.io().scheduleDirect {
+            println("To save sent message: $messageObj")
             messageRepository.addMessage(messageObj)
         }
             // TODO: SET LAST MESSAGE
@@ -54,7 +55,7 @@ class NearbyService(
     private fun setUpNearbyRepository() {
         nearbyRepository.setOnConnectCallback { device ->
             val user = User(device.getId(), device.getUsername(), true)
-            GlobalScope.async {
+            schedulerProvider.io().scheduleDirect {
                 userRepository.addUser(user).subscribe { _ ->
                     connectedDeviceCallback?.accept(user)
                 }
@@ -62,9 +63,9 @@ class NearbyService(
         }
 
         nearbyRepository.setOnMessageCallback { message ->
-            GlobalScope.async {
+            schedulerProvider.io().scheduleDirect {
                 messageRepository.addMessage(message).subscribe { dbMessage ->
-                    GlobalScope.async {
+                    schedulerProvider.io().scheduleDirect {
                         userRepository.setLastMessage(dbMessage)
                     }
                 }

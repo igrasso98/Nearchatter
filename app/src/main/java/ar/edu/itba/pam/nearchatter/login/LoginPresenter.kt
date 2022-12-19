@@ -5,8 +5,6 @@ import ar.edu.itba.pam.nearchatter.db.sharedPreferences.ISharedPreferencesStorag
 import ar.edu.itba.pam.nearchatter.domain.User
 import ar.edu.itba.pam.nearchatter.repository.IUserRepository
 import ar.edu.itba.pam.nearchatter.utils.schedulers.SchedulerProvider
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
 
 class LoginPresenter(
     view: LoginView,
@@ -19,13 +17,13 @@ class LoginPresenter(
     @SuppressLint("CheckResult")
     fun onUsernameConfirm(username: String) {
         if (sharedPreferencesStorage.isActive()) {
-            GlobalScope.async {
+            schedulerProvider.io().scheduleDirect {
                 userRepository.addUser(User(hwid, username, true))
                     .subscribeOn(schedulerProvider.io()).observeOn(schedulerProvider.ui())
-                    .subscribe({ it -> onUserAdded(it) }, { it -> onUserAddedFailed(it) })
+                    .subscribe({ onUserAdded(it) }, { onUserAddedFailed(it) })
             }
         } else {
-            GlobalScope.async {
+            schedulerProvider.io().scheduleDirect {
                 userRepository.updateUsername(hwid, username)
                     .subscribeOn(schedulerProvider.io()).observeOn(schedulerProvider.ui())
                     .subscribe({ onSuccess(it) }, { onUserAddedFailed(it) })
