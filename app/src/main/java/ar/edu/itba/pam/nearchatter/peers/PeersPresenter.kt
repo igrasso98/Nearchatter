@@ -47,8 +47,11 @@ class PeersPresenter(
     }
 
     private fun onConversationsLoaded(conversations: List<Conversation>) {
+        val mutableList = conversations.toMutableList()
+        mutableList.removeAll { it.getUserId() == hwid }
+        mutableList.sortedBy { it.getLastMessageSendAt() }
         if (view.get() != null) {
-            view.get()!!.bind(conversations)
+            view.get()!!.bind(mutableList)
         }
     }
 

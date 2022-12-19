@@ -57,6 +57,7 @@ class ChatPresenter(
     }
 
     private fun onMessagesLoaded(messages: List<Message>) {
+        messages.sortedBy { it.getSendAt() }
         if (view.get() != null && username != null) {
             view.get()!!.bind(username!!, messages)
         }
