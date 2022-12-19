@@ -57,7 +57,11 @@ class NearbyRepository(
             },
             { otherHwId ->
                 println("Disconnected: $otherHwId")
-                disconnectedDeviceCallback?.accept(hwIdDevices.remove(otherHwId)!!)
+                if (hwIdDevices.containsKey(otherHwId)) {
+                    val device = hwIdDevices[otherHwId]!!
+                    hwIdDevices.remove(otherHwId)
+                    disconnectedDeviceCallback?.accept(device)
+                }
             }
         )
 
@@ -87,11 +91,11 @@ class NearbyRepository(
     }
 
     override fun setOnConnectCallback(callback: Consumer<Device>?) {
-        this.disconnectedDeviceCallback = callback
+        this.connectedDeviceCallback = callback
     }
 
     override fun setOnDisconnectCallback(callback: Consumer<Device>?) {
-        this.connectedDeviceCallback = callback
+        this.disconnectedDeviceCallback = callback
     }
 
     override fun setOnMessageCallback(callback: Consumer<Message>?) {

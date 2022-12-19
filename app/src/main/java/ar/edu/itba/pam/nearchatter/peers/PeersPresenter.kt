@@ -2,19 +2,13 @@ package ar.edu.itba.pam.nearchatter.peers
 
 import android.annotation.SuppressLint
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.Observer
 import androidx.lifecycle.asLiveData
 import ar.edu.itba.pam.nearchatter.db.sharedPreferences.ISharedPreferencesStorage
 import ar.edu.itba.pam.nearchatter.domain.Conversation
 import ar.edu.itba.pam.nearchatter.repository.IUserRepository
 import ar.edu.itba.pam.nearchatter.services.INearbyService
 import ar.edu.itba.pam.nearchatter.utils.schedulers.SchedulerProvider
-import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.observeOn
-import kotlinx.coroutines.flow.subscribe
-import kotlinx.coroutines.flow.subscribeOn
 import java.lang.ref.WeakReference
 
 class PeersPresenter(
@@ -66,11 +60,6 @@ class PeersPresenter(
         nearbyService.setOnDisconnectCallback { d ->
             run {
                 println(d.getUsername())
-            }
-        }
-        nearbyService.setOnMessageCallback { m ->
-            run {
-                println(m.getPayload())
             }
         }
     }

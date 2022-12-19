@@ -8,7 +8,7 @@ class NearbyConnectionHandler(
     private val hwId: String,
 ) : INearbyConnectionHandler {
     companion object {
-        const val INITIALIZATION_PREFIX = "id"
+        const val USERNAME_PREFIX = "us"
         const val MESSAGE_PREFIX = "ms"
         const val MAGIC_PREFIX = "nc"
         val CHAR_REGEX = "[^0-9]".toRegex()
@@ -104,8 +104,9 @@ class NearbyConnectionHandler(
                     Payload.fromBytes(
                         (
                             MAGIC_PREFIX +
-                                INITIALIZATION_PREFIX +
+                                USERNAME_PREFIX +
                                 username!!.length +
+                                USERNAME_PREFIX +
                                 username +
                                 hwId
                             ).toByteArray(Charsets.UTF_8)
@@ -134,12 +135,13 @@ class NearbyConnectionHandler(
             decoded = decoded.substringAfter(MAGIC_PREFIX)
 
             println("received from $endpointId: $decoded")
-            if (decoded.startsWith(INITIALIZATION_PREFIX)) {
-                decoded = decoded.substringAfter(INITIALIZATION_PREFIX)
+            if (decoded.startsWith(USERNAME_PREFIX)) {
+                decoded = decoded.substringAfter(USERNAME_PREFIX)
 
-                val usernameIndex = CHAR_REGEX.find(decoded)!!.range.first
-                val usernameLength = decoded.substring(0, usernameIndex).toInt()
-                val username = decoded.substring(usernameIndex, usernameLength)
+                val usernamePrefixIndex = decoded.indexOf(USERNAME_PREFIX)
+
+                val usernameLength = decoded.substring(0, usernamePrefixIndex).toInt()
+                val username = decoded.substring(usernamePrefixIndex + USERNAME_PREFIX.length, usernamePrefixIndex + USERNAME_PREFIX.length + usernameLength)
 
                 decoded = decoded.substringAfter(username)
 
@@ -156,7 +158,8 @@ class NearbyConnectionHandler(
         }
 
         override fun onPayloadTransferUpdate(p0: String, p1: PayloadTransferUpdate) {
-            println("received custom payload but this is not supported")
+            // Bytes payloads are sent as a single chunk, so you'll receive a SUCCESS update immediately
+            // after the call to onPayloadReceived().
         }
     }
 }
