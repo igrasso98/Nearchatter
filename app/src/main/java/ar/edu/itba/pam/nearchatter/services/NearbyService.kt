@@ -8,10 +8,12 @@ import ar.edu.itba.pam.nearchatter.repository.INearbyRepository
 import ar.edu.itba.pam.nearchatter.repository.IUserRepository
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
+import java.time.LocalDate
 import java.util.function.Consumer
 
 
 class NearbyService(
+    private val hwId: String,
     private val nearbyRepository: INearbyRepository,
     private val userRepository: IUserRepository,
     private val messageRepository: IMessageRepository,
@@ -35,9 +37,10 @@ class NearbyService(
         nearbyRepository.openConnections(username)
     }
 
-    override fun sendMessage(message: Message) {
-        nearbyRepository.sendMessage(message)
-        messageRepository.addMessage(message)
+    override fun sendMessage(message: String, receiverId: String) {
+        val messageObj = Message(null, hwId, receiverId, message, LocalDate.now())
+        nearbyRepository.sendMessage(messageObj)
+        messageRepository.addMessage(messageObj)
     }
 
     override fun closeConnections() {
