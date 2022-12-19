@@ -1,6 +1,8 @@
 package ar.edu.itba.pam.nearchatter.di
 
 import android.content.Context
+import ar.edu.itba.pam.nearchatter.chat.ChatPresenter
+import ar.edu.itba.pam.nearchatter.chat.ChatView
 import ar.edu.itba.pam.nearchatter.db.sharedPreferences.ISharedPreferencesStorage
 import ar.edu.itba.pam.nearchatter.login.LoginPresenter
 import ar.edu.itba.pam.nearchatter.login.LoginView
@@ -20,6 +22,7 @@ interface NearchatterContainer {
     fun getUserRepository(): IUserRepository
     fun getLoginPresenter(view: LoginView): LoginPresenter
     fun getPeersPresenter(view: PeersView): PeersPresenter
+    fun getChatPresenter(view: ChatView, userId: String): ChatPresenter
     fun getNearbyService(): INearbyService
     fun getSharedPreferencesStorage(): ISharedPreferencesStorage
     fun getSchedulerProvider(): SchedulerProvider

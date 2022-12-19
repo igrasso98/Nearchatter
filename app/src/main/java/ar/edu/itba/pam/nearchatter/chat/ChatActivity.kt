@@ -3,22 +3,45 @@ package ar.edu.itba.pam.nearchatter.chat
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import ar.edu.itba.pam.nearchatter.databinding.ActivityChatBinding
+import ar.edu.itba.pam.nearchatter.di.NearchatterContainer
+import ar.edu.itba.pam.nearchatter.di.NearchatterContainerLocator
 import ar.edu.itba.pam.nearchatter.domain.Message
 import ar.edu.itba.pam.nearchatter.domain.User
+import ar.edu.itba.pam.nearchatter.peers.PeersPresenter
 
 class ChatActivity : AppCompatActivity(), ChatView {
     private lateinit var binding: ActivityChatBinding
-    private lateinit var receiverUser: User
+    private lateinit var otherUserId: String
     private lateinit var chatMessages: List<Message>
     private lateinit var chatAdapter: ChatAdapter
+
+    private var presenter: ChatPresenter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityChatBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        setListeners()
         loadReceiverDetails()
+
+        createPresenter()
+        setListeners()
         init()
+    }
+
+    private fun createPresenter() {
+        presenter = lastNonConfigurationInstance as ChatPresenter?
+
+        if (presenter == null) {
+            val container: NearchatterContainer =
+                NearchatterContainerLocator().locateComponent(this)
+            presenter = container.getChatPresenter(this, otherUserId)
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        presenter?.onViewAttached()
+
     }
 
     private fun init() {
@@ -43,11 +66,10 @@ class ChatActivity : AppCompatActivity(), ChatView {
     }
 
     private fun loadReceiverDetails() {
-//        receiverUser = intent.getSerializableExtra("KEY_USER") as User
-        binding.textName.text = "Delfi Varas"
+        otherUserId = intent.getSerializableExtra("KEY_USER") as String
     }
 
-    override fun bind(conversations: List<Message>) {
+    override fun bind(username: String, messages: List<Message>) {
         TODO("Not yet implemented")
     }
 

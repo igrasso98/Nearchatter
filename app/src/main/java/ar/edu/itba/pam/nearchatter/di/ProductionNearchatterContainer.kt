@@ -1,6 +1,8 @@
 package ar.edu.itba.pam.nearchatter.di
 
 import android.content.Context
+import ar.edu.itba.pam.nearchatter.chat.ChatPresenter
+import ar.edu.itba.pam.nearchatter.chat.ChatView
 import ar.edu.itba.pam.nearchatter.db.room.message.MessageDao
 import ar.edu.itba.pam.nearchatter.db.room.user.UserDao
 import ar.edu.itba.pam.nearchatter.db.sharedPreferences.ISharedPreferencesStorage
@@ -21,6 +23,7 @@ class ProductionNearchatterContainer(context: Context) : NearchatterContainer {
     private var userDao: UserDao? = null
     private var loginPresenter: LoginPresenter? = null
     private var peersPresenter: PeersPresenter? = null
+    private var chatPresenter: ChatPresenter? = null
     private var nearbyService: INearbyService? = null
     private var messageRepository: IMessageRepository? = null
     private var messageDao: MessageDao? = null
@@ -121,6 +124,19 @@ class ProductionNearchatterContainer(context: Context) : NearchatterContainer {
             )
         }
         return this.peersPresenter!!
+    }
+
+    override fun getChatPresenter(view: ChatView, userId: String): ChatPresenter {
+        if (this.chatPresenter == null) {
+            this.chatPresenter = this.nearchatterModule.provideChatPresenter(
+                view,
+                userId,
+                getUserRepository(),
+                getMessageRepository(),
+                getSchedulerProvider(),
+            )
+        }
+        return this.chatPresenter!!
     }
 
     override fun getNearbyService(): INearbyService {

@@ -11,7 +11,7 @@ interface IUserRepository {
 
     fun getUsernameById(id: String): Single<String>
 
-    fun updateUsername(userId: String, username: String): Single<Unit>
+    suspend fun updateUsername(userId: String, username: String): Single<Unit>
 
     fun getUserConversations(): Flow<List<Conversation>>
 

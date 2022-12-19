@@ -27,7 +27,7 @@ class UserRepository(
         return Single.fromCallable { userDao.getUsernameById(id) }
     }
 
-    override fun updateUsername(userId: String, username: String): Single<Unit> {
+    override suspend fun updateUsername(userId: String, username: String): Single<Unit> {
         return Single.fromCallable { userDao.updateUser(userId, username) }
     }
 

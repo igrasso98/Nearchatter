@@ -57,9 +57,9 @@ class PeersPresenter(
                 println(user)
             }
         }
-        nearbyService.setOnDisconnectCallback { d ->
+        nearbyService.setOnDisconnectCallback { user ->
             run {
-                println(d.getUsername())
+                println(user.getUsername())
             }
         }
     }

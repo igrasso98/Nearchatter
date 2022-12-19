@@ -4,6 +4,8 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.provider.Settings
+import ar.edu.itba.pam.nearchatter.chat.ChatPresenter
+import ar.edu.itba.pam.nearchatter.chat.ChatView
 import ar.edu.itba.pam.nearchatter.db.room.NearchatterDb
 import ar.edu.itba.pam.nearchatter.db.room.message.MessageDao
 import ar.edu.itba.pam.nearchatter.db.room.user.UserDao
@@ -60,7 +62,10 @@ class NearchatterModule(context: Context) {
         return NearbyConnectionHandler(hwId)
     }
 
-    fun provideMessageRepository(messageDao: MessageDao, messageMapper: MessageMapper): IMessageRepository {
+    fun provideMessageRepository(
+        messageDao: MessageDao,
+        messageMapper: MessageMapper
+    ): IMessageRepository {
         return MessageRepository(messageDao, messageMapper)
     }
 
@@ -104,6 +109,16 @@ class NearchatterModule(context: Context) {
             nearbyService,
             hwid
         )
+    }
+
+    fun provideChatPresenter(
+        view: ChatView,
+        userId: String,
+        userRepository: IUserRepository,
+        messageRepository: IMessageRepository,
+        schedulerProvider: SchedulerProvider
+    ): ChatPresenter {
+        return ChatPresenter(view, userId, userRepository, messageRepository, schedulerProvider)
     }
 
     fun provideNearbyService(
