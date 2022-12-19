@@ -27,8 +27,8 @@ class ChatPresenter(
     private val hwid: String,
 
     ) {
-    private var messages: LiveData<List<Message>>? = null
     private var view: WeakReference<ChatView> = WeakReference<ChatView>(view)
+    private var messages: LiveData<List<Message>>? = null
     private var username: String? = null
     private val observer: Observer<List<Message>> =
         Observer<List<Message>> { data -> onMessagesLoaded(data) }
@@ -50,7 +50,8 @@ class ChatPresenter(
         nearbyService.sendMessage(payload, userId)
     }
 
-    private fun onOtherUserLoaded(username: String) {
+    private fun onOtherUserLoaded(otherUsername: String) {
+        username = otherUsername
         messages = messageRepository.getMessagesById(userId).asLiveData()
         messages!!.observeForever(observer)
     }
