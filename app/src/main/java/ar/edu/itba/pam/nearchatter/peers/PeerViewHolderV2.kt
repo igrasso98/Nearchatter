@@ -1,10 +1,8 @@
 package ar.edu.itba.pam.nearchatter.peers
 
 import androidx.recyclerview.widget.RecyclerView
-import ar.edu.itba.pam.nearchatter.databinding.ItemContainerReceivedMessageBinding
 import ar.edu.itba.pam.nearchatter.databinding.ItemContainerUserBinding
 import ar.edu.itba.pam.nearchatter.domain.Conversation
-import ar.edu.itba.pam.nearchatter.domain.User
 import java.time.format.DateTimeFormatter
 
 class PeerViewHolderV2(itemView: ItemContainerUserBinding) :
@@ -17,7 +15,7 @@ class PeerViewHolderV2(itemView: ItemContainerUserBinding) :
         binding.textName.text = conversation.getUsername()
         binding.textRecentMessage.text = conversation.getLastMessagePayload()
         binding.textSendAt.text = conversation.getLastMessageSendAt()?.format(DateTimeFormatter.BASIC_ISO_DATE)
-        binding.root.setOnClickListener { _ -> onPeerSelectedListener?.onSelected(conversation.getUsername()) }
+        binding.root.setOnClickListener { _ -> onPeerSelectedListener?.onSelected(conversation.getUserId()) }
     }
 
     fun setOnPeerSelectedListener(listener: OnPeerSelectedListener?) {

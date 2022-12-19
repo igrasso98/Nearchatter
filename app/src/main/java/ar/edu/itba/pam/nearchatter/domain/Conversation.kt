@@ -6,6 +6,10 @@ class Conversation(user: User, lastMessage: Message?) {
     private var user: User = user
     private var lastMessage: Message? = lastMessage
 
+    fun getUserId(): String {
+        return user.getUserId()
+    }
+
     fun getUsername(): String {
         return this.user.getUsername()
     }

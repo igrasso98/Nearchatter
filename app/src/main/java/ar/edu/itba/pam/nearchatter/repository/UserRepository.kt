@@ -19,7 +19,6 @@ class UserRepository(
 
 
     override suspend fun addUser(user: User): Single<Unit> {
-        println("${user.getUserId()} ${user.getUsername()}")
         return Single.fromCallable { userDao.insert(userMapper.toEntity(user)) }
     }
 
@@ -40,7 +39,7 @@ class UserRepository(
     }
 
 
-    override fun setLastMessage(message: Message): Single<Unit> {
+    override suspend fun setLastMessage(message: Message): Single<Unit> {
         return Single.fromCallable {
             userDao.setLastMessage(
                 message.getSenderId(),

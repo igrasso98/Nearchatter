@@ -39,8 +39,7 @@ class ChatPresenter(
     }
 
     fun sendMessage(payload: String) {
-        val message = Message(null, hwid, userId, payload, LocalDate.now())
-        nearbyService.sendMessage(message)
+        nearbyService.sendMessage(payload, userId)
     }
 
     private fun onOtherUserLoaded(username: String) {

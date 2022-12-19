@@ -15,5 +15,5 @@ interface IUserRepository {
 
     fun getUserConversations(): Flow<List<Conversation>>
 
-    fun setLastMessage(message: Message): Single<Unit>
+    suspend fun setLastMessage(message: Message): Single<Unit>
 }
