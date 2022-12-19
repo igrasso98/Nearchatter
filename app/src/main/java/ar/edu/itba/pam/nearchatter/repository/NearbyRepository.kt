@@ -109,8 +109,8 @@ class NearbyRepository(
         lifecycle: ConnectionLifecycleCallback
     ) {
         val advertisingOptions: AdvertisingOptions = AdvertisingOptions.Builder()
-            .setStrategy(Strategy.P2P_STAR)
-            .setDisruptiveUpgrade(false)
+            .setStrategy(Strategy.P2P_CLUSTER)
+            .setConnectionType(ConnectionType.BALANCED)
             .build()
 
         connectionsClient.startAdvertising(username, SERVICE_ID, lifecycle, advertisingOptions)
@@ -119,7 +119,9 @@ class NearbyRepository(
     private fun startDiscovery(
         discovery: EndpointDiscoveryCallback
     ) {
-        val discoveryOptions = DiscoveryOptions.Builder().setStrategy(Strategy.P2P_STAR).build()
+        val discoveryOptions = DiscoveryOptions.Builder()
+            .setStrategy(Strategy.P2P_CLUSTER)
+            .build()
         connectionsClient.startDiscovery(SERVICE_ID, discovery, discoveryOptions)
     }
 
