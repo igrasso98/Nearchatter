@@ -7,7 +7,7 @@ import ar.edu.itba.pam.nearchatter.databinding.ItemContainerReceivedMessageBindi
 import ar.edu.itba.pam.nearchatter.databinding.ItemContainerSentMessageBinding
 import ar.edu.itba.pam.nearchatter.domain.Message
 
-class ChatAdapter(private var chatMessages: List<Message>, private var senderId: String) :
+class ChatAdapter(private var chatMessages: List<Message>, private var otherId: String) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     val VIEW_TYPE_SENT = 1
@@ -43,6 +43,15 @@ class ChatAdapter(private var chatMessages: List<Message>, private var senderId:
 
     override fun getItemCount(): Int {
         return chatMessages.size
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        if (chatMessages[position].getSenderId() != otherId) {
+            return VIEW_TYPE_SENT
+        } else {
+            return VIEW_TYPE_RECEIVED
+        }
+
     }
 
 }

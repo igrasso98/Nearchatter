@@ -108,9 +108,9 @@ class PeersActivityV2 : AppCompatActivity(), PeersView, OnPeerSelectedListener {
         Toast.makeText(applicationContext, message, Toast.LENGTH_SHORT).show()
     }
 
-    override fun onSelected(deviceId: String) {
+    override fun onSelected(userId: String) {
         val intent = Intent(this, ChatActivity::class.java)
-//        intent.putExtra("deviceId", deviceId)
+        intent.putExtra("KEY_USER", userId)
         startActivity(intent)
     }
 

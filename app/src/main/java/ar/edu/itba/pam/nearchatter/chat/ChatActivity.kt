@@ -2,53 +2,80 @@ package ar.edu.itba.pam.nearchatter.chat
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import ar.edu.itba.pam.nearchatter.databinding.ActivityChatBinding
+import ar.edu.itba.pam.nearchatter.di.NearchatterContainer
+import ar.edu.itba.pam.nearchatter.di.NearchatterContainerLocator
 import ar.edu.itba.pam.nearchatter.domain.Message
 import ar.edu.itba.pam.nearchatter.domain.User
+import ar.edu.itba.pam.nearchatter.peers.PeersPresenter
 
-class ChatActivity : AppCompatActivity(), ChatView {
+class ChatActivity : AppCompatActivity(), ChatView, OnMessageSentListener {
     private lateinit var binding: ActivityChatBinding
-    private lateinit var receiverUser: User
+    private lateinit var otherUserId: String
     private lateinit var chatMessages: List<Message>
     private lateinit var chatAdapter: ChatAdapter
+
+    private var presenter: ChatPresenter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityChatBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        setListeners()
         loadReceiverDetails()
+
+        createPresenter()
+        setListeners()
         init()
+    }
+
+    private fun createPresenter() {
+        presenter = lastNonConfigurationInstance as ChatPresenter?
+
+        if (presenter == null) {
+            val container: NearchatterContainer =
+                NearchatterContainerLocator().locateComponent(this)
+            presenter = container.getChatPresenter(this, otherUserId)
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        presenter?.onViewAttached()
+
     }
 
     private fun init() {
         chatMessages = ArrayList()
         chatAdapter = ChatAdapter(
             chatMessages,
-            "senderId",
+            otherUserId,
         )
         binding.chatRecyclerView.adapter = chatAdapter
+        binding.chatRecyclerView.visibility = View.VISIBLE
+        binding.progressBar.visibility = View.GONE
+
 
     }
-
-    private fun sendMessage() {
-        //SEND MESSAGE LOGIC
-        binding.inputMessage.text = null
-    }
-
 
     private fun setListeners() {
         binding.imageBack.setOnClickListener { onBackPressed() }
-        binding.layoutSend.setOnClickListener { sendMessage() }
+        binding.layoutSend.setOnClickListener { onMessageSent(binding.inputMessage.text.toString()) }
     }
 
     private fun loadReceiverDetails() {
-//        receiverUser = intent.getSerializableExtra("KEY_USER") as User
-        binding.textName.text = "Delfi Varas"
+        otherUserId = intent.getSerializableExtra("KEY_USER") as String
     }
 
-    override fun bind(conversations: List<Message>) {
+    override fun bind(username: String, messages: List<Message>) {
         TODO("Not yet implemented")
+    }
+
+    override fun onMessageSent(payload: String) {
+        if (payload.isNotEmpty() && payload.isNotBlank()) {
+            presenter!!.sendMessage(payload)
+            binding.inputMessage.text = null
+        }
     }
 
 

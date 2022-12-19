@@ -47,13 +47,15 @@ class NearbyRepository(
             },
             { otherHwId, message ->
                 println("Message: $message - $otherHwId")
-                messageCallback?.accept(Message(
-                    null,
-                    otherHwId,
-                    hwId,
-                    message,
-                    LocalDate.now()
-                ))
+                messageCallback?.accept(
+                    Message(
+                        null,
+                        otherHwId,
+                        hwId,
+                        message,
+                        LocalDate.now()
+                    )
+                )
             },
             { otherHwId ->
                 println("Disconnected: $otherHwId")
