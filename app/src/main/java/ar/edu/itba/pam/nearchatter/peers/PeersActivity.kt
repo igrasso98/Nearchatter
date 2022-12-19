@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -21,6 +22,7 @@ class PeersActivity : AppCompatActivity(), PeersView, OnPeerSelectedListener {
     private lateinit var adapter: PeersAdapter
     private lateinit var peersListView: PeersListView
     private val REQUEST_CODE_REQUIRED_PERMISSIONS = 1
+    private val tag = "PeersActivity"
 
 
     private val REQUIRED_PERMISSIONS = arrayOf<String>(
@@ -84,7 +86,7 @@ class PeersActivity : AppCompatActivity(), PeersView, OnPeerSelectedListener {
 
     override fun onSelected(deviceId: String) {
         TODO("Not yet implemented")
-        println(deviceId)
+        Log.i(tag, deviceId)
     }
 
     override fun bind(conversations: List<Conversation>) {

@@ -5,9 +5,6 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import io.reactivex.Flowable
-import io.reactivex.Single
-import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface UserDao {
@@ -29,5 +26,5 @@ interface UserDao {
     fun updateUser(id: String, username: String)
 
     @Query("UPDATE users SET last_message_id = :message_id WHERE user_id = :sender_id OR user_id = :receiver_id")
-    fun setLastMessage(sender_id: String, receiver_id: String, message_id: Long): Single<Unit>
+    fun setLastMessage(sender_id: String, receiver_id: String, message_id: Long)
 }

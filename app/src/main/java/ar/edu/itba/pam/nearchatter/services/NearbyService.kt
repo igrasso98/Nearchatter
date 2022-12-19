@@ -43,9 +43,7 @@ class NearbyService(
         nearbyRepository.sendMessage(messageObj)
         schedulerProvider.io().scheduleDirect {
             messageRepository.addMessage(messageObj).subscribe { dbMessage ->
-                schedulerProvider.io().scheduleDirect {
-                    userRepository.setLastMessage(dbMessage).subscribe()
-                }
+                userRepository.setLastMessage(dbMessage).subscribe()
             }
         }
     }
@@ -59,18 +57,15 @@ class NearbyService(
         nearbyRepository.setOnConnectCallback { device ->
             val user = User(device.getId(), device.getUsername(), true)
             schedulerProvider.io().scheduleDirect {
-                userRepository.addUser(user).subscribe { _ ->
-                    connectedDeviceCallback?.accept(user)
-                }
+                userRepository.addUser(user).subscribe()
             }
+            connectedDeviceCallback?.accept(user)
         }
 
         nearbyRepository.setOnMessageCallback { message ->
             schedulerProvider.io().scheduleDirect {
                 messageRepository.addMessage(message).subscribe { dbMessage ->
-                    schedulerProvider.io().scheduleDirect {
-                        userRepository.setLastMessage(dbMessage).subscribe()
-                    }
+                    userRepository.setLastMessage(dbMessage).subscribe()
                 }
             }
         }
