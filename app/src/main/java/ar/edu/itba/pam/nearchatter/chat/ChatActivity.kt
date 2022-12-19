@@ -47,15 +47,8 @@ class ChatActivity : AppCompatActivity(), ChatView, OnMessageSentListener {
 
     private fun init() {
         chatMessages = ArrayList()
-        chatAdapter = ChatAdapter(
-            chatMessages,
-            otherUserId,
-        )
+        chatAdapter = ChatAdapter(otherUserId)
         binding.chatRecyclerView.adapter = chatAdapter
-        binding.chatRecyclerView.visibility = View.VISIBLE
-        binding.progressBar.visibility = View.GONE
-
-
     }
 
     private fun setListeners() {
@@ -68,7 +61,10 @@ class ChatActivity : AppCompatActivity(), ChatView, OnMessageSentListener {
     }
 
     override fun bind(username: String, messages: List<Message>) {
-        TODO("Not yet implemented")
+        binding.chatRecyclerView.visibility = View.VISIBLE
+        binding.progressBar.visibility = View.GONE
+        binding.textName.text = username
+        chatAdapter.setDataset(messages)
     }
 
     override fun onMessageSent(payload: String) {
