@@ -3,7 +3,6 @@ package ar.edu.itba.pam.nearchatter.repository
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.asFlow
 import ar.edu.itba.pam.nearchatter.db.room.message.MessageDao
-import ar.edu.itba.pam.nearchatter.domain.Conversation
 import ar.edu.itba.pam.nearchatter.domain.Message
 import io.reactivex.Single
 import kotlinx.coroutines.flow.Flow
@@ -13,7 +12,7 @@ class MessageRepository(
     private val messageMapper: MessageMapper,
 ) :
     IMessageRepository {
-    override fun addMessage(message: Message): Single<Message> {
+    override suspend fun addMessage(message: Message): Single<Message> {
         return Single.fromCallable {
             val id = messageDao.insert(messageMapper.toEntity(message))
             messageMapper.setId(id, message)

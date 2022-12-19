@@ -40,7 +40,10 @@ class NearbyService(
     override fun sendMessage(message: String, receiverId: String) {
         val messageObj = Message(null, hwId, receiverId, message, LocalDate.now())
         nearbyRepository.sendMessage(messageObj)
-        messageRepository.addMessage(messageObj)
+        GlobalScope.async {
+            messageRepository.addMessage(messageObj)
+        }
+            // TODO: SET LAST MESSAGE
     }
 
     override fun closeConnections() {
@@ -59,8 +62,12 @@ class NearbyService(
         }
 
         nearbyRepository.setOnMessageCallback { message ->
-            messageRepository.addMessage(message).subscribe { dbMessage ->
-                userRepository.setLastMessage(dbMessage)
+            GlobalScope.async {
+                messageRepository.addMessage(message).subscribe { dbMessage ->
+                    GlobalScope.async {
+                        userRepository.setLastMessage(dbMessage)
+                    }
+                }
             }
         }
 
