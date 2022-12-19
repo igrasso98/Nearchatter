@@ -102,6 +102,8 @@ class PeersActivityV2 : AppCompatActivity(), PeersView, OnPeerSelectedListener {
 
     private fun signOut() {
         showToast("Signing out...")
+        presenter!!.deactivateSession()
+        finish()
     }
 
     private fun showToast(message: String) {

@@ -39,6 +39,10 @@ class PeersPresenter(
         conversations!!.removeObserver(observer)
     }
 
+    fun deactivateSession() {
+        sharedPreferencesStorage.deactivate()
+    }
+
     private fun onUsernameLoaded(username: String) {
         setNearbyServiceCallbacks()
         nearbyService.openConnections(username)
