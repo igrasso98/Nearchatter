@@ -1,6 +1,6 @@
 package ar.edu.itba.pam.nearchatter.repository
 
-import ar.edu.itba.pam.nearchatter.models.Device
+import android.util.Log
 import com.google.android.gms.nearby.connection.*
 
 
@@ -13,8 +13,9 @@ class NearbyConnectionHandler(
         const val MAGIC_PREFIX = "nc"
     }
 
+    private val tag = "NearbyConnectionHandler"
     private val endpointIdDevicesConnecting: MutableSet<String> = HashSet()
-    private val endpointIdDevices: MutableMap<String, Device> = HashMap()
+    private val endpointIdDevicesHwId: MutableMap<String, String> = HashMap()
     private var connectionsClient: ConnectionsClient? = null
     private var username: String? = null
     private var onConnected: OnConnectCallback? = null
@@ -68,22 +69,28 @@ class NearbyConnectionHandler(
     // Callbacks for finding other devices
     private inner class EndpointDiscovery : EndpointDiscoveryCallback() {
         override fun onEndpointFound(endpointId: String, info: DiscoveredEndpointInfo) {
-            if (endpointIdDevices.contains(endpointId) || endpointIdDevicesConnecting.contains(endpointId)) {
-                println("On endpoint Found existing device: $endpointId")
+            if (endpointIdDevicesHwId.contains(endpointId) || endpointIdDevicesConnecting.contains(endpointId)) {
+                Log.i(tag, "On endpoint Found existing device: $endpointId")
                 return
             }
 
-            println("On endpoint Found: $endpointId")
+            Log.i(tag, "On endpoint Found: $endpointId")
             endpointIdDevicesConnecting.plus(endpointId)
 
             connectionsClient!!
                 .requestConnection(username!!, endpointId, ConnectionLifecycle())
-                .addOnSuccessListener { println("connected") }
-                .addOnFailureListener { e -> println(e) }
+                .addOnSuccessListener { Log.i(tag, "initial connection, passing hw ids...") }
+                .addOnFailureListener { e ->
+                    Log.e(tag, e.toString(), e)
+                    endpointIdDevicesConnecting.remove(endpointId)
+                    endpointIdDevicesHwId.remove(endpointId)
+                }
         }
 
         override fun onEndpointLost(endpointId: String) {
-            println("On endpoint lost: $endpointId")
+            Log.i(tag, "On endpoint lost: $endpointId")
+            endpointIdDevicesConnecting.remove(endpointId)
+            endpointIdDevicesHwId.remove(endpointId)
             onDisconnected!!.accept(endpointId)
         }
     }
@@ -95,9 +102,9 @@ class NearbyConnectionHandler(
         }
 
         override fun onConnectionResult(endpointId: String, resolution: ConnectionResolution) {
-            println("On connection result: $endpointId, $resolution (${resolution.status})")
+            Log.i(tag, "On connection result: $endpointId, $resolution (${resolution.status})")
             if (resolution.status.isSuccess) {
-                println("sending hwid to $endpointId")
+                Log.i(tag, "sending hwid to $endpointId")
                 connectionsClient!!.sendPayload(
                     endpointId,
                     Payload.fromBytes(
@@ -115,7 +122,9 @@ class NearbyConnectionHandler(
         }
 
         override fun onDisconnected(endpointId: String) {
-            println("On connection disconnected: $endpointId")
+            Log.i(tag, "On connection disconnected: $endpointId")
+            endpointIdDevicesConnecting.remove(endpointId)
+            endpointIdDevicesHwId.remove(endpointId)
             onDisconnected!!.accept(endpointId)
         }
     }
@@ -127,13 +136,13 @@ class NearbyConnectionHandler(
 
             // Prevent unknown connections
             if (!decoded.startsWith(MAGIC_PREFIX)) {
-                println("invalid message from $endpointId: $decoded")
+                Log.i(tag, "invalid message from $endpointId: $decoded")
                 return
             }
 
             decoded = decoded.substringAfter(MAGIC_PREFIX)
 
-            println("received from $endpointId: $decoded")
+            Log.i(tag, "received from $endpointId: $decoded")
             if (decoded.startsWith(USERNAME_PREFIX)) {
                 decoded = decoded.substringAfter(USERNAME_PREFIX)
 
@@ -146,15 +155,18 @@ class NearbyConnectionHandler(
 
                 val otherHwId = decoded
 
-                println("received from $endpointId: username = $username, hwid = $otherHwId")
+                Log.i(tag, "received from $endpointId: username = $username, hwid = $otherHwId")
+                endpointIdDevicesConnecting.remove(endpointId)
+                endpointIdDevicesHwId[endpointId] = otherHwId
+
                 onConnected!!.accept(endpointId, otherHwId, username)
             } else if (decoded.startsWith(MESSAGE_PREFIX)) {
                 val message = decoded.substringAfter(MESSAGE_PREFIX)
 
-                println("received from $endpointId: message = $message")
-                val device = endpointIdDevices[endpointId] ?: return
+                Log.i(tag, "received from $endpointId: message = $message")
+                val otherHwId = endpointIdDevicesHwId[endpointId] ?: return
 
-                onMessage!!.accept(device.getId(), message)
+                onMessage!!.accept(otherHwId, message)
             }
         }
 

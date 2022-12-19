@@ -1,5 +1,6 @@
 package ar.edu.itba.pam.nearchatter.repository
 
+import android.util.Log
 import androidx.annotation.VisibleForTesting
 import ar.edu.itba.pam.nearchatter.domain.Message
 import ar.edu.itba.pam.nearchatter.models.Device
@@ -17,6 +18,7 @@ class NearbyRepository(
         const val SERVICE_ID = "ar.edu.itba.pam.nearchatter"
     }
 
+    private val tag = "NearbyRepository"
     @VisibleForTesting
     val hwIdDevices: MutableMap<String, Device> = HashMap()
     private var disconnectedDeviceCallback: Consumer<Device>? = null
@@ -40,13 +42,13 @@ class NearbyRepository(
             connectionsClient,
             username,
             { endpointId, otherHwId, username ->
-                println("Connected with: $endpointId -> $otherHwId (username: $username)")
+                Log.i(tag, "Connected with: $endpointId -> $otherHwId (username: $username)")
                 val device = Device(otherHwId, endpointId, username)
                 hwIdDevices[otherHwId] = device
                 connectedDeviceCallback?.accept(device)
             },
             { otherHwId, message ->
-                println("Message: $message - $otherHwId")
+                Log.i(tag, "Message: $message - $otherHwId")
                 messageCallback?.accept(
                     Message(
                         null,
@@ -58,7 +60,7 @@ class NearbyRepository(
                 )
             },
             { otherHwId ->
-                println("Disconnected: $otherHwId")
+                Log.i(tag, "Disconnected: $otherHwId")
                 if (hwIdDevices.containsKey(otherHwId)) {
                     val device = hwIdDevices[otherHwId]!!
                     hwIdDevices.remove(otherHwId)

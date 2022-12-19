@@ -1,6 +1,7 @@
 package ar.edu.itba.pam.nearchatter.login
 
 import android.annotation.SuppressLint
+import android.util.Log
 import ar.edu.itba.pam.nearchatter.db.sharedPreferences.ISharedPreferencesStorage
 import ar.edu.itba.pam.nearchatter.domain.User
 import ar.edu.itba.pam.nearchatter.repository.IUserRepository
@@ -13,6 +14,7 @@ class LoginPresenter(
     private val schedulerProvider: SchedulerProvider,
     private val hwid: String,
 ) {
+    private val tag = "LoginPresenter"
 
     @SuppressLint("CheckResult")
     fun onUsernameConfirm(username: String) {
@@ -33,14 +35,14 @@ class LoginPresenter(
 
     private fun onUserAdded(unit: Unit) {
         sharedPreferencesStorage.deactivate()
-        println(unit)
+        Log.i(tag, unit.toString())
     }
 
     private fun onSuccess(unit: Unit) {
-        println(unit)
+        Log.i(tag, unit.toString())
     }
 
     private fun onUserAddedFailed(t: Throwable) {
-        println(t.toString())
+        Log.i(tag, t.toString())
     }
 }

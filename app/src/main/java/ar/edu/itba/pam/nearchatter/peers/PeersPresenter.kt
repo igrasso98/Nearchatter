@@ -1,6 +1,7 @@
 package ar.edu.itba.pam.nearchatter.peers
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.asLiveData
@@ -21,6 +22,7 @@ class PeersPresenter(
     private val hwid: String,
 ) {
 
+    private val tag = "PeersPresenter"
     private var view: WeakReference<PeersView> = WeakReference<PeersView>(view)
     private var conversations: LiveData<List<Conversation>>? = null
     private val observer: Observer<List<Conversation>> =
@@ -57,12 +59,12 @@ class PeersPresenter(
     private fun setNearbyServiceCallbacks() {
         nearbyService.setOnConnectCallback { user ->
             run {
-                println(user)
+                Log.i(tag, user.toString())
             }
         }
         nearbyService.setOnDisconnectCallback { user ->
             run {
-                println(user.getUsername())
+                Log.i(tag, user.getUsername())
             }
         }
     }
