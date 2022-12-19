@@ -17,6 +17,7 @@
         android:layout_marginTop="@dimen/_12sdp"
         android:background="@drawable/background_icon"
         android:scaleType="centerCrop"
+        android:src="@drawable/ic_round_person"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:riv_corner_radius="@dimen/_8sdp" />
