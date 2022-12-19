@@ -14,6 +14,7 @@ import ar.edu.itba.pam.nearchatter.services.INearbyService
 import ar.edu.itba.pam.nearchatter.utils.schedulers.SchedulerProvider
 import io.reactivex.schedulers.Schedulers
 import java.lang.ref.WeakReference
+import java.time.LocalDate
 
 class ChatPresenter(
     view: ChatView,
@@ -21,10 +22,10 @@ class ChatPresenter(
     private val userRepository: IUserRepository,
     private val messageRepository: IMessageRepository,
     private val schedulerProvider: SchedulerProvider,
-//    private val nearbyService: INearbyService,
-//    private val hwid: String,
+    private val nearbyService: INearbyService,
+    private val hwid: String,
 
-) {
+    ) {
     private var messages: LiveData<List<Message>>? = null
     private var view: WeakReference<ChatView> = WeakReference<ChatView>(view)
 
@@ -37,7 +38,12 @@ class ChatPresenter(
 
     }
 
-    fun onOtherUserLoaded(username: String) {
+    fun sendMessage(payload: String) {
+        val message = Message(null, hwid, userId, payload, LocalDate.now())
+        nearbyService.sendMessage(message)
+    }
+
+    private fun onOtherUserLoaded(username: String) {
         messages = messageRepository.getMessagesById(userId).asLiveData()
         messages!!.observeForever { data -> (onMessagesLoaded(username, data)) }
     }

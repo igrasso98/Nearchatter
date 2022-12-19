@@ -134,6 +134,8 @@ class ProductionNearchatterContainer(context: Context) : NearchatterContainer {
                 getUserRepository(),
                 getMessageRepository(),
                 getSchedulerProvider(),
+                getNearbyService(),
+                getHwId(),
             )
         }
         return this.chatPresenter!!

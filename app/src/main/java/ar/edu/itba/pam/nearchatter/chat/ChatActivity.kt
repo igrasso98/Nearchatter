@@ -2,6 +2,7 @@ package ar.edu.itba.pam.nearchatter.chat
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import ar.edu.itba.pam.nearchatter.databinding.ActivityChatBinding
 import ar.edu.itba.pam.nearchatter.di.NearchatterContainer
 import ar.edu.itba.pam.nearchatter.di.NearchatterContainerLocator
@@ -9,7 +10,7 @@ import ar.edu.itba.pam.nearchatter.domain.Message
 import ar.edu.itba.pam.nearchatter.domain.User
 import ar.edu.itba.pam.nearchatter.peers.PeersPresenter
 
-class ChatActivity : AppCompatActivity(), ChatView {
+class ChatActivity : AppCompatActivity(), ChatView, OnMessageSentListener {
     private lateinit var binding: ActivityChatBinding
     private lateinit var otherUserId: String
     private lateinit var chatMessages: List<Message>
@@ -48,21 +49,18 @@ class ChatActivity : AppCompatActivity(), ChatView {
         chatMessages = ArrayList()
         chatAdapter = ChatAdapter(
             chatMessages,
-            "senderId",
+            otherUserId,
         )
         binding.chatRecyclerView.adapter = chatAdapter
+        binding.chatRecyclerView.visibility = View.VISIBLE
+        binding.progressBar.visibility = View.GONE
+
 
     }
-
-    private fun sendMessage() {
-        //SEND MESSAGE LOGIC
-        binding.inputMessage.text = null
-    }
-
 
     private fun setListeners() {
         binding.imageBack.setOnClickListener { onBackPressed() }
-        binding.layoutSend.setOnClickListener { sendMessage() }
+        binding.layoutSend.setOnClickListener { onMessageSent(binding.inputMessage.text.toString()) }
     }
 
     private fun loadReceiverDetails() {
@@ -71,6 +69,13 @@ class ChatActivity : AppCompatActivity(), ChatView {
 
     override fun bind(username: String, messages: List<Message>) {
         TODO("Not yet implemented")
+    }
+
+    override fun onMessageSent(payload: String) {
+        if (payload.isNotEmpty() && payload.isNotBlank()) {
+            presenter!!.sendMessage(payload)
+            binding.inputMessage.text = null
+        }
     }
 
 

@@ -22,12 +22,14 @@ class LoginPresenter(
             GlobalScope.async {
                 userRepository.addUser(User(hwid, username, true))
                     .subscribeOn(schedulerProvider.io()).observeOn(schedulerProvider.ui())
-                    .subscribe({ it -> onUserAdded(it)}, {it -> onUserAddedFailed(it)})
+                    .subscribe({ it -> onUserAdded(it) }, { it -> onUserAddedFailed(it) })
             }
         } else {
-            userRepository.updateUsername(hwid, username)
-                .subscribeOn(schedulerProvider.io()).observeOn(schedulerProvider.ui())
-                .subscribe(this::onSuccess, this::onUserAddedFailed)
+            GlobalScope.async {
+                userRepository.updateUsername(hwid, username)
+                    .subscribeOn(schedulerProvider.io()).observeOn(schedulerProvider.ui())
+                    .subscribe({ onSuccess(it) }, { onUserAddedFailed(it) })
+            }
         }
     }
 

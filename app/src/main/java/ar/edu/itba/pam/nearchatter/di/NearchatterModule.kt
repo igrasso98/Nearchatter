@@ -116,9 +116,19 @@ class NearchatterModule(context: Context) {
         userId: String,
         userRepository: IUserRepository,
         messageRepository: IMessageRepository,
-        schedulerProvider: SchedulerProvider
+        schedulerProvider: SchedulerProvider,
+        nearbyService: INearbyService,
+        hwId: String
     ): ChatPresenter {
-        return ChatPresenter(view, userId, userRepository, messageRepository, schedulerProvider)
+        return ChatPresenter(
+            view,
+            userId,
+            userRepository,
+            messageRepository,
+            schedulerProvider,
+            nearbyService,
+            hwId
+        )
     }
 
     fun provideNearbyService(
