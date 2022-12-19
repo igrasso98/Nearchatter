@@ -18,7 +18,8 @@ class UserRepository(
     IUserRepository {
 
 
-    override fun addUser(user: User): Single<Unit> {
+    override suspend fun addUser(user: User): Single<Unit> {
+        println("${user.getUserId()} ${user.getUsername()}")
         return Single.fromCallable { userDao.insert(userMapper.toEntity(user)) }
     }
 

@@ -19,6 +19,4 @@ interface INearbyService {
     fun setOnConnectCallback(callback: Consumer<User>?)
 
     fun setOnDisconnectCallback(callback: Consumer<User>?)
-
-    fun setOnMessageCallback(callback: Consumer<Message>?)
 }

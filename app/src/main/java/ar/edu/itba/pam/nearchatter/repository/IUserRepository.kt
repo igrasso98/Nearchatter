@@ -1,14 +1,13 @@
 package ar.edu.itba.pam.nearchatter.repository
 
-import androidx.lifecycle.MutableLiveData
 import ar.edu.itba.pam.nearchatter.domain.Conversation
 import ar.edu.itba.pam.nearchatter.domain.Message
 import ar.edu.itba.pam.nearchatter.domain.User
-import kotlinx.coroutines.flow.Flow
 import io.reactivex.Single
+import kotlinx.coroutines.flow.Flow
 
 interface IUserRepository {
-    fun addUser(user: User): Single<Unit>
+    suspend fun addUser(user: User): Single<Unit>
 
     fun getUsernameById(id: String): Single<String>
 
