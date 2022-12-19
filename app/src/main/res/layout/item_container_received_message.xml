@@ -15,6 +15,7 @@
         android:padding="@dimen/_12sdp"
         android:textColor="@color/white"
         android:textSize="@dimen/_13ssp"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintWidth_percent="0.8" />
 
@@ -23,7 +24,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_4sdp"
-        android:textColor="@color/lemon_green"
+        android:textColor="#4A4C49"
         android:textSize="@dimen/_10ssp"
         app:layout_constraintStart_toStartOf="@id/textMessage"
         app:layout_constraintTop_toBottomOf="@id/textMessage" />

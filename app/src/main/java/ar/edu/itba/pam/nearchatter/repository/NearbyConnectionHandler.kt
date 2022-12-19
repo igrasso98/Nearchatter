@@ -84,6 +84,7 @@ class NearbyConnectionHandler(
                     Log.e(tag, e.toString(), e)
                     endpointIdDevicesConnecting.remove(endpointId)
                     endpointIdDevicesHwId.remove(endpointId)
+                    connectionsClient!!.disconnectFromEndpoint(endpointId)
                 }
         }
 
@@ -91,6 +92,7 @@ class NearbyConnectionHandler(
             Log.i(tag, "On endpoint lost: $endpointId")
             endpointIdDevicesConnecting.remove(endpointId)
             endpointIdDevicesHwId.remove(endpointId)
+            connectionsClient!!.disconnectFromEndpoint(endpointId)
             onDisconnected!!.accept(endpointId)
         }
     }
@@ -125,6 +127,7 @@ class NearbyConnectionHandler(
             Log.i(tag, "On connection disconnected: $endpointId")
             endpointIdDevicesConnecting.remove(endpointId)
             endpointIdDevicesHwId.remove(endpointId)
+            connectionsClient!!.disconnectFromEndpoint(endpointId)
             onDisconnected!!.accept(endpointId)
         }
     }

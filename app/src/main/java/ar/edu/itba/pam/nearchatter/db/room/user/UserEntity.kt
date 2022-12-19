@@ -10,8 +10,8 @@ import ar.edu.itba.pam.nearchatter.db.room.message.MessageEntity
             entity = MessageEntity::class,
             parentColumns = ["message_id"],
             childColumns = ["last_message_id"],
-            onDelete = ForeignKey.RESTRICT,
-            onUpdate = ForeignKey.CASCADE
+            onDelete = ForeignKey.NO_ACTION,
+            onUpdate = ForeignKey.NO_ACTION
         )
     ],
     indices = [

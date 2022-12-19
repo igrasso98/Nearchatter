@@ -7,7 +7,7 @@ import ar.edu.itba.pam.nearchatter.repository.IMessageRepository
 import ar.edu.itba.pam.nearchatter.repository.INearbyRepository
 import ar.edu.itba.pam.nearchatter.repository.IUserRepository
 import ar.edu.itba.pam.nearchatter.utils.schedulers.SchedulerProvider
-import java.time.LocalDate
+import java.time.LocalDateTime
 import java.util.function.Consumer
 
 
@@ -39,7 +39,7 @@ class NearbyService(
 
     @SuppressLint("CheckResult")
     override fun sendMessage(message: String, receiverId: String) {
-        val messageObj = Message(null, hwId, receiverId, message, LocalDate.now())
+        val messageObj = Message(null, hwId, receiverId, message, LocalDateTime.now())
         nearbyRepository.sendMessage(messageObj)
         schedulerProvider.io().scheduleDirect {
             messageRepository.addMessage(messageObj).subscribe { dbMessage ->

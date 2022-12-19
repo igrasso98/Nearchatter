@@ -7,7 +7,7 @@ import com.google.android.gms.nearby.connection.ConnectionsClient
 import org.junit.Assert.assertThrows
 import org.junit.Test
 import org.mockito.Mockito.*
-import java.time.LocalDate
+import java.time.LocalDateTime
 
 class NearbyRepositoryTest {
   @Test
@@ -56,7 +56,7 @@ class NearbyRepositoryTest {
     val repository = NearbyRepository("fakeHardwareId", mockNearbyConnectionHandler, mockConnectionsClient)
 
     assertThrows(IllegalStateException::class.java) {
-      repository.sendMessage(Message(1, "sender", "receiver", "content", LocalDate.now()))
+      repository.sendMessage(Message(1, "sender", "receiver", "content", LocalDateTime.now()))
     }
   }
 
@@ -68,7 +68,7 @@ class NearbyRepositoryTest {
 
     repository.openConnections("fakeUsername")
 
-    val message = Message(1, "sender", "receiver", "content", LocalDate.now())
+    val message = Message(1, "sender", "receiver", "content", LocalDateTime.now())
     repository.sendMessage(message)
 
     verify(mockNearbyConnectionHandler, times(0)).sendMessage("fakeEndpointId", "content")
@@ -83,7 +83,7 @@ class NearbyRepositoryTest {
     repository.openConnections("fakeUsername")
     repository.hwIdDevices["fakeHwId"] = Device("fakeHwId", "fakeEndpointId", "fakeUsername")
 
-    val message = Message(1, "sender", "fakeHwId", "content", LocalDate.now())
+    val message = Message(1, "sender", "fakeHwId", "content", LocalDateTime.now())
     repository.sendMessage(message)
 
     verify(mockNearbyConnectionHandler, times(1)).sendMessage("fakeEndpointId", "content")
@@ -98,7 +98,7 @@ class NearbyRepositoryTest {
     repository.openConnections("fakeUsername")
     repository.hwIdDevices["fakeHwId"] = Device("fakeHwId", "fakeEndpointId", "fakeUsername")
 
-    val message = Message(1, "sender", "fakeHwId", "content", LocalDate.now())
+    val message = Message(1, "sender", "fakeHwId", "content", LocalDateTime.now())
     repository.sendMessage(message)
 
     verify(mockNearbyConnectionHandler, times(1)).sendMessage("fakeEndpointId", "content")
