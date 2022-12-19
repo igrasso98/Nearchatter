@@ -1,17 +1,31 @@
 package ar.edu.itba.pam.nearchatter.chat
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import ar.edu.itba.pam.nearchatter.databinding.ItemContainerReceivedMessageBinding
 import ar.edu.itba.pam.nearchatter.databinding.ItemContainerSentMessageBinding
+import ar.edu.itba.pam.nearchatter.domain.Conversation
 import ar.edu.itba.pam.nearchatter.domain.Message
 
-class ChatAdapter(private var chatMessages: List<Message>, private var otherId: String) :
+class ChatAdapter(private val otherId: String) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     val VIEW_TYPE_SENT = 1
     val VIEW_TYPE_RECEIVED = 2
+
+    private var chatMessages: MutableList<Message> = ArrayList()
+
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun setDataset(newDataset: List<Message>?) {
+        chatMessages.clear()
+        if (newDataset != null) {
+            chatMessages.addAll(newDataset)
+        }
+        notifyDataSetChanged()
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         if (viewType == VIEW_TYPE_SENT) {
