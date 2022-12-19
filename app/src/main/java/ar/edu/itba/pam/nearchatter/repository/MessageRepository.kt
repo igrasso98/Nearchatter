@@ -12,9 +12,11 @@ class MessageRepository(
     private val messageMapper: MessageMapper,
 ) :
     IMessageRepository {
-    override suspend fun addMessage(message: Message): Single<Message> {
+    override fun addMessage(message: Message): Single<Message> {
         return Single.fromCallable {
+            println("Saving message: $message")
             val id = messageDao.insert(messageMapper.toEntity(message))
+            println("Setting id: $id")
             messageMapper.setId(id, message)
         }
     }

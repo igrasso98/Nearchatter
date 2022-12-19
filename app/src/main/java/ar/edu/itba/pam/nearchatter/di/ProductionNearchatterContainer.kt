@@ -148,6 +148,7 @@ class ProductionNearchatterContainer(context: Context) : NearchatterContainer {
                 getNearbyRepository(),
                 getUserRepository(),
                 getMessageRepository(),
+                getSchedulerProvider(),
             )
         }
         return this.nearbyService!!

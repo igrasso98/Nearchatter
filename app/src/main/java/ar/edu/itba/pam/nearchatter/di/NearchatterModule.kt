@@ -73,10 +73,6 @@ class NearchatterModule(context: Context) {
         return MessageMapper()
     }
 
-    fun provideMessageDao(): MessageDao {
-        return NearchatterDb.getInstance(getApplicationContext())?.messageDao()!!
-    }
-
     fun provideLoginPresenter(
         view: LoginView,
         userRepository: IUserRepository,
@@ -136,12 +132,14 @@ class NearchatterModule(context: Context) {
         nearbyRepository: INearbyRepository,
         userRepository: IUserRepository,
         messageRepository: IMessageRepository,
+        schedulerProvider: SchedulerProvider,
     ): INearbyService {
         return NearbyService(
             hwId,
             nearbyRepository,
             userRepository,
             messageRepository,
+            schedulerProvider,
         )
     }
 
@@ -156,6 +154,10 @@ class NearchatterModule(context: Context) {
 
     fun provideUserMapper(): UserMapper {
         return UserMapper()
+    }
+
+    fun provideMessageDao(): MessageDao {
+        return NearchatterDb.getInstance(getApplicationContext())?.messageDao()!!
     }
 
     fun provideUserDao(): UserDao {

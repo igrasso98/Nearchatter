@@ -11,7 +11,6 @@ class NearbyConnectionHandler(
         const val USERNAME_PREFIX = "us"
         const val MESSAGE_PREFIX = "ms"
         const val MAGIC_PREFIX = "nc"
-        val CHAR_REGEX = "[^0-9]".toRegex()
     }
 
     private val endpointIdDevicesConnecting: MutableSet<String> = HashSet()
@@ -153,7 +152,9 @@ class NearbyConnectionHandler(
                 val message = decoded.substringAfter(MESSAGE_PREFIX)
 
                 println("received from $endpointId: message = $message")
-                onMessage!!.accept(endpointId, message)
+                val device = endpointIdDevices[endpointId] ?: return
+
+                onMessage!!.accept(device.getId(), message)
             }
         }
 

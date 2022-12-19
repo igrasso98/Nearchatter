@@ -5,7 +5,7 @@ import io.reactivex.Single
 import kotlinx.coroutines.flow.Flow
 
 interface IMessageRepository {
-    suspend fun addMessage(message: Message): Single<Message>
+    fun addMessage(message: Message): Single<Message>
 
     fun getMessagesById(userId: String): Flow<List<Message>>
 }
