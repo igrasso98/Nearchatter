@@ -68,10 +68,6 @@ class PeersActivityV2 : AppCompatActivity(), PeersView, OnPeerSelectedListener {
         peersAdapterV2 = PeersAdapterV2()
         peersAdapterV2.setOnPeerSelectedListener(this)
         binding.peersRecyclerView.adapter = peersAdapterV2
-        // MOVE THIS FROM HERE
-        binding.peersRecyclerView.visibility = View.VISIBLE
-        binding.progressBar.visibility = View.GONE
-
     }
 
     private fun createPresenter() {
@@ -111,6 +107,14 @@ class PeersActivityV2 : AppCompatActivity(), PeersView, OnPeerSelectedListener {
 
     override fun bind(conversations: List<Conversation>) {
         peersAdapterV2.setDataset(conversations)
+
+        if (conversations.isEmpty()){
+            binding.peersRecyclerView.visibility = View.GONE
+            binding.progressBar.visibility = View.VISIBLE
+        } else {
+            binding.peersRecyclerView.visibility = View.VISIBLE
+            binding.progressBar.visibility = View.GONE
+        }
     }
 
     override fun setOnline(userId: String, connected: Boolean) {
