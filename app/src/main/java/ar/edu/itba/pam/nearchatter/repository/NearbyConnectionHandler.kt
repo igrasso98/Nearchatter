@@ -80,7 +80,7 @@ class NearbyConnectionHandler(
             }
 
             Log.i(tag, "On endpoint Found: $endpointId")
-            endpointIdDevicesConnecting.plus(endpointId)
+            endpointIdDevicesConnecting.add(endpointId)
 
             connectionsClient!!
                 .requestConnection(username!!, endpointId, ConnectionLifecycle())

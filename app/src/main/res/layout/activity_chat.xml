@@ -40,6 +40,21 @@
         app:layout_constraintTop_toTopOf="parent"
         android:tint="@color/blue"/>
 
+    <FrameLayout
+        android:id="@+id/connectingProgressBar"
+        android:layout_width="@dimen/_40sdp"
+        android:layout_height="@dimen/_40sdp"
+        android:layout_marginLeft="12dp"
+        app:layout_constraintTop_toTopOf="@+id/imageBack"
+        app:layout_constraintBottom_toBottomOf="@+id/imageBack"
+        app:layout_constraintStart_toEndOf="@+id/imageBack">
+
+        <ProgressBar
+            android:layout_width="@dimen/_25sdp"
+            android:layout_height="24dp"
+            android:layout_gravity="center" />
+    </FrameLayout>
+
     <TextView
         android:id="@+id/textName"
         android:layout_width="0dp"
@@ -52,9 +67,9 @@
         android:textColor="@color/blue"
         android:textSize="@dimen/_14sdp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@id/imageBack"
-        app:layout_constraintStart_toEndOf="@id/imageBack"
-        app:layout_constraintTop_toTopOf="@id/imageBack" />
+        app:layout_constraintBottom_toBottomOf="@id/connectingProgressBar"
+        app:layout_constraintStart_toEndOf="@id/connectingProgressBar"
+        app:layout_constraintTop_toTopOf="@id/connectingProgressBar" />
 
     <View
         android:id="@+id/viewSupporter"

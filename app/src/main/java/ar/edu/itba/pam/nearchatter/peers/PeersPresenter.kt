@@ -24,8 +24,11 @@ class PeersPresenter(
     private val tag = "PeersPresenter"
     private var view: WeakReference<PeersView>? = null
     private var conversations: LiveData<List<Conversation>>? = null
+    private var connectedUsers: LiveData<Set<String>>? = null
     private val observer: Observer<List<Conversation>> =
         Observer<List<Conversation>> { data -> onConversationsLoaded(data) }
+    private val observerConnected: Observer<Set<String>> =
+        Observer<Set<String>> { data -> onConnectedLoaded(data) }
 
     @SuppressLint("CheckResult")
     fun onViewAttached(peersView: PeersView) {
@@ -37,6 +40,7 @@ class PeersPresenter(
 
     fun onViewDetached() {
         conversations!!.removeObserver(observer)
+        connectedUsers!!.removeObserver(observerConnected)
     }
 
     fun deactivateSession() {
@@ -45,10 +49,11 @@ class PeersPresenter(
     }
 
     private fun onUsernameLoaded(username: String?) {
-        setNearbyServiceCallbacks()
         nearbyService.openConnections(username!!)
         conversations = userRepository.getUserConversations().asLiveData()
         conversations!!.observeForever(observer)
+        connectedUsers = userRepository.getConnectedUserIds().asLiveData()
+        connectedUsers!!.observeForever(observerConnected)
     }
 
     private fun onConversationsLoaded(conversations: List<Conversation>) {
@@ -60,20 +65,13 @@ class PeersPresenter(
         }
     }
 
-    private fun onFailure(throwable: Throwable) {
-        Log.e(tag, "Error loading username", throwable)
+    private fun onConnectedLoaded(connectedUsers: Set<String>) {
+        if (view?.get() != null) {
+            view?.get()!!.setOnline(connectedUsers)
+        }
     }
 
-    private fun setNearbyServiceCallbacks() {
-        nearbyService.setOnConnectCallback { user ->
-            run {
-                view?.get()!!.setOnline(user.getUserId(), true)
-            }
-        }
-        nearbyService.setOnDisconnectCallback { user ->
-            run {
-                view?.get()!!.setOnline(user.getUserId(), false)
-            }
-        }
+    private fun onFailure(throwable: Throwable) {
+        Log.e(tag, "Error loading username", throwable)
     }
 }

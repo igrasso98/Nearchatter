@@ -24,9 +24,12 @@ class ChatPresenter(
     private val tag = "ChatPresenter"
     private var view: WeakReference<ChatView>? = null
     private var messages: LiveData<List<Message>>? = null
+    private var connectedUsers: LiveData<Set<String>>? = null
     private var username: String? = null
     private val observer: Observer<List<Message>> =
         Observer<List<Message>> { data -> onMessagesLoaded(data) }
+    private val observerConnected: Observer<Set<String>> =
+        Observer<Set<String>> { data -> onConnectedLoaded(data) }
 
 
     @SuppressLint("CheckResult")
@@ -40,6 +43,7 @@ class ChatPresenter(
 
     fun onViewDetached() {
         messages!!.removeObserver(observer)
+        connectedUsers!!.removeObserver(observerConnected)
     }
 
     fun sendMessage(payload: String) {
@@ -48,6 +52,8 @@ class ChatPresenter(
 
     private fun onOtherUserLoaded(otherUsername: String?) {
         username = otherUsername
+        connectedUsers = userRepository.getConnectedUserIds().asLiveData()
+        connectedUsers!!.observeForever(observerConnected)
         messages = messageRepository.getMessagesById(userId).asLiveData()
         messages!!.observeForever(observer)
     }
@@ -55,6 +61,12 @@ class ChatPresenter(
     private fun onMessagesLoaded(messages: List<Message>) {
         if (view?.get() != null && username != null) {
             view?.get()!!.bind(username!!, messages.sortedBy { it.getSendAt() })
+        }
+    }
+
+    private fun onConnectedLoaded(connectedUsers: Set<String>) {
+        if (view?.get() != null) {
+            view?.get()!!.setOnline(connectedUsers.contains(userId))
         }
     }
 
