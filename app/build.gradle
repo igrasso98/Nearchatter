@@ -36,6 +36,9 @@ android {
     buildFeatures {
         viewBinding true
     }
+    testOptions {
+        unitTests.returnDefaultValues true
+    }
     compileSdkVersion 31
     buildToolsVersion '32.0.0'
 }

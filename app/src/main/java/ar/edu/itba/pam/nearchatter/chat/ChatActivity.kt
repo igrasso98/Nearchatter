@@ -33,7 +33,7 @@ class ChatActivity : AppCompatActivity(), ChatView, OnMessageSentListener {
 
         if (presenter == null) {
             val container: NearchatterContainer =
-                NearchatterContainerLocator().locateComponent(this)
+                NearchatterContainerLocator.locateComponent(this)
             presenter = container.getChatPresenter(otherUserId)
         }
     }

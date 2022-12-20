@@ -1,8 +1,5 @@
 package ar.edu.itba.pam.nearchatter.services
 
-import ar.edu.itba.pam.nearchatter.domain.User
-import java.util.function.Consumer
-
 interface INearbyService {
     /**
      * Broadcasts and searches for devices with Nearchatter app open
@@ -14,8 +11,4 @@ interface INearbyService {
     fun sendMessage(message: String, receiverId: String)
 
     fun closeConnections()
-
-    fun setOnConnectCallback(callback: Consumer<User>?)
-
-    fun setOnDisconnectCallback(callback: Consumer<User>?)
 }
