@@ -21,16 +21,24 @@ class PeersAdapterV2() : RecyclerView.Adapter<PeerViewHolderV2>() {
         notifyDataSetChanged()
     }
 
-    fun setOnline(userId: String, connected: Boolean) {
-        if (connected) {
-            connectedPeers.add(userId)
-        } else {
-            connectedPeers.remove(userId)
+    @SuppressLint("NotifyDataSetChanged")
+    fun setOnline(users: Set<String>?) {
+        if (users == null) {
+            connectedPeers.clear()
+            return
         }
 
-        val ix = peers.indexOfFirst { it.getUserId() == userId }
-        if (ix >= 0) {
-            notifyItemChanged(ix)
+        val disconnected = connectedPeers.minus(users)
+        val connected = users.minus(connectedPeers)
+
+        connectedPeers.clear()
+        connectedPeers.addAll(users)
+
+        for (userId in disconnected.plus(connected)) {
+            val ix = peers.indexOfFirst { it.getUserId() == userId }
+            if (ix >= 0) {
+                notifyItemChanged(ix)
+            }
         }
     }
 

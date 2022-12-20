@@ -59,6 +59,7 @@ class NearbyService(
             val user = User(device.getId(), device.getUsername())
             schedulerProvider.io().scheduleDirect {
                 userRepository.addUser(user).subscribe()
+                userRepository.setConnected(user.getUserId(), true).subscribe()
             }
             connectedDeviceCallback?.accept(user)
         }
@@ -72,6 +73,7 @@ class NearbyService(
         }
 
         nearbyRepository.setOnDisconnectCallback { device ->
+            userRepository.setConnected(device.getId(), false).subscribe()
             disconnectedDeviceCallback?.accept(User(device.getId(), device.getUsername()))
         }
     }

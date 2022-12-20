@@ -9,9 +9,13 @@ import kotlinx.coroutines.flow.Flow
 interface IUserRepository {
     fun addUser(user: User): Single<Unit>
 
+    fun setConnected(userId: String, connected: Boolean): Single<Unit>
+
     fun getUsernameById(id: String): Single<String?>
 
     fun updateUsername(userId: String, username: String): Single<Unit>
+
+    fun getConnectedUserIds(): Flow<Set<String>>
 
     fun getUserConversations(): Flow<List<Conversation>>
 

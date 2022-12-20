@@ -13,6 +13,7 @@ class ChatActivity : AppCompatActivity(), ChatView, OnMessageSentListener {
     private lateinit var otherUserId: String
     private lateinit var chatMessages: List<Message>
     private lateinit var chatAdapter: ChatAdapter
+    private var isOnline: Boolean = false
 
     private var presenter: ChatPresenter? = null
 
@@ -71,8 +72,21 @@ class ChatActivity : AppCompatActivity(), ChatView, OnMessageSentListener {
         chatAdapter.setDataset(messages)
     }
 
+    override fun setOnline(online: Boolean) {
+        isOnline = online
+        if (!online){
+            binding.textName.visibility = View.GONE
+            binding.connectingProgressBar.visibility = View.VISIBLE
+            binding.layoutSend.isEnabled = false
+        } else {
+            binding.textName.visibility = View.VISIBLE
+            binding.connectingProgressBar.visibility = View.GONE
+            binding.layoutSend.isEnabled = true
+        }
+    }
+
     override fun onMessageSent(payload: String) {
-        if (payload.isNotEmpty() && payload.isNotBlank()) {
+        if (payload.isNotEmpty() && payload.isNotBlank() && isOnline) {
             presenter!!.sendMessage(payload)
             binding.inputMessage.text = null
         }

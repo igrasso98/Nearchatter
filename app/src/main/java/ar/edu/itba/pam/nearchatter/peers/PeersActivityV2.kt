@@ -117,8 +117,8 @@ class PeersActivityV2 : AppCompatActivity(), PeersView, OnPeerSelectedListener {
         }
     }
 
-    override fun setOnline(userId: String, connected: Boolean) {
-        peersAdapterV2.setOnline(userId, connected)
+    override fun setOnline(users: Set<String>) {
+        peersAdapterV2.setOnline(users)
     }
 
 
