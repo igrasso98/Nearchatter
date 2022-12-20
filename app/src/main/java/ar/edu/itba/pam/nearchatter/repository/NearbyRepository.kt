@@ -92,9 +92,16 @@ class NearbyRepository(
         stopDiscovery()
         stopAdvertising()
 
-        nearbyConnectionHandler.closeConnections()
-
+        // Make sure to first propagate all disconnections
+        // before actually disconnecting them.
+        if (disconnectedDeviceCallback != null) {
+            for (device in hwIdDevices.values) {
+                disconnectedDeviceCallback!!.accept(device)
+            }
+        }
         hwIdDevices.clear()
+
+        nearbyConnectionHandler.closeConnections()
 
         stopping = false
     }
