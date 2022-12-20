@@ -35,14 +35,14 @@ class LoginPresenter(
 
     private fun onUserAdded(unit: Unit) {
         sharedPreferencesStorage.activate()
-        Log.i(tag, unit.toString())
+        Log.i(tag, "onUserAdded")
     }
 
     private fun onSuccess(unit: Unit) {
-        Log.i(tag, unit.toString())
+        Log.i(tag, "onSuccess")
     }
 
     private fun onUserAddedFailed(t: Throwable) {
-        Log.i(tag, t.toString())
+        Log.e(tag, "onUserAddedFailed", t)
     }
 }

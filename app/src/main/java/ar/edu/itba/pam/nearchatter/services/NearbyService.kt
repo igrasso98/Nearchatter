@@ -8,6 +8,7 @@ import ar.edu.itba.pam.nearchatter.repository.INearbyRepository
 import ar.edu.itba.pam.nearchatter.repository.IUserRepository
 import ar.edu.itba.pam.nearchatter.utils.schedulers.SchedulerProvider
 import java.time.LocalDateTime
+import java.util.*
 import java.util.function.Consumer
 
 
@@ -39,11 +40,11 @@ class NearbyService(
 
     @SuppressLint("CheckResult")
     override fun sendMessage(message: String, receiverId: String) {
-        val messageObj = Message(null, hwId, receiverId, message, LocalDateTime.now())
+        val messageObj = Message(UUID.randomUUID().toString(), hwId, receiverId, message, LocalDateTime.now())
         nearbyRepository.sendMessage(messageObj)
         schedulerProvider.io().scheduleDirect {
-            messageRepository.addMessage(messageObj).subscribe { dbMessage ->
-                userRepository.setLastMessage(dbMessage).subscribe()
+            messageRepository.addMessage(messageObj).subscribe { _ ->
+                userRepository.setLastMessage(messageObj).subscribe()
             }
         }
     }
@@ -64,8 +65,8 @@ class NearbyService(
 
         nearbyRepository.setOnMessageCallback { message ->
             schedulerProvider.io().scheduleDirect {
-                messageRepository.addMessage(message).subscribe { dbMessage ->
-                    userRepository.setLastMessage(dbMessage).subscribe()
+                messageRepository.addMessage(message).subscribe { _ ->
+                    userRepository.setLastMessage(message).subscribe()
                 }
             }
         }

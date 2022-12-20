@@ -89,11 +89,8 @@ class NearbyConnectionHandler(
         }
 
         override fun onEndpointLost(endpointId: String) {
-            Log.i(tag, "On endpoint lost: $endpointId")
+            Log.i(tag, "On endpoint lost: $endpointId - Do Nothing")
             endpointIdDevicesConnecting.remove(endpointId)
-            endpointIdDevicesHwId.remove(endpointId)
-            connectionsClient!!.disconnectFromEndpoint(endpointId)
-            onDisconnected!!.accept(endpointId)
         }
     }
 

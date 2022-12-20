@@ -15,7 +15,7 @@ interface MessageDao {
     fun getById(id: String): LiveData<List<MessageEntity>>
 
     @Insert
-    fun insert(message: MessageEntity): Long
+    fun insert(message: MessageEntity)
 
     @Delete
     fun delete(message: MessageEntity)

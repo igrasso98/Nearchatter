@@ -12,8 +12,4 @@ class MessageMapper {
     fun fromEntity(messageEntity: MessageEntity): Message {
         return Message(messageEntity.id, messageEntity.senderId,  messageEntity.receiverId, messageEntity.payload, messageEntity.sendAt)
     }
-
-    fun setId(id: Long, message: Message): Message {
-        return Message(id, message.getSenderId(),  message.getReceiverId(), message.getPayload(), message.getSendAt())
-    }
 }

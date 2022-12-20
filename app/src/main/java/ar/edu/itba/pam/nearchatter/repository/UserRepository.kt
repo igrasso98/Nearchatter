@@ -1,5 +1,6 @@
 package ar.edu.itba.pam.nearchatter.repository
 
+import android.annotation.SuppressLint
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.asFlow
 import ar.edu.itba.pam.nearchatter.db.room.user.UserDao
@@ -17,12 +18,13 @@ class UserRepository(
 ) :
     IUserRepository {
 
-
+    @SuppressLint("CheckResult")
+//    @Transaction
     override fun addUser(user: User): Single<Unit> {
-        return Single.fromCallable { userDao.insert(userMapper.toEntity(user)) }
+        return Single.fromCallable { userDao.insertOrUpdateUsername(userMapper.toEntity(user)) }
     }
 
-    override fun getUsernameById(id: String): Single<String> {
+    override fun getUsernameById(id: String): Single<String?> {
         return Single.fromCallable { userDao.getUsernameById(id) }
     }
 
@@ -44,7 +46,7 @@ class UserRepository(
             userDao.setLastMessage(
                 message.getSenderId(),
                 message.getReceiverId(),
-                message.getId()!!
+                message.getId()
             )
         }
     }

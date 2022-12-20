@@ -10,8 +10,8 @@ import ar.edu.itba.pam.nearchatter.db.room.message.MessageEntity
             entity = MessageEntity::class,
             parentColumns = ["message_id"],
             childColumns = ["last_message_id"],
-            onDelete = ForeignKey.NO_ACTION,
-            onUpdate = ForeignKey.NO_ACTION
+            onDelete = ForeignKey.SET_NULL,
+            onUpdate = ForeignKey.SET_NULL
         )
     ],
     indices = [
@@ -25,5 +25,5 @@ class UserEntity(
     @ColumnInfo(name = "username")
     val username: String,
     @ColumnInfo(name = "last_message_id")
-    val lastMessageId: Long?
+    val lastMessageId: String?
 )

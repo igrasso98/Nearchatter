@@ -6,6 +6,7 @@ import ar.edu.itba.pam.nearchatter.domain.Message
 import ar.edu.itba.pam.nearchatter.models.Device
 import com.google.android.gms.nearby.connection.*
 import java.time.LocalDateTime
+import java.util.*
 import java.util.function.Consumer
 
 class NearbyRepository(
@@ -48,10 +49,10 @@ class NearbyRepository(
                 connectedDeviceCallback?.accept(device)
             },
             { otherHwId, message ->
-                Log.i(tag, "Message: $message - $otherHwId")
+                Log.i(tag, "Received Message: $message - $otherHwId")
                 messageCallback?.accept(
                     Message(
-                        null,
+                        UUID.randomUUID().toString(),
                         otherHwId,
                         hwId,
                         message,
@@ -79,10 +80,12 @@ class NearbyRepository(
         }
 
         val device = hwIdDevices[message.getReceiverId()] ?: return
+        Log.i(tag, "Sending Message: $message - ${device.getId()}")
         nearbyConnectionHandler.sendMessage(device.getEndpointId(), message.getPayload())
     }
 
     override fun closeConnections() {
+        Log.i(tag, "Closing connections")
         acceptsConnections = false
         stopping = true
 

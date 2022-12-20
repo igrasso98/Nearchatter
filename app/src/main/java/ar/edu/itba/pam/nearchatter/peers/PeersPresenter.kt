@@ -41,11 +41,12 @@ class PeersPresenter(
 
     fun deactivateSession() {
         sharedPreferencesStorage.deactivate()
+        nearbyService.closeConnections()
     }
 
-    private fun onUsernameLoaded(username: String) {
+    private fun onUsernameLoaded(username: String?) {
         setNearbyServiceCallbacks()
-        nearbyService.openConnections(username)
+        nearbyService.openConnections(username!!)
         conversations = userRepository.getUserConversations().asLiveData()
         conversations!!.observeForever(observer)
     }
@@ -60,7 +61,7 @@ class PeersPresenter(
     }
 
     private fun onFailure(throwable: Throwable) {
-
+        Log.e(tag, "Error loading username", throwable)
     }
 
     private fun setNearbyServiceCallbacks() {

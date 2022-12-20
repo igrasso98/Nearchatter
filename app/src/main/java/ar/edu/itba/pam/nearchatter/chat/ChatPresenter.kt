@@ -1,6 +1,7 @@
 package ar.edu.itba.pam.nearchatter.chat
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.asLiveData
@@ -22,6 +23,7 @@ class ChatPresenter(
     private val hwid: String,
 
     ) {
+    private val tag = "ChatPresenter"
     private var view: WeakReference<ChatView> = WeakReference<ChatView>(view)
     private var messages: LiveData<List<Message>>? = null
     private var username: String? = null
@@ -45,7 +47,7 @@ class ChatPresenter(
         nearbyService.sendMessage(payload, userId)
     }
 
-    private fun onOtherUserLoaded(otherUsername: String) {
+    private fun onOtherUserLoaded(otherUsername: String?) {
         username = otherUsername
         messages = messageRepository.getMessagesById(userId).asLiveData()
         messages!!.observeForever(observer)
@@ -58,6 +60,6 @@ class ChatPresenter(
     }
 
     private fun onFailure(throwable: Throwable) {
-
+        Log.e(tag, "Error loading username", throwable)
     }
 }
