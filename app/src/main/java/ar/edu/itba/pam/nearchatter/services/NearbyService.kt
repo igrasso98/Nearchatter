@@ -9,7 +9,6 @@ import ar.edu.itba.pam.nearchatter.repository.IUserRepository
 import ar.edu.itba.pam.nearchatter.utils.schedulers.SchedulerProvider
 import java.time.LocalDateTime
 import java.util.*
-import java.util.function.Consumer
 
 
 class NearbyService(
@@ -19,19 +18,8 @@ class NearbyService(
     private val messageRepository: IMessageRepository,
     private val schedulerProvider: SchedulerProvider,
 ) : INearbyService {
-    private var disconnectedDeviceCallback: Consumer<User>? = null
-    private var connectedDeviceCallback: Consumer<User>? = null
-
     init {
         setUpNearbyRepository()
-    }
-
-    override fun setOnConnectCallback(callback: Consumer<User>?) {
-        this.connectedDeviceCallback = callback
-    }
-
-    override fun setOnDisconnectCallback(callback: Consumer<User>?) {
-        this.disconnectedDeviceCallback = callback
     }
 
     override fun openConnections(username: String) {
@@ -61,7 +49,6 @@ class NearbyService(
                 userRepository.addUser(user).subscribe()
                 userRepository.setConnected(user.getUserId(), true).subscribe()
             }
-            connectedDeviceCallback?.accept(user)
         }
 
         nearbyRepository.setOnMessageCallback { message ->
@@ -74,7 +61,6 @@ class NearbyService(
 
         nearbyRepository.setOnDisconnectCallback { device ->
             userRepository.setConnected(device.getId(), false).subscribe()
-            disconnectedDeviceCallback?.accept(User(device.getId(), device.getUsername()))
         }
     }
 }

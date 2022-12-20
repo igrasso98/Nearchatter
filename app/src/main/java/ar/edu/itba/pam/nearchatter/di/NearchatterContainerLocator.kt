@@ -7,17 +7,17 @@ class NearchatterContainerLocator {
     companion object {
         var container: NearchatterContainer? = null
         private set
-    }
 
-    fun locateComponent(context: Context): NearchatterContainer {
-        if (container == null) {
-            setComponent(ProductionNearchatterContainer(context));
+        fun locateComponent(context: Context): NearchatterContainer {
+            if (container == null) {
+                setComponent(ProductionNearchatterContainer(context));
+            }
+            return container!!
         }
-        return container!!
-    }
 
-    @VisibleForTesting
-    fun setComponent(nearchatterContainer: NearchatterContainer) {
-        container = nearchatterContainer
+        @VisibleForTesting
+        fun setComponent(nearchatterContainer: NearchatterContainer) {
+            container = nearchatterContainer
+        }
     }
 }

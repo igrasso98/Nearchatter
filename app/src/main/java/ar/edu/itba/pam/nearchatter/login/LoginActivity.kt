@@ -31,7 +31,7 @@ class LoginActivity : AppCompatActivity(), LoginView, OnUsernameConfirmListener 
 
         if (presenter == null) {
             val container: NearchatterContainer =
-                NearchatterContainerLocator().locateComponent(this)
+                NearchatterContainerLocator.locateComponent(this)
             presenter = container.getLoginPresenter(this)
         }
     }

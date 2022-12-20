@@ -75,7 +75,7 @@ class PeersActivityV2 : AppCompatActivity(), PeersView, OnPeerSelectedListener {
 
         if (presenter == null) {
             val container: NearchatterContainer =
-                NearchatterContainerLocator().locateComponent(this)
+                NearchatterContainerLocator.locateComponent(this)
             presenter = container.getPeersPresenter()
         }
     }
