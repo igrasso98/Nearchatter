@@ -2,14 +2,12 @@ package ar.edu.itba.pam.nearchatter.di
 
 import android.content.Context
 import ar.edu.itba.pam.nearchatter.chat.ChatPresenter
-import ar.edu.itba.pam.nearchatter.chat.ChatView
 import ar.edu.itba.pam.nearchatter.db.room.message.MessageDao
 import ar.edu.itba.pam.nearchatter.db.room.user.UserDao
 import ar.edu.itba.pam.nearchatter.db.sharedPreferences.ISharedPreferencesStorage
 import ar.edu.itba.pam.nearchatter.login.LoginPresenter
 import ar.edu.itba.pam.nearchatter.login.LoginView
 import ar.edu.itba.pam.nearchatter.peers.PeersPresenter
-import ar.edu.itba.pam.nearchatter.peers.PeersView
 import ar.edu.itba.pam.nearchatter.repository.*
 import ar.edu.itba.pam.nearchatter.services.INearbyService
 import ar.edu.itba.pam.nearchatter.utils.schedulers.SchedulerProvider
@@ -112,10 +110,9 @@ class ProductionNearchatterContainer(context: Context) : NearchatterContainer {
         return schedulerProvider!!
     }
 
-    override fun getPeersPresenter(view: PeersView): PeersPresenter {
+    override fun getPeersPresenter(): PeersPresenter {
         if (this.peersPresenter == null) {
             this.peersPresenter = this.nearchatterModule.providePeersPresenter(
-                view,
                 getUserRepository(),
                 getSharedPreferencesStorage(),
                 getSchedulerProvider(),
@@ -126,10 +123,9 @@ class ProductionNearchatterContainer(context: Context) : NearchatterContainer {
         return this.peersPresenter!!
     }
 
-    override fun getChatPresenter(view: ChatView, userId: String): ChatPresenter {
+    override fun getChatPresenter(userId: String): ChatPresenter {
         if (this.chatPresenter == null) {
             this.chatPresenter = this.nearchatterModule.provideChatPresenter(
-                view,
                 userId,
                 getUserRepository(),
                 getMessageRepository(),

@@ -11,7 +11,7 @@ import ar.edu.itba.pam.nearchatter.db.room.user.UserEntity
 
 @Database(
     entities = [UserEntity::class, MessageEntity::class],
-    version = 12
+    version = 15
 )
 abstract class NearchatterDb : RoomDatabase() {
     companion object {

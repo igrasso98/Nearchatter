@@ -14,7 +14,6 @@ class ConversationMapper {
         val user = User(
             userEnt.userId,
             userEnt.username,
-            false,
         )
         var lastMessage: Message? = null
         if (lastMessEnt != null) {

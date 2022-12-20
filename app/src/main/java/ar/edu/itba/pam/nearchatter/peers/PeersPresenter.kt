@@ -14,7 +14,6 @@ import io.reactivex.schedulers.Schedulers
 import java.lang.ref.WeakReference
 
 class PeersPresenter(
-    view: PeersView,
     private val userRepository: IUserRepository,
     private val sharedPreferencesStorage: ISharedPreferencesStorage,
     private val schedulerProvider: SchedulerProvider,
@@ -23,13 +22,14 @@ class PeersPresenter(
 ) {
 
     private val tag = "PeersPresenter"
-    private var view: WeakReference<PeersView> = WeakReference<PeersView>(view)
+    private var view: WeakReference<PeersView>? = null
     private var conversations: LiveData<List<Conversation>>? = null
     private val observer: Observer<List<Conversation>> =
         Observer<List<Conversation>> { data -> onConversationsLoaded(data) }
 
     @SuppressLint("CheckResult")
-    fun onViewAttached() {
+    fun onViewAttached(peersView: PeersView) {
+        view = WeakReference<PeersView>(peersView)
         userRepository.getUsernameById(hwid).subscribeOn(Schedulers.computation())
             .subscribeOn(schedulerProvider.io()).observeOn(schedulerProvider.ui())
             .subscribe(this::onUsernameLoaded, this::onFailure)
@@ -41,11 +41,12 @@ class PeersPresenter(
 
     fun deactivateSession() {
         sharedPreferencesStorage.deactivate()
+        nearbyService.closeConnections()
     }
 
-    private fun onUsernameLoaded(username: String) {
+    private fun onUsernameLoaded(username: String?) {
         setNearbyServiceCallbacks()
-        nearbyService.openConnections(username)
+        nearbyService.openConnections(username!!)
         conversations = userRepository.getUserConversations().asLiveData()
         conversations!!.observeForever(observer)
     }
@@ -54,24 +55,24 @@ class PeersPresenter(
         val mutableList = conversations.toMutableList()
         mutableList.removeAll { it.getUserId() == hwid }
         mutableList.sortedBy { it.getLastMessageSendAt() }
-        if (view.get() != null) {
-            view.get()!!.bind(mutableList)
+        if (view?.get() != null) {
+            view?.get()!!.bind(mutableList)
         }
     }
 
     private fun onFailure(throwable: Throwable) {
-
+        Log.e(tag, "Error loading username", throwable)
     }
 
     private fun setNearbyServiceCallbacks() {
         nearbyService.setOnConnectCallback { user ->
             run {
-                Log.i(tag, user.toString())
+                view?.get()!!.setOnline(user.getUserId(), true)
             }
         }
         nearbyService.setOnDisconnectCallback { user ->
             run {
-                Log.i(tag, user.getUsername())
+                view?.get()!!.setOnline(user.getUserId(), false)
             }
         }
     }

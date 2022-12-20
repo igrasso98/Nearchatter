@@ -31,8 +31,8 @@ import java.time.LocalDateTime
 )
 @TypeConverters(LocalDateTimeTypeConverter::class)
 class MessageEntity(
-    @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "message_id") val id: Long?,
+    @PrimaryKey
+    @ColumnInfo(name = "message_id") val id: String,
     @ColumnInfo(name = "sender_id") val senderId: String,
     @ColumnInfo(name = "receiver_id") val receiverId: String,
     @ColumnInfo(name = "payload") val payload: String,

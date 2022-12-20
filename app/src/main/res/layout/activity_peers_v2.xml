@@ -18,6 +18,7 @@
         android:background="@drawable/background_icon"
         android:scaleType="centerCrop"
         android:src="@drawable/ic_round_person"
+        android:tint="@color/white"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:riv_corner_radius="@dimen/_8sdp" />
@@ -73,8 +74,8 @@
 
         <ProgressBar
             android:id="@+id/progressBar"
-            android:layout_width="@dimen/_25sdp"
-            android:layout_height="@dimen/_25sdp"
+            android:layout_width="74dp"
+            android:layout_height="74dp"
             android:layout_gravity="center" />
     </FrameLayout>
 

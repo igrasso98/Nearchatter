@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
 interface IUserRepository {
     fun addUser(user: User): Single<Unit>
 
-    fun getUsernameById(id: String): Single<String>
+    fun getUsernameById(id: String): Single<String?>
 
     fun updateUsername(userId: String, username: String): Single<Unit>
 

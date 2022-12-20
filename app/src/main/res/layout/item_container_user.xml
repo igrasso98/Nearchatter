@@ -18,6 +18,7 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <com.makeramen.roundedimageview.RoundedImageView
+            android:visibility="gone"
             android:id="@+id/imageProfile"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -26,6 +27,12 @@
             android:src="@drawable/ic_round_person"
             app:riv_oval="true"
             tools:srcCompat="@tools:sample/backgrounds/scenic" />
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="@dimen/_25sdp"
+            android:layout_height="24dp"
+            android:layout_gravity="center" />
     </FrameLayout>
 
     <View

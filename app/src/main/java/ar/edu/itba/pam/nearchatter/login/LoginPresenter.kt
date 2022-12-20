@@ -18,15 +18,16 @@ class LoginPresenter(
 
     @SuppressLint("CheckResult")
     fun onUsernameConfirm(username: String) {
+        val cleanUsername = username.trim()
         if (!sharedPreferencesStorage.isActive()) {
             schedulerProvider.io().scheduleDirect {
-                userRepository.addUser(User(hwid, username, true))
+                userRepository.addUser(User(hwid, cleanUsername))
                     .subscribeOn(schedulerProvider.io()).observeOn(schedulerProvider.ui())
                     .subscribe({ onUserAdded(it) }, { onUserAddedFailed(it) })
             }
         } else {
             schedulerProvider.io().scheduleDirect {
-                userRepository.updateUsername(hwid, username)
+                userRepository.updateUsername(hwid, cleanUsername)
                     .subscribeOn(schedulerProvider.io()).observeOn(schedulerProvider.ui())
                     .subscribe({ onSuccess(it) }, { onUserAddedFailed(it) })
             }
@@ -35,14 +36,14 @@ class LoginPresenter(
 
     private fun onUserAdded(unit: Unit) {
         sharedPreferencesStorage.activate()
-        Log.i(tag, unit.toString())
+        Log.i(tag, "onUserAdded")
     }
 
     private fun onSuccess(unit: Unit) {
-        Log.i(tag, unit.toString())
+        Log.i(tag, "onSuccess")
     }
 
     private fun onUserAddedFailed(t: Throwable) {
-        Log.i(tag, t.toString())
+        Log.e(tag, "onUserAddedFailed", t)
     }
 }

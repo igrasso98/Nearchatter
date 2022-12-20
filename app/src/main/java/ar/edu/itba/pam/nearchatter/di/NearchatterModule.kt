@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.provider.Settings
 import ar.edu.itba.pam.nearchatter.chat.ChatPresenter
-import ar.edu.itba.pam.nearchatter.chat.ChatView
 import ar.edu.itba.pam.nearchatter.db.room.NearchatterDb
 import ar.edu.itba.pam.nearchatter.db.room.message.MessageDao
 import ar.edu.itba.pam.nearchatter.db.room.user.UserDao
@@ -14,7 +13,6 @@ import ar.edu.itba.pam.nearchatter.db.sharedPreferences.SharedPreferencesStorage
 import ar.edu.itba.pam.nearchatter.login.LoginPresenter
 import ar.edu.itba.pam.nearchatter.login.LoginView
 import ar.edu.itba.pam.nearchatter.peers.PeersPresenter
-import ar.edu.itba.pam.nearchatter.peers.PeersView
 import ar.edu.itba.pam.nearchatter.repository.*
 import ar.edu.itba.pam.nearchatter.services.INearbyService
 import ar.edu.itba.pam.nearchatter.services.NearbyService
@@ -90,7 +88,6 @@ class NearchatterModule(context: Context) {
     }
 
     fun providePeersPresenter(
-        view: PeersView,
         userRepository: IUserRepository,
         sharedPreferencesStorage: ISharedPreferencesStorage,
         schedulerProvider: SchedulerProvider,
@@ -98,7 +95,6 @@ class NearchatterModule(context: Context) {
         hwid: String
     ): PeersPresenter {
         return PeersPresenter(
-            view,
             userRepository,
             sharedPreferencesStorage,
             schedulerProvider,
@@ -108,7 +104,6 @@ class NearchatterModule(context: Context) {
     }
 
     fun provideChatPresenter(
-        view: ChatView,
         userId: String,
         userRepository: IUserRepository,
         messageRepository: IMessageRepository,
@@ -117,7 +112,6 @@ class NearchatterModule(context: Context) {
         hwId: String
     ): ChatPresenter {
         return ChatPresenter(
-            view,
             userId,
             userRepository,
             messageRepository,

@@ -39,6 +39,11 @@ class NearbyConnectionHandler(
         initialized = true
     }
 
+    override fun closeConnections() {
+        initialized = false
+        connectionsClient?.stopAllEndpoints()
+    }
+
     override fun sendMessage(endpointId: String, message: String) {
         if (!initialized) {
             throw IllegalStateException("Not initialized")
@@ -89,11 +94,8 @@ class NearbyConnectionHandler(
         }
 
         override fun onEndpointLost(endpointId: String) {
-            Log.i(tag, "On endpoint lost: $endpointId")
+            Log.i(tag, "On endpoint lost: $endpointId - Do Nothing")
             endpointIdDevicesConnecting.remove(endpointId)
-            endpointIdDevicesHwId.remove(endpointId)
-            connectionsClient!!.disconnectFromEndpoint(endpointId)
-            onDisconnected!!.accept(endpointId)
         }
     }
 
@@ -126,9 +128,12 @@ class NearbyConnectionHandler(
         override fun onDisconnected(endpointId: String) {
             Log.i(tag, "On connection disconnected: $endpointId")
             endpointIdDevicesConnecting.remove(endpointId)
-            endpointIdDevicesHwId.remove(endpointId)
+            val hwId = endpointIdDevicesHwId.remove(endpointId)
             connectionsClient!!.disconnectFromEndpoint(endpointId)
-            onDisconnected!!.accept(endpointId)
+
+            if (hwId != null) {
+                onDisconnected!!.accept(hwId)
+            }
         }
     }
 
