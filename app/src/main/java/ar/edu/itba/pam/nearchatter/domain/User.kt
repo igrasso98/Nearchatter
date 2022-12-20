@@ -2,8 +2,7 @@ package ar.edu.itba.pam.nearchatter.domain
 
 class User(
     private val id: String,
-    private val username: String,
-    private val isConnected: Boolean
+    private val username: String
 ) {
     fun getUserId(): String {
         return id
@@ -11,9 +10,5 @@ class User(
 
     fun getUsername(): String {
         return username
-    }
-
-    fun isConnected(): Boolean {
-        return isConnected
     }
 }

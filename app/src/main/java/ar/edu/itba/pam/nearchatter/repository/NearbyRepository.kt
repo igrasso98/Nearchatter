@@ -92,6 +92,8 @@ class NearbyRepository(
         stopDiscovery()
         stopAdvertising()
 
+        nearbyConnectionHandler.closeConnections()
+
         hwIdDevices.clear()
 
         stopping = false

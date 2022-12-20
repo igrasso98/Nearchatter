@@ -25,6 +25,8 @@ interface INearbyConnectionHandler {
         onDisconnected: OnDisconnectCallback
     )
 
+    fun closeConnections()
+
     fun sendMessage(endpointId: String, message: String)
 
     fun createEndpointDiscoveryCallback() : EndpointDiscoveryCallback

@@ -27,11 +27,11 @@ class NearbyService(
     }
 
     override fun setOnConnectCallback(callback: Consumer<User>?) {
-        this.disconnectedDeviceCallback = callback
+        this.connectedDeviceCallback = callback
     }
 
     override fun setOnDisconnectCallback(callback: Consumer<User>?) {
-        this.connectedDeviceCallback = callback
+        this.disconnectedDeviceCallback = callback
     }
 
     override fun openConnections(username: String) {
@@ -56,7 +56,7 @@ class NearbyService(
     @SuppressLint("CheckResult")
     private fun setUpNearbyRepository() {
         nearbyRepository.setOnConnectCallback { device ->
-            val user = User(device.getId(), device.getUsername(), true)
+            val user = User(device.getId(), device.getUsername())
             schedulerProvider.io().scheduleDirect {
                 userRepository.addUser(user).subscribe()
             }
@@ -72,7 +72,7 @@ class NearbyService(
         }
 
         nearbyRepository.setOnDisconnectCallback { device ->
-            disconnectedDeviceCallback?.accept(User(device.getId(), device.getUsername(), false))
+            disconnectedDeviceCallback?.accept(User(device.getId(), device.getUsername()))
         }
     }
 }

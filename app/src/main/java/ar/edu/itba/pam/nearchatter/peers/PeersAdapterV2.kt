@@ -9,6 +9,7 @@ import ar.edu.itba.pam.nearchatter.domain.Conversation
 
 class PeersAdapterV2() : RecyclerView.Adapter<PeerViewHolderV2>() {
     private var peers: MutableList<Conversation> = ArrayList()
+    private var connectedPeers: MutableSet<String> = HashSet()
     private var onPeerSelectedListener: OnPeerSelectedListener? = null
 
     @SuppressLint("NotifyDataSetChanged")
@@ -18,6 +19,19 @@ class PeersAdapterV2() : RecyclerView.Adapter<PeerViewHolderV2>() {
             peers.addAll(newDataset)
         }
         notifyDataSetChanged()
+    }
+
+    fun setOnline(userId: String, connected: Boolean) {
+        if (connected) {
+            connectedPeers.add(userId)
+        } else {
+            connectedPeers.remove(userId)
+        }
+
+        val ix = peers.indexOfFirst { it.getUserId() == userId }
+        if (ix >= 0) {
+            notifyItemChanged(ix)
+        }
     }
 
     fun setOnPeerSelectedListener(listener: OnPeerSelectedListener) {
@@ -34,9 +48,8 @@ class PeersAdapterV2() : RecyclerView.Adapter<PeerViewHolderV2>() {
     }
 
     override fun onBindViewHolder(holder: PeerViewHolderV2, position: Int) {
-        holder.setPeerData(peers[position])
+        holder.setPeerData(peers[position], connectedPeers.contains(peers[position].getUserId()))
         holder.setOnPeerSelectedListener(onPeerSelectedListener)
-
     }
 
     override fun getItemCount(): Int {

@@ -12,10 +12,19 @@ class PeerViewHolderV2(itemView: ItemContainerUserBinding) :
     private var onPeerSelectedListener: OnPeerSelectedListener? = null
 
 
-    fun setPeerData(conversation: Conversation) {
+    fun setPeerData(conversation: Conversation, connected: Boolean) {
         binding.textName.text = conversation.getUsername()
         binding.textRecentMessage.text = conversation.getLastMessagePayload()
         binding.textSendAt.text = conversation.getLastMessageSendAt()?.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM, FormatStyle.SHORT))
+
+        if (connected) {
+            binding.progressBar.visibility = android.view.View.GONE
+            binding.imageProfile.visibility = android.view.View.VISIBLE
+        } else {
+            binding.progressBar.visibility = android.view.View.VISIBLE
+            binding.imageProfile.visibility = android.view.View.GONE
+        }
+
         binding.root.setOnClickListener { _ -> onPeerSelectedListener?.onSelected(conversation.getUserId()) }
     }
 

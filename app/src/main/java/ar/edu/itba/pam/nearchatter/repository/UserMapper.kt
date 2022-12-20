@@ -9,6 +9,6 @@ class UserMapper {
     }
 
     fun fromEntity(userEntity: UserEntity): User {
-        return User(userEntity.userId!!, userEntity.username!!, false)
+        return User(userEntity.userId, userEntity.username)
     }
 }

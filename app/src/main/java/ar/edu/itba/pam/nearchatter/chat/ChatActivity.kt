@@ -1,14 +1,12 @@
 package ar.edu.itba.pam.nearchatter.chat
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import ar.edu.itba.pam.nearchatter.databinding.ActivityChatBinding
 import ar.edu.itba.pam.nearchatter.di.NearchatterContainer
 import ar.edu.itba.pam.nearchatter.di.NearchatterContainerLocator
 import ar.edu.itba.pam.nearchatter.domain.Message
-import ar.edu.itba.pam.nearchatter.domain.User
-import ar.edu.itba.pam.nearchatter.peers.PeersPresenter
 
 class ChatActivity : AppCompatActivity(), ChatView, OnMessageSentListener {
     private lateinit var binding: ActivityChatBinding
@@ -35,13 +33,13 @@ class ChatActivity : AppCompatActivity(), ChatView, OnMessageSentListener {
         if (presenter == null) {
             val container: NearchatterContainer =
                 NearchatterContainerLocator().locateComponent(this)
-            presenter = container.getChatPresenter(this, otherUserId)
+            presenter = container.getChatPresenter(otherUserId)
         }
     }
 
     override fun onStart() {
         super.onStart()
-        presenter?.onViewAttached()
+        presenter?.onViewAttached(this)
 
     }
 

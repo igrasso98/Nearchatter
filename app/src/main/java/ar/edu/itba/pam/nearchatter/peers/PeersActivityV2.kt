@@ -4,22 +4,16 @@ import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import ar.edu.itba.pam.nearchatter.R
 import ar.edu.itba.pam.nearchatter.chat.ChatActivity
 import ar.edu.itba.pam.nearchatter.databinding.ActivityPeersV2Binding
 import ar.edu.itba.pam.nearchatter.di.NearchatterContainer
 import ar.edu.itba.pam.nearchatter.di.NearchatterContainerLocator
 import ar.edu.itba.pam.nearchatter.domain.Conversation
-import ar.edu.itba.pam.nearchatter.domain.Message
-import ar.edu.itba.pam.nearchatter.domain.User
-import java.time.LocalDateTime
 
 class PeersActivityV2 : AppCompatActivity(), PeersView, OnPeerSelectedListener {
     private lateinit var binding: ActivityPeersV2Binding
@@ -51,10 +45,9 @@ class PeersActivityV2 : AppCompatActivity(), PeersView, OnPeerSelectedListener {
         setListeners()
     }
 
-    @RequiresApi(Build.VERSION_CODES.M)
     override fun onStart() {
         super.onStart()
-        presenter?.onViewAttached()
+        presenter?.onViewAttached(this)
         if (!hasPermissions(this, *REQUIRED_PERMISSIONS)) {
             requestPermissions(REQUIRED_PERMISSIONS, REQUEST_CODE_REQUIRED_PERMISSIONS);
         }
@@ -87,7 +80,7 @@ class PeersActivityV2 : AppCompatActivity(), PeersView, OnPeerSelectedListener {
         if (presenter == null) {
             val container: NearchatterContainer =
                 NearchatterContainerLocator().locateComponent(this)
-            presenter = container.getPeersPresenter(this)
+            presenter = container.getPeersPresenter()
         }
     }
 
@@ -118,6 +111,10 @@ class PeersActivityV2 : AppCompatActivity(), PeersView, OnPeerSelectedListener {
 
     override fun bind(conversations: List<Conversation>) {
         peersAdapterV2.setDataset(conversations)
+    }
+
+    override fun setOnline(userId: String, connected: Boolean) {
+        peersAdapterV2.setOnline(userId, connected)
     }
 
 

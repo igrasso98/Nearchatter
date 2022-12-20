@@ -18,15 +18,16 @@ class LoginPresenter(
 
     @SuppressLint("CheckResult")
     fun onUsernameConfirm(username: String) {
+        val cleanUsername = username.trim()
         if (!sharedPreferencesStorage.isActive()) {
             schedulerProvider.io().scheduleDirect {
-                userRepository.addUser(User(hwid, username, true))
+                userRepository.addUser(User(hwid, cleanUsername))
                     .subscribeOn(schedulerProvider.io()).observeOn(schedulerProvider.ui())
                     .subscribe({ onUserAdded(it) }, { onUserAddedFailed(it) })
             }
         } else {
             schedulerProvider.io().scheduleDirect {
-                userRepository.updateUsername(hwid, username)
+                userRepository.updateUsername(hwid, cleanUsername)
                     .subscribeOn(schedulerProvider.io()).observeOn(schedulerProvider.ui())
                     .subscribe({ onSuccess(it) }, { onUserAddedFailed(it) })
             }
