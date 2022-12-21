@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -16,12 +17,13 @@ import ar.edu.itba.pam.nearchatter.peers.PeersActivityV2
 
 class LoginActivity : AppCompatActivity(), LoginView, OnUsernameConfirmListener {
     private var presenter: LoginPresenter? = null
+    private var canLogIn: Boolean = false
+    private var hasRequestedPermissions: Boolean = false
     private lateinit var loginFormView: LoginFormView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
-        checkForPermission()
         createPresenter()
         setupView()
     }
@@ -43,22 +45,51 @@ class LoginActivity : AppCompatActivity(), LoginView, OnUsernameConfirmListener 
     }
 
     private fun checkForPermission() {
-        if (ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            ActivityCompat.requestPermissions(
-                this,
-                arrayOf(
-                    Manifest.permission.ACCESS_COARSE_LOCATION,
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.BLUETOOTH_SCAN,
-                    Manifest.permission.BLUETOOTH_ADVERTISE,
-                    Manifest.permission.BLUETOOTH_CONNECT,
-                ), 1
-            )
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 1)
+        } else {
+            presenter?.onPermissionGranted(1)
         }
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION), 2)
+        } else {
+            presenter?.onPermissionGranted(2)
+        }
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.BLUETOOTH), 3)
+        } else {
+            presenter?.onPermissionGranted(3)
+        }
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.BLUETOOTH_SCAN), 4)
+        } else {
+            presenter?.onPermissionGranted(4)
+        }
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_ADVERTISE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.BLUETOOTH_ADVERTISE), 5)
+        } else {
+            presenter?.onPermissionGranted(5)
+        }
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_ADVERTISE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.BLUETOOTH_CONNECT), 6)
+        } else {
+            presenter?.onPermissionGranted(6)
+        }
+
+        hasRequestedPermissions = true
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            presenter?.onPermissionGranted(requestCode)
+        }
+        hasRequestedPermissions = true
     }
 
 
@@ -66,10 +97,20 @@ class LoginActivity : AppCompatActivity(), LoginView, OnUsernameConfirmListener 
         loginFormView.bind()
     }
 
+    override fun setCanLogIn(canLogIn: Boolean) {
+        this.canLogIn = canLogIn
+    }
+
     override fun onConfirm(username: String) {
-        presenter?.onUsernameConfirm(username)
-        val intent = Intent(this, PeersActivityV2::class.java)
-        intent.putExtra("username", username)
-        startActivity(intent)
+        checkForPermission()
+
+        if (canLogIn) {
+            presenter?.onUsernameConfirm(username)
+            val intent = Intent(this, PeersActivityV2::class.java)
+            intent.putExtra("username", username)
+            startActivity(intent)
+        } else if (hasRequestedPermissions) {
+            Toast.makeText(applicationContext, "Please grant all permissions", Toast.LENGTH_LONG).show()
+        }
     }
 }
