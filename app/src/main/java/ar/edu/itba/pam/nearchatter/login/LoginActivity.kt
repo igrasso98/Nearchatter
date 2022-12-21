@@ -3,6 +3,7 @@ package ar.edu.itba.pam.nearchatter.login
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -25,6 +26,7 @@ class LoginActivity : AppCompatActivity(), LoginView, OnUsernameConfirmListener 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
         createPresenter()
+        checkForPermission()
         setupView()
     }
 
@@ -63,20 +65,32 @@ class LoginActivity : AppCompatActivity(), LoginView, OnUsernameConfirmListener 
             presenter?.onPermissionGranted(3)
         }
 
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.BLUETOOTH_SCAN), 4)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.BLUETOOTH_SCAN), 4)
+            } else {
+                presenter?.onPermissionGranted(4)
+            }
         } else {
             presenter?.onPermissionGranted(4)
         }
 
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_ADVERTISE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.BLUETOOTH_ADVERTISE), 5)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_ADVERTISE) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.BLUETOOTH_ADVERTISE), 5)
+            } else {
+                presenter?.onPermissionGranted(5)
+            }
         } else {
             presenter?.onPermissionGranted(5)
         }
 
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_ADVERTISE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.BLUETOOTH_CONNECT), 6)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.BLUETOOTH_CONNECT), 6)
+            } else {
+                presenter?.onPermissionGranted(6)
+            }
         } else {
             presenter?.onPermissionGranted(6)
         }
@@ -87,7 +101,7 @@ class LoginActivity : AppCompatActivity(), LoginView, OnUsernameConfirmListener 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            presenter?.onPermissionGranted(requestCode)
+            checkForPermission()
         }
         hasRequestedPermissions = true
     }
