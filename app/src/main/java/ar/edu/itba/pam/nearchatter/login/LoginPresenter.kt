@@ -6,6 +6,7 @@ import ar.edu.itba.pam.nearchatter.db.sharedPreferences.ISharedPreferencesStorag
 import ar.edu.itba.pam.nearchatter.domain.User
 import ar.edu.itba.pam.nearchatter.repository.IUserRepository
 import ar.edu.itba.pam.nearchatter.utils.schedulers.SchedulerProvider
+import java.lang.ref.WeakReference
 
 class LoginPresenter(
     view: LoginView,
@@ -15,6 +16,9 @@ class LoginPresenter(
     private val hwid: String,
 ) {
     private val tag = "LoginPresenter"
+    private val permissions: MutableSet<Int> = mutableSetOf()
+    private val allPermissions: Set<Int> = setOf(1, 2, 3, 4, 5, 6)
+    private var view: WeakReference<LoginView> = WeakReference(view)
 
     @SuppressLint("CheckResult")
     fun onUsernameConfirm(username: String) {
@@ -31,6 +35,27 @@ class LoginPresenter(
                     .subscribeOn(schedulerProvider.io()).observeOn(schedulerProvider.ui())
                     .subscribe({ onSuccess(it) }, { onUserAddedFailed(it) })
             }
+        }
+    }
+
+    fun onViewAttached(loginView: LoginView) {
+        view = WeakReference<LoginView>(loginView)
+    }
+
+    fun onViewDetached() {
+        view = WeakReference<LoginView>(null)
+    }
+
+    fun onPermissionGranted(requestedCode: Int) {
+        permissions.add(requestedCode)
+        checkPermissions()
+    }
+
+    private fun checkPermissions() {
+        if (permissions.containsAll(allPermissions)) {
+            view.get()?.setCanLogIn(true)
+        } else {
+            view.get()?.setCanLogIn(false)
         }
     }
 
