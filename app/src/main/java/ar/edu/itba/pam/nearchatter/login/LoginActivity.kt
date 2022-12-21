@@ -186,9 +186,9 @@ class LoginActivity : AppCompatActivity(), LoginView, OnUsernameConfirmListener 
         checkForPermission()
 
         if (canLogIn) {
-            presenter?.onUsernameConfirm(username)
+            val cleanUsername = presenter?.onUsernameConfirm(username)
             val intent = Intent(this, PeersActivityV2::class.java)
-            intent.putExtra("username", username)
+            intent.putExtra("username", cleanUsername)
             startActivity(intent)
         } else if (hasRequestedPermissions) {
             Toast.makeText(applicationContext, "Please grant all permissions", Toast.LENGTH_LONG)

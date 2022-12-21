@@ -22,7 +22,7 @@ class LoginPresenter(
     private var view: WeakReference<LoginView> = WeakReference(view)
 
     @SuppressLint("CheckResult")
-    fun onUsernameConfirm(username: String) {
+    fun onUsernameConfirm(username: String): String {
         val cleanUsername = username.trim()
         schedulerProvider.io().scheduleDirect {
             sharedPreferencesStorage.setUsername(cleanUsername)
@@ -30,6 +30,7 @@ class LoginPresenter(
                 .subscribeOn(schedulerProvider.io()).observeOn(schedulerProvider.ui())
                 .subscribe({ onUserAdded(it) }, { onUserAddedFailed(it) })
         }
+        return cleanUsername
     }
 
     fun onViewAttached(loginView: LoginView) {
