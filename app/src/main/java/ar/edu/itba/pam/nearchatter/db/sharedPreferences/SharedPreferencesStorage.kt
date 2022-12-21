@@ -4,17 +4,13 @@ import android.content.SharedPreferences
 
 class SharedPreferencesStorage(private val preferences: SharedPreferences) :
     ISharedPreferencesStorage {
-    private val SESSION_KEY: String = "is-active"
+    private val USERNAME_KEY: String = "username"
 
-    override fun isActive(): Boolean {
-        return preferences.getBoolean(SESSION_KEY, false);
+    override fun getUsername(): String? {
+        return preferences.getString(USERNAME_KEY, null)
     }
 
-    override fun deactivate() {
-        preferences.edit().putBoolean(SESSION_KEY, false).apply()
-    }
-
-    override fun activate() {
-        preferences.edit().putBoolean(SESSION_KEY, true).apply()
+    override fun setUsername(username: String) {
+        preferences.edit().putString(USERNAME_KEY, username).apply()
     }
 }

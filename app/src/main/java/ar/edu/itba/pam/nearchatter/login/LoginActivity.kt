@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import ar.edu.itba.pam.nearchatter.R
+import ar.edu.itba.pam.nearchatter.databinding.ActivityLoginBinding
 import ar.edu.itba.pam.nearchatter.di.NearchatterContainer
 import ar.edu.itba.pam.nearchatter.di.NearchatterContainerLocator
 import ar.edu.itba.pam.nearchatter.login.ui.LoginFormView
@@ -21,13 +22,27 @@ class LoginActivity : AppCompatActivity(), LoginView, OnUsernameConfirmListener 
     private var canLogIn: Boolean = false
     private var hasRequestedPermissions: Boolean = false
     private lateinit var loginFormView: LoginFormView
+    private lateinit var binding: ActivityLoginBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_login)
+
+        binding = ActivityLoginBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         createPresenter()
         checkForPermission()
         setupView()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        presenter?.onViewAttached(this)
+
+    }
+
+    override fun onStop() {
+        super.onStop()
+        presenter?.onViewDetached()
     }
 
     private fun createPresenter() {
@@ -161,6 +176,10 @@ class LoginActivity : AppCompatActivity(), LoginView, OnUsernameConfirmListener 
 
     override fun setCanLogIn(canLogIn: Boolean) {
         this.canLogIn = canLogIn
+    }
+
+    override fun setUsername(username: String) {
+        binding.loginForm.setUsername(username)
     }
 
     override fun onConfirm(username: String) {
