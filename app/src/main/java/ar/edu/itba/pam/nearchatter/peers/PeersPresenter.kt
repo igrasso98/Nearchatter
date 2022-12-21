@@ -44,7 +44,6 @@ class PeersPresenter(
     }
 
     fun deactivateSession() {
-        sharedPreferencesStorage.deactivate()
         nearbyService.closeConnections()
     }
 

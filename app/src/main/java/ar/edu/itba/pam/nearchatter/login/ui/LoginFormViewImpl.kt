@@ -57,6 +57,10 @@ class LoginFormViewImpl @JvmOverloads constructor(
         }
     }
 
+    override fun setUsername(username: String) {
+        usernameField?.setText(username)
+    }
+
     override fun setOnUsernameConfirmListener(listener: OnUsernameConfirmListener) {
         this.onUsernameConfirmListener = listener
     }

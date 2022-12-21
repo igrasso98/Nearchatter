@@ -1,9 +1,7 @@
 package ar.edu.itba.pam.nearchatter.db.sharedPreferences
 
 interface ISharedPreferencesStorage {
-    fun isActive(): Boolean
+    fun getUsername(): String?
 
-    fun deactivate()
-
-    fun activate()
+    fun setUsername(username: String)
 }

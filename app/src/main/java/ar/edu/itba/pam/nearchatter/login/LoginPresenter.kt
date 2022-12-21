@@ -2,6 +2,7 @@ package ar.edu.itba.pam.nearchatter.login
 
 import android.annotation.SuppressLint
 import android.util.Log
+import androidx.annotation.VisibleForTesting
 import ar.edu.itba.pam.nearchatter.db.sharedPreferences.ISharedPreferencesStorage
 import ar.edu.itba.pam.nearchatter.domain.User
 import ar.edu.itba.pam.nearchatter.repository.IUserRepository
@@ -23,23 +24,17 @@ class LoginPresenter(
     @SuppressLint("CheckResult")
     fun onUsernameConfirm(username: String) {
         val cleanUsername = username.trim()
-        if (!sharedPreferencesStorage.isActive()) {
-            schedulerProvider.io().scheduleDirect {
-                userRepository.addUser(User(hwid, cleanUsername))
-                    .subscribeOn(schedulerProvider.io()).observeOn(schedulerProvider.ui())
-                    .subscribe({ onUserAdded(it) }, { onUserAddedFailed(it) })
-            }
-        } else {
-            schedulerProvider.io().scheduleDirect {
-                userRepository.updateUsername(hwid, cleanUsername)
-                    .subscribeOn(schedulerProvider.io()).observeOn(schedulerProvider.ui())
-                    .subscribe({ onSuccess(it) }, { onUserAddedFailed(it) })
-            }
+        schedulerProvider.io().scheduleDirect {
+            sharedPreferencesStorage.setUsername(cleanUsername)
+            userRepository.addUser(User(hwid, cleanUsername))
+                .subscribeOn(schedulerProvider.io()).observeOn(schedulerProvider.ui())
+                .subscribe({ onUserAdded(it) }, { onUserAddedFailed(it) })
         }
     }
 
     fun onViewAttached(loginView: LoginView) {
         view = WeakReference<LoginView>(loginView)
+        retrieveUsername()
     }
 
     fun onViewDetached() {
@@ -59,13 +54,13 @@ class LoginPresenter(
         }
     }
 
-    private fun onUserAdded(unit: Unit) {
-        sharedPreferencesStorage.activate()
-        Log.i(tag, "onUserAdded")
+    @VisibleForTesting
+    fun retrieveUsername() {
+        view.get()?.setUsername(sharedPreferencesStorage.getUsername() ?: "")
     }
 
-    private fun onSuccess(unit: Unit) {
-        Log.i(tag, "onSuccess")
+    private fun onUserAdded(unit: Unit) {
+        Log.i(tag, "onUserAdded")
     }
 
     private fun onUserAddedFailed(t: Throwable) {
