@@ -2,11 +2,12 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/peers_activity_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
     android:background="@color/lemon_green"
-    tools:context=".peers.PeersActivity">
+    tools:context=".peers.PeersActivityV2">
 
     <com.makeramen.roundedimageview.RoundedImageView
         android:id="@+id/imageProfile"
